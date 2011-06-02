@@ -1,0 +1,57 @@
+
+
+-> documentacion interna
+-> informe de avance
+-> presentacion de proyecto. 
+
+
+Title: 	A new programming interface for Educational Robotics
+Keywords: 	educational robotics, popularization of science, programming interface
+
+Abstract: 	
+
+Educational Robotics uses robotics as a teaching tool for popularization of science. One important problem is to have an adequate interface that allows unexperienced public to interact with robots. In this paper we present a new application that doesn't require previous programming experience to control robots. To accomplish this, it is necessary to abandon standard programming paradigms. Our approach is based on the theoretical concepts exposed by Braitenberg in his book "Vehicles: Experiments in Synthetic Psychology". The idea is to program the behaviors of robots by establishing connections between his sensors and actuators. This connections may include different mathematical functions, making possible to achieve complex behaviors. A the same time, different defined behaviors can be connected using a subsumision architecture. The new application is designed to work with a variety of real robots and simulators, and it is easy to add new robots. Learning experiences with high school students allowed us to test its effectiveness.
+
+
+1) Introducción
+
+- Robotica Educativa es bla. y mas bla.
+- analisis de las herramientas existentes, porque la nuestra es mejor :P
+- herramienta para que se pueda programar sin conocimientos de programacion. Además, que se pueda usar con muchos robots y simuladores diferentes, facil de cambiar de robot. 
+
+2) Diseño/Idea Conceptual. 
+
+- analisis de las herramientas existentes (mas fuerte con lo de la programación imperativa). 
+
+Para la programacion de los robots nuestra aplicaci ́n se basa en los conceptos te ́ricos expuestos por
+Braitenberg en su libro “Vehicles: Experiments in Synthetic Psychology”. La idea es poder programar los
+comportamientos de los robots a partir de establecer conexiones entre sus distintos sensores y actuadores.
+Cada conexion puede ejecutar un funcion matem ́tica, lo que permite una capacidad de programacion
+equivalente a la que proporcionan los lenguajes de programaci ́n estandar (del paradigma imperativo u
+otros). A la vez, los distintos comportamientos programados para el robot pueden coordinarse mediante
+una arquitectura de subsumicion, tan cual se define en el libro “Behavior-Based Robotics” de Arkin,
+donde se establecen transiciones entre distintos comportamientos a partir de que se cumplan ciertas
+condiciones. De esta forma se tiene un aut ́mata (o m ́quina) de estados donde cada estado represen-
+ta un comportamiento y cada transici ́n un cambio en el entorno. En res ́men, se pueden programar
+nuevos comportamientos siguiendo la tecnica de Braitenberg y enlazarlos con los anteriores a traves de
+la arquitectura de subsumicion. Es decir
+
+dibujito!
+
+3) Arquitectura de la herramienta. 
+
+modulos, interfaces de cada modulo, bla. 
+GUI
+Core
+RAL
+
+4) Implementacion 
+open source C++ Java XML cross platform (bla).
+
+5) Resultados
+- herramienta: con que robots lo probamos, con que simuladores. Por un lado con un robot comercial (khepera) como con robots diseñados en nuestro laboratorio (exabot), simuladores. 
+- incluir prueba con alumnos
+
+6) Conclusiones y Trabajo Futuro
+
+

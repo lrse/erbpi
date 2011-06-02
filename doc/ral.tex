@@ -1,0 +1,285 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% RAL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introducci\'on}
+The RAL modules encapsulates all the knowledge of the particular robot or
+simulator, providing a standard interface to the CORE module, and dealing with
+everything necessary to communicate with the actual robot. The RAL abstracts
+the particular robot, its communication protocol, and normalizes the values of
+the particular sensors and actuators. In this way, all the specific characteristics of
+the robot are transparent to the CORE: the RAL provides a standard interface
+that allows the CORE to get the list of sensors and actuators in the robot,
+the frequency the robot can work in, the normalized sensor values, and set the
+normalized values for the actuators.
+
+To add a new robotic platform for ERBPI to work with, a programmer must
+only program a particular RAL for the platform implementing the general RAL
+interface. All RALs are implemented as dynamic libraries. In this manner, we can
+add new RALs without having to recompile the CORE or the GUI. Moreover,
+this allows the CORE to load a different RAL on runtime, without having to
+restart the application. This makes ERBPI easily extendable to control different
+robots.
+
+La idea es que sea una capa de abstraction respecto del hardware específico que hay del otro lado, es decir, qué tipo de robot, simulador, qué tipo y cantidad de sensores y actuadores, etc.
+Por lo tanto, para el \textit{Core} va a ser transparente, sólo se comunicará con el \textit{RAL} para recibir el estado de los sensores
+ y enviar el nuevo estado para los actuadores. Luego, será el \textit{RAL} el que se comunicará directamente con el hardware o simulador según corresponda (Khepera, ExaBot, Yaks, etc.).
+
+Debería hacer las siguientes cosas:
+\begin{itemize}
+  \item \textbf{getListaSensores().} Devolver una lista de IDs de los sensores que posee el hardware o simulador que se se está utilizando.
+  \item \textbf{getListaActuadores().} Devolver una lista de IDs de los actuadores que posee el hardware o simulador que se se está utilizando.
+  \item \textbf{getEstadoSensores().} Devolver una lista de $<$id;valor$>$ con el nuevo estado de cada sensor del hardware o simulador que se se está utilizando.
+  \item \textbf{getFrecuenciaTrabajo().} Devolver a qué frecuencia sensa y es posible asignarle a los actuadores el hardware o simulador que se se está utilizando, para que el \textit{Core} lo tenga en cuenta y trabaje a esta frecuencia como máximo...
+  \item \textbf{setEstadoActuadores().} Recibir una lista de $<$id;valor$>$ con el nuevo valor para cada actuador y actualizar los actuadores en el hardware o simulador que se se está utilizando.
+  \item \textbf{inicializarRAL().} Inicializar el hardware o simulador que se se está utilizando.
+  \item \textbf{finalizarRAL().} Finalizar el hardware o simulador que se se está utilizando.
+  \item \textbf{Comunicación con el Hardware.} Realizar la conexión por software con el hardware específico o simulador que se utilizará y enviar los comandos correspondientes para que se mueva...
+\end{itemize}
+
+\section{Implementaci\'on}
+Lo hacemos en \texttt{C++} como una \textit{librería dinámica multiplataforma} (.DLL o .SO)
+para interactuar directamente con el \textit{Core}, sin la necesidad de recompilar el \textit{Core} para distintos \textit{RALs}.
+Luego, para interactuar con otro robot o simulador, simplemente se le especificará
+por línea de comandos al \textit{Core} cuál será el \textit{RAL\_ID} que se utilizará.
+
+Por lo tanto, la \textit{librería diámica del RAL} será una sola, y el mismo \textit{RAL} deberá poder diferenciar sobre qué hardware deberá trabajar... ¿ESTO LO HACEMOS CON UN PARÁMETRO? ¿ESTE PARÁMETRO DEBERÍA IR EN C/U DE LAS FUNCIONES DEL RAL? RESOLVER ESTO...
+
+Por el momento, la idea es tener las siguientes \textit{RALs}:
+
+To the date, we have implemented RALs for the Khepera [14] and Exabot
+[15] robots, and for the YAKS (Yet another Khepera Simulator) [16] and the
+Player/Stage [17] simulator adapted for the ExaBot.
+
+\subsection{Normalización de Mediciones}
+El RAL debe normalizar las mediciones de los sensores entre 0 y 1 !!!!
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+\section{Ejecuci\'on}
+la llama din\'amicamente el Core
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+\section{Compilaci\'on}
+\label{RalCompilacion}
+
+\subsection{Linux 32 bits - Librería Din\'amica}\label{subsub:CompRAL}
+El código fuente del \textit{RAL} cuenta con los siguientes archivos:
+\begin{enumerate}
+ \item \textbf{RAL.h} Encabezados de las funciones para la utilización de la librería dinámica del \textit{RAL}.
+ \item \textbf{RAL.cpp} Código de las funciones de la librería dinámica del \textit{RAL}.
+\end{enumerate}
+
+\subsubsection{Makefile}
+Además, el código fuente incluye un archivo \textit{Makefile} con las siguientes funciones para facilitar
+la compilación de la librería dinámica del \textit{RAL}:
+\begin{enumerate}
+ \item \textbf{all:} Compila y enlaza los archivos del código fuente generando la librería dinámica \textit{libRAL.so} de la siguiente manera: \\
+						\textit{g++ -c RAL.cpp -o RAL.o} \\
+						\textit{ld -o libRAL.so RAL.o -shared} ó \textit{g++ -shared -Wl -o libRAL.so RAL.o} (dependiendo el caso)
+ \item \textbf{clean:} Borra todos los archivos \textit{*.o} y \textit{*.so} del \textit{RAL}.
+\end{enumerate}
+
+Para más información sobre la creación, compilación y enlace de librerías dinámicas en \textit{Linux}, puede consultarse \url{http://www.chuidiang.com/clinux/herramientas/librerias.php}
+
+\subsubsection{Error de Compilación en 64 bits}
+Si el Linux es de 64 bits, es probable que falle la compilación de \textit{RAL.cpp}. La solución es agregar en la línea de compilación el
+parámetro ``\texttt{-fPIC}'', de forma que la línea antes indicada quede como ``\textit{g++ -c RAL.cpp -o RAL.o -fPIC}''.
+
+
+\subsection{Windows 32 bits - Librería Din\'amica}
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!
+FALTA COMPLETAR ESTO!!! Ojo con esto, porque aunque simula el GNU-GCC, no necesariamente todas las librería incluidas andan, porque algunas son especificas de
+Linux, por ejemplo ``sys/socket.h'', que me parece que en Windows hay que cambiarla por ``winsock.h'0'.
+HAY QUE VER BIEN ESTO y ANOTAR !!!!
+
+FALTA COMPLETAR ESTO!!! Nota: cualquier cosa, probar también Cygwin 5.1.6 (GNU + Cygnus + Windows) que contiene de \url{http://www.cygwin.com/}. ojo con esto porque me parece que sí o sí necesita ``cygwin1.dll'' en la PC para que después pueda andar... Probar!!!
+
+
+
+\section{Instalaci\'on}
+lo hace la instalacion del Core!!!
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+\section{Compiladores}
+\subsection{C++ Linux 32 bits}
+Utilizamos los siguientes compiladores para C++:
+\begin{itemize}
+ \item gcc: GCC (GNU Compiler Collection) C compiler.
+ \item g++: GCC (GNU Compiler Collection) C++ compiler.
+\end{itemize}
+Ver \url{http://gcc.gnu.org/}
+
+\subsection{C++ Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+FALTA COMPLETAR ESTO!!! Para que los comandos como \textit{gcc}, \textit{g++}, \textit{make} (\textit{mingw32-make}) anden en la consola de windows, es necesario modificar la variable de sistema \texttt{PATH} de Windows y agregar la ruta \url{C:/MinGW/bin}.
+
+FALTA COMPLETAR ESTO!!! Ojo con esto, porque aunque simula el GNU-GCC, no necesariamente todas las librería incluidas andan, porque algunas son especificas de
+Linux, por ejemplo ``sys/socket.h'', que me parece que en Windows hay que cambiarla por ``winsock.h'0'.
+HAY QUE VER BIEN ESTO y ANOTAR !!!!
+
+FALTA COMPLETAR ESTO!!! Nota: cualquier cosa, probar también Cygwin 5.1.6 (GNU + Cygnus + Windows) que contiene de \url{http://www.cygwin.com/}. ojo con esto porque me parece que sí o sí necesita ``cygwin1.dll'' en la PC para que después pueda andar... Probar!!!
+
+
+
+\section{RAL Khepera}
+\subsection{Khepera}
+\textit{Khepera} es un robot móvil desarrollado por la empresa K-Team. Tiene un cuerpo
+circular, de 5,5\textit{cm} de diámetro, y consta de dos ruedas (actuadores) y ocho pares de sensores
+infrarojos, que pueden funcionar como sensores de proximidad o de luz direccionales. Estos
+robots pueden ser controlados desde una PC a través de una interface serie o de una interface
+de radio.
+
+Para más información ver:
+\begin{itemize}
+ \item \url{http://ftp.k-team.com/khepera/documentation/}
+ \item \url{http://ftp.k-team.com/khepera/documentation/KheperaUserManual.pdf}
+ \item \url{http://ftp.k-team.com/khepera/documentation/RadioBaseManual.pdf}
+ \item \url{http://ftp.k-team.com/khepera/documentation/RadioTurretManual.pdf}
+\end{itemize}
+
+\subsection{Implementaci\'on}
+
+En función de las especificaciones del robot \textit{Khepera} y las características particulares necesarias para
+la conexión con el mismo, ya sea a través de \textit{Cable Serial} o \textit{Radio Frecuencia}, en los distintos sistemas
+operativos, fue necesario crear cuatro \textit{RALs} de \textit{Khepera} destintos para cada una de las posibilidades:
+\begin{itemize}
+ \item RAL Khepera Linux - Cable
+ \item RAL Khepera Windows - Cable
+ \item RAL Khepera Linux - Radio
+ \item RAL Khepera Windows - Radio
+\end{itemize}
+A continuación se detallan cada una de ellas:
+
+\subsection{Conexión por Cable}
+Primero es importante chequear que el robot esté correctamente configurado para este tipo de conexión.
+En la sección \textit{3.1.3 - Jumpers, reset button and settings} del manual de usuario se detalla los modos de conexión.
+
+\textbf{Importante:} La configuración correcta es \texttt{\textbf{MODE 1}}, que implica una conexión por \textit{cable serial a 9600 Baud}.
+
+\subsubsection{RAL Khepera Linux 32 bits}
+En Linux, para controlar el puerto serial, o más conocido como \texttt{COM1}, se realiza a través del archivo de sistema \url{/dev/ttyS0}, donde en general:
+\begin{itemize}
+ \item \url{/dev/ttyS0} ó \url{/dev/cua0} corresponde con el puerto \texttt{COM1} en Windows
+ \item \url{/dev/ttyS1} ó \url{/dev/cua1} corresponde con el puerto \texttt{COM2} en Windows
+ \item \url{/dev/ttyS2} ó \url{/dev/cua2} corresponde con el puerto \texttt{COM3} en Windows
+ \item \url{/dev/ttyS3} ó \url{/dev/cua3} corresponde con el puerto \texttt{COM4} en Windows
+\end{itemize}
+
+Por lo tanto en \texttt{C++}, generar una conexión a través del puerto serial, leer, escribir y cerrar el mismo se realiza con las funciones comunes
+para manejo de \textit{streams} y archivos:
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        #include <iostream>
+        open( "/dev/ttyS0" );
+        close( file_descriptor );
+        write( file_descriptor );
+        read( file_descriptor );
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Es importante el modo en el que se abre el archivo del \texttt{COM1} y más importante, configurar el puerto para la conexión necesaria para el robot Khepera.
+Esto se hace de la sigueinte manera:
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        // se abre el COM1 en modo "non-blocking"
+        com1_file_descriptor = open( "/dev/ttyS0", O_RDWR | O_NOCTTY | O_NONBLOCK );
+                // O_RDWR - open read-write.
+                // O_NOCTTY - open TTY without it becoming controlling tty.
+                // O_NONBLOCK ó O_NDELAY - open in non-blocking mode (read will return immediately)
+
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Luego se configura el puerto antes de comenzar a utilizarlo:
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+  // se definen constantes para simplificar
+  #define BAUDRATE    B9600   // BAUDRATE = 9600
+  #define DATABITS_8  CS8     // DATABITS = 8 bits
+  #define STOPBITS_2  CSTOPB  // STOPBITS_2 = 2
+  #define PARITYON    0       // es igual a PARITY_NONE ó PARITY_DISABLED
+  #define PARITY      0       // es igual a PARITY_NONE ó PARITY_DISABLED
+  // se crea la estructura para setear la configuración del puerto
+  struct termios com1_new_set;
+  com1_new_set.c_cflag = ( BAUDRATE | CRTSCTS | DATABITS_8 | STOPBITS_2 | PARITYON | PARITY | CLOCAL | CREAD );
+  com1_new_set.c_iflag = IGNPAR;
+  com1_new_set.c_oflag = 0;
+  com1_new_set.c_lflag = 0;
+  com1_new_set.c_cc[VMIN] = 1;
+  com1_new_set.c_cc[VTIME] = 0;
+  tcflush( com1_file_descriptor, TCIFLUSH );
+  // se setea la nueva configuración para el puerto COM1
+  tcsetattr( com1_file_descriptor, TCSANOW, &com1_new_set );
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+La compilación de este \textit{RAL} es básicamente la misma a la de todos los demás, con la diferencia que el proceso
+de \textit{linkeo} para generar la librería dínamica debió ser levemente cambiado. El error ocurría al intentar \textit{linkear}
+el ejecutable del \textit{Core} dinámicamente con \textit{libRAL.so}, producía el siguiente error:
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+   hidden symbol `__dso_handle' in /usr/lib/gcc/i486-linux-gnu/4.3.3/crtbegin.o is referenced by DSO
+   /usr/bin/ld: final link failed: Nonrepresentable section on output
+   collect2: ld returned 1 exit status
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Por lo tanto, en el \textit{Makefile} incluído en los archivos fuentes de este \textit{RAL}, para generar 
+la librería dinámica \textit{libRAL.so} el proceso de \textit{linkeo} que se realizaba mediante
+\textit{ld -o libRAL.so RAL.o -shared} fue cambiado por \textit{\textbf{g++ -shared -Wl -o libRAL.so RAL.o}}.
+
+Por último, la frecuencia de trabajo que devuelve esta librería (\textit{getFrecuenciaTrabajo()}) es igual al
+valor que devuelve el \textit{RAL YAKS} (100\textit{mseg}). Según las pruebas que se realizaron parece andar bien, 
+pero si aparecieran inconvenientes será necesario revisar este valor. Tener en cuenta que la frecuencia de trabajo debería
+quedar determinada por:
+\begin{itemize}
+ \item Envío de comando y tiempo de transmisión de esa cantidad de caracteres a 9600 baudios.
+ \item Tiempo de sensado (de todos los sensores ¿16?) del \textit{Khepera}.
+ \item Tiempo de transmisión de las cantidad de caracteres de la respuesta a 9600 baudios.
+ \item Sumatoria de todo lo anterior...
+\end{itemize}
+
+Para probar el robot manualmente (chequear que se tiene conexi\'on con el mismo), se pueden instalar y usar los siguientes programas
+para el manejo del puerto (como el \textit{hyperterminal} de Windows):
+\begin{verbatim}
+   sudo apt-get install gtkterm
+   sudo apt-get install setserial
+\end{verbatim}
+
+
+
+
+
+
+\section{RAL YAKS}
+\subsection{YAKS}
+YAKS es un simulador de cóìdigo abierto, escrito en \texttt{C++}, de robots tipo \texttt{Khepera}, desarrollado por Johan Carlsson.
+Su nombre proviene del acrónimo \textit{Yet Another Khepera Simulator}. Posee las siguientes características:
+\begin{itemize}
+ \item Permite incluir en el entorno obstáculos circulares, paredes, luces y definir zonas.
+ \item Permite definir y manipular un número ilimitado de robots.
+ \item Permite separar el programa de control del simulador, ya que los robots pueden ser manejados a través de una conexión \texttt{TCP/IP}.
+ \item Soporta una gran variedad de sensores: proximidad, luminosidad, energía, encoders de las ruedas, compás y sensor de tierra (para detección de zonas).
+\end{itemize}
+
+PONER UNA IMAGEN DEL YAKS!!!!!
+
+
+\subsection{Implementaci\'on}
+
+
+
+
+\section{RAL ExaBot}
+\subsection{ExaBot}
+\subsection{Implementaci\'on}
+
+\section{RAL SimuladorExaBot}
+\subsection{SimuladorExaBot}
+\subsection{Implementaci\'on}

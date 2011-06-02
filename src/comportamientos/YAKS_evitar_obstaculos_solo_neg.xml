@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ejecucion>
+<sensores>
+<sensor id="proximidad.320"/>
+<sensor id="proximidad.340"/>
+<sensor id="proximidad.350"/>
+<sensor id="proximidad.10"/>
+<sensor id="proximidad.20"/>
+<sensor id="proximidad.40"/>
+<sensor id="proximidad.170"/>
+<sensor id="proximidad.190"/>
+</sensores>
+<actuadores>
+<actuador id="motor.izquierda">
+<entradas>
+<entrada id="caja.20549"/>
+<entrada id="caja.13697"/>
+</entradas>
+</actuador>
+<actuador id="motor.derecha">
+<entradas>
+<entrada id="caja.09159"/>
+<entrada id="caja.25494"/>
+</entradas>
+</actuador>
+</actuadores>
+<cajas>
+<caja id="caja.20549">
+<esquema id="inhibitoria"/>
+<puntos>
+<punto x="0" y="0"/>
+<punto x="100" y="-100"/>
+</puntos>
+<entradas>
+<entrada id="proximidad.10"/>
+<entrada id="proximidad.20"/>
+<entrada id="proximidad.40"/>
+</entradas>
+</caja>
+<caja id="caja.09159">
+<esquema id="inhibitoria"/>
+<puntos>
+<punto x="0" y="0"/>
+<punto x="100" y="-100"/>
+</puntos>
+<entradas>
+<entrada id="proximidad.320"/>
+<entrada id="proximidad.340"/>
+<entrada id="proximidad.350"/>
+</entradas>
+</caja>
+<caja id="caja.13697">
+<esquema id="energia"/>
+<puntos>
+<punto x="0" y="15"/>
+<punto x="100" y="15"/>
+</puntos>
+</caja>
+<caja id="caja.25494">
+<esquema id="energia"/>
+<puntos>
+<punto x="0" y="15"/>
+<punto x="100" y="15"/>
+</puntos>
+</caja>
+</cajas>
+<robot id="yaks"/>
+</ejecucion>

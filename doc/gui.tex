@@ -1,0 +1,237 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% GUI
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introducci\'on}
+
+The GUI module is in charge of interfacing with the user. First, the user selects a
+robot or simulator to work with, and which sensors and actuators of the robot is
+going to use for this particular behaviour. The GUI allows the user to drag and
+drop the different objects (sensors, actuators, functions) to a work canvas, and
+then connect them using the mouse. Different functions may be selected from a
+menu, dragged to the canvas, and then configured with a pop-up configuration window. 
+
+Fig. 3 shows a screenshot of the GUI and Fig. 4 an example of the
+pop-up configuration window.
+Once the behaviour is finished, the user can select a robot to execute it on.
+The created behaviour and the minimum needed sensor and actuator configura-
+tion for its execution are stored in a file (the behaviour-file), that will be read by
+the CORE. The execution of the behaviour may be started and paused at any
+moment from the GUI. The GUI also provides general operations to open and
+save files.
+
+
+Este m\'odulo se encarga de la interfaz con el usuario y su funci\'on principal es la de permitir la programaci\'on gr\'afica del comportamiento del robot. 
+El m\'odulo GUI cuenta con las siguientes funcionalidades:
+
+\begin{itemize}
+	\item Permitir en modo gr\'afico dise\~nar el modelo de Braitenberg mediante la interconexi\'on de sensores con actuadores. 
+	      Cada una de estas conexiones debe implementar funciones matem\'aticas parametrizables. 
+	      De esta forma se define un \textit{grafo de ejecuci\'on} que representa el comportamiento a realizar, donde los nodos son sensores, 
+	      actuadores o funciones matem\'aticas. En la Figura \ref{Fig:braitenberg} se muestra esta idea.
+ 	      \begin{figure}[!htb]
+ 		%\centering
+		%\includegraphics[scale=0.7]{images/braitenberg_3.eps}
+ 		\caption{Un ejemplo de grafo de ejecuci\'on}
+ 		\label{Fig:braitenberg}
+ 	      \end{figure}
+	\item Permitir en modo gr\'afico dise\~nar una arquitectura de subsumisi\'on para coordinar los distintos comportamientos.
+	\item Realizar chequeos para validar los comportamientos dise\~nados y su coordinaci\'on. 
+	\item Guardar en un archivo el comportamiento dise\~nado y la configuraci\'on de sensores y actuadores requerida en un robot para poder llevar adelante ese comportamiento. Este archivo ser\'a le\'ido y ejecutado por el Core.
+	\item Ejecutar la aplicaci\'on, indic\'andole al CORE cu\'ando iniciar y finalizar la ejecuci\'on del comportamiento. 
+	\item Guardar y cargar configuraciones de distintos robots (sensores y actuadores).
+	\item Realizar un replay de la experiencia, utilizando para ello un archivo generado por el Core durante la ejecuci\'on donde se almacena el estado de los sensores y actuadores en cada momento (archivo de LOGs).
+	      \begin{itemize}
+		\item Replay (Debug). Leer el \textit{LOG} para cuando se esté debuggeando e ir mostrando en la pantalla el estado de la máquina de estados, encendiendo con colores las cosas que se van activando para saber qué es lo que pasó...
+		\item WebCam. De alguna forma, cuando el \textit{RAL} es un robot real, se debería poder seleccionar que una WebCam grabe lo que sucede. Así sería un ``debugging'' para un robot real. Esto respetaría la filosofía de que no es posible debuggear como estamos acostumbrados, las cosas en un robot no funcionan así. Entonces, lo grabo y lo reproduzco en camara lenta...
+	      \end{itemize}
+\end{itemize}
+
+
+FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\
+
+\section{Implementaci\'on}
+The GUI is implemented in Java, since it is a good language for graphical in-
+terfaces and its portable to several operating systems, only requiring the installa-
+tion of the JVM (Java Virtul Machine). The behaviour-file is an XML(Extensible
+Markup Language) file, making it very simple to add new robots, sensor types,
+functions and other features we might add to ERBPI.
+
+El m\'odulo GUI est\'a implementado en \texttt{Java}. Elegimos este lenguaje por la capacidad de portabilidad y la no necesidad de recompilar para distintos Sistemas Operativos. El \'unico requerimiento en la PC para ejecutar la GUI es tener instalado el JVM (Java Virtul Machine).
+
+Para desarrollar la interfaz gráfica, usamos la \textit{Swing API} (JFC/Swing). Ver \url{http://java.sun.com/docs/books/tutorial/uiswing/index.html} y \url{http://en.wikipedia.org/wiki/Swing_(Java)}
+
+Está organizado en tres paquetes:
+\begin{itemize}
+\item model: aca esta toda la parte "funcional". Por ejemplo, la clase Program tiene el programa con sus cajas y conexiones y la clase Robot tiene la descripción de cada robot.
+\item gui: todo lo que tiene que ver con la interacción con el usuario (paneles, cajas, dibujos, intereacción con el mouse, etc).
+\item model.persist: carga y graba de archivos xml.
+\item utils: métodos que facilitan algunas tareas.
+\item thirdparty: librerías que bajé programadas por otras personas.
+\end{itemize}
+
+La conexión entre el modelo y la gui se da por el método \textit{publish-suscribe}: hay definidas interfaces de \textit{listener}, y las clases pueden suscribirse a diferentes acciones. Por ejemplo, la clase \textit{JConnectionsPanel}, que dibuja las conexiones, se suscribe al programa para que le avise cuando se genera una nueva conexión. También, por ejemplo, el panel con el esquema del robot se suscribe a la clase Robot para que le avise cuando algun sensor entra en ``foco'' y lo pinta.
+
+La parte de gui es la más enquilombada, pero no pude hacerlo más fácil.
+
+Hay un archivo xml que define cada robot, y uno con configuración general (\textit{config.xml}). Desde ahí se puede cambiar las cajas que aparecen en las herramientas, los dibujos, etc. Los dibujos están todos en la carpeta images.
+
+\begin{itemize}
+\item PONER LO DE LOS XMLs PARA CONFIGURAR !!!! (configGral y Robots!!)
+\item SON ESPECTACULARES!!! AGREGANDO Y TOCANDO AHÍ, SE PARAMETRIZA TODO!!! LAS CONFIGs
+\item GRALES DE LA GUI Y TOCANDO EL DE LOS ROBOTS SE CONFIGURAN LOS ROBOTS, ANDO UNA MASA!!!
+\item DOCUMENTAR CADA PARAMETRO, MOSTRAR TAMBIÉN LOS PNGs (SENSORES Y ROBOTS)...
+\end{itemize}
+
+
+\section{Ejecuci\'on}
+\subsection{Linux 32 bits}
+La GUI se ejecuta de la siguiente forma: \textit{java extension.ExtensionApp}.
+\subsubsection{Script}
+Para facilitar esta ejecuci\'on, se incluye un archivo script \textit{ERBPI/bin/gui/gui\_ejecutar.sh}.
+\subsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+\section{Compilaci\'on}
+\label{GUICompilacion}
+\subsection{Linux y Windows 32 bits}
+El código fuente de la GUI cuenta con los siguientes archivos:
+\begin{itemize}
+	\item ./gui:
+		\begin{itemize}
+			\item .classpath
+			\item .project
+			\item gui\_ejecutar.sh
+			\item gui\_instalar.sh
+		\end{itemize}
+	\item ./gui/extension:
+		\begin{itemize}
+			\item config.xml
+			\item ExtensionApp.java
+		\end{itemize}
+	\item ./gui/extension/gui:
+		\begin{itemize}
+			\item BoxColumnLayout.java
+			\item ComponentDragger.java
+			\item JBox.java
+			\item JBoxPanel.java
+			\item JBoxTemplate.java
+			\item JConnectionsPanel.java
+			\item JInlineDialog.java
+			\item JParametrosCajaEnergia.java
+			\item JParametrosCaja.java
+			\item JProgramPanel.java
+			\item JRoboticaFrame.java
+			\item JRobotPanel.java
+			\item PopupMenuMouseAdapter.java
+		\end{itemize}
+	\item ./gui/extension/images:
+		\begin{itemize}
+			\item activar\_no.png
+			\item activar\_si.png
+			\item act\_rueda.png
+			\item conexion\_cola.png
+			\item conexion\_punta.png
+			\item f\_energia.png
+			\item f\_exitatoria.png
+			\item f\_inhibitoria.png
+			\item f\_parametrica.png
+			\item menu\_abrir.png
+			\item menu\_ejecutar.png
+			\item menu\_guardar.png
+			\item menu\_nuevo.png
+			\item menu\_pausa.png
+			\item menu\_salir.png
+			\item seleccionar.png
+			\item sen\_contacto.png
+			\item sen\_linea.png
+			\item sen\_luz.png
+			\item sen\_proximidad.png
+			\item sen\_sonar.png
+			\item sen\_telemetro.png
+		\end{itemize}
+	\item ./gui/extension/model:
+		\begin{itemize}
+			\item ActuatorBox.java
+			\item ActuatorType.java
+			\item Box.java
+			\item BoxListener.java
+			\item ConnectionMaker.java
+			\item ConnectionMakerListener.java
+			\item Diagram.java
+			\item FunctionBox.java
+			\item FunctionTemplate.java
+			\item GlobalConfig.java
+			\item ImageMapFeature.java
+			\item ImageMap.java
+			\item Panel.java
+			\item Program.java
+			\item ProgramListener.java
+			\item Robot.java
+			\item RobotListener.java
+			\item SensorBox.java
+			\item SensorType.java
+		\end{itemize}
+	\item ./gui/extension/model/persist:
+		\begin{itemize}
+			\item GlobalConfigXml.java
+			\item ProgramXml.java
+			\item RobotXml.java
+		\end{itemize}
+	\item ./gui/extension/robots:
+		\begin{itemize}
+			\item exabot.xml
+			\item khepera.xml
+			\item robot\_exabot.png
+			\item robot\_khepera.png
+			\item robot\_yaks.png
+			\item yaks.xml
+		\end{itemize}
+	\item ./gui/extension/utils:
+		\begin{itemize}
+			\item FileUtils.java
+			\item IconBank.java
+			\item XmlUtils.java
+		\end{itemize}
+	\item ./gui/thirdparty/dragnghost:
+		\begin{itemize}
+			\item AbstractGhostDropManager.java
+			\item DragnGhostDemo.java
+			\item DragnGhostDemo.jnlp
+			\item GhostComponentAdapter.java
+			\item GhostDropAdapter.java
+			\item GhostDropEvent.java
+			\item GhostDropListener.java
+			\item GhostDropManagerDemo.java
+			\item GhostGlassPane.java
+			\item GhostMotionAdapter.java
+			\item GhostPictureAdapter.java
+			\item GlassPaneExtension.java
+			\item HeaderPanel.java
+			\item UIHelper.java
+		\end{itemize}
+\end{itemize}
+
+Para la compilaci\'on y debugging de este c\'odigo, se cuenta con un  \textit{Eclipse Proyect} cuyas definiciones se ecuentran en los archivos \textit{gui/.project} y \textit{gui/.classpath}.
+
+
+\section{Instalaci\'on}
+\subsection{Linux 32 bits}
+Para la instalaci\'on se ejecuta el script \textit{ERBPI/src/gui/gui\_instalar.sh}. Es necesario que la GUI se encuentre compilada con anterioridad. Para compilaci\'on de GUI ver punto \ref{GUICompilacion}.
+\subsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+\section{Compiladores}
+\subsection{Java Linux 32 bits}
+
+Utilizamos el siguiente paquete: OpenJDK 6 (openjdk-6-jdk).
+
+Con el paquete Open Source Java Development Kit obtenemos compilador e intérprete para Java Standard Edition.
+
+\subsection{Java Windows 32 bits}
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+

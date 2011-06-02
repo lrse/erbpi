@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ejecucion>
+<sensores>
+<sensor id="telemetro.315"/>
+<sensor id="telemetro.0"/>
+<sensor id="telemetro.45"/>
+<sensor id="telemetro.90"/>
+<sensor id="telemetro.180"/>
+<sensor id="telemetro.270"/>
+</sensores>
+<actuadores>
+<actuador id="motor.izquierda">
+<entradas>
+<entrada id="caja.12341"/>
+<entrada id="caja.06558"/>
+</entradas>
+</actuador>
+<actuador id="motor.derecha">
+<entradas>
+<entrada id="caja.15221"/>
+<entrada id="caja.99902"/>
+</entradas>
+</actuador>
+</actuadores>
+<cajas>
+<caja id="caja.12341">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="5" y="0"/>
+<punto x="78" y="15"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.270"/>
+</entradas>
+</caja>
+<caja id="caja.15221">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="22" y="15"/>
+<punto x="94" y="0"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.270"/>
+</entradas>
+</caja>
+<caja id="caja.06558">
+<esquema id="energia"/>
+<puntos>
+<punto x="0" y="20"/>
+<punto x="100" y="20"/>
+</puntos>
+</caja>
+<caja id="caja.99902">
+<esquema id="energia"/>
+<puntos>
+<punto x="0" y="20"/>
+<punto x="100" y="20"/>
+</puntos>
+</caja>
+</cajas>
+<robot id="exabot"/>
+</ejecucion>

@@ -1,0 +1,205 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SOFTWARE ADICIONAL
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Xerces XML Parser}
+FALTA PONER UNA INTRO!!!
+
+\subsection{Compilaci\'on}
+\subsubsection{Linux 32 bits - Librerías Estáticas}
+El código fuente del Core se compila incluyendo las librerías estáticas del Xerces para
+que estén incluidas en el ejecutable del Core y no sea necesario transportalas.
+Para eso, es necesario obtener el código fuente de las librerías del Xerces y recompilarlas de forma estática
+antes de poder compilar el Core.
+
+Para recompilar las librerías del Xerces de forma estática, los pasos son los siguientes:
+\begin{enumerate}
+ \item Bajar el archivo \texttt{xerces-c-3.0.1.zip} del código fuente del Xerces de \url{http://apache.xmundo.com.ar/xerces/c/3/sources/xerces-c-3.0.1.zip}
+ \item Descomprimir el archivo \texttt{xerces-c-3.0.1.zip} en alguna carpeta, por ejemplo, en \textit{/home/.../workspace/xerces-c-3.0.1-static/}
+ \item En la carpeta \textit{/home/.../workspace/xerces-c-3.0.1-static/xerces-c-3.0.1/} ejecutar ``\textit{./configure --disable-shared --disable-network}''
+		para que no compile las librerías dinámicas (\textit{.so}), y sólo compile las estáticas (\textit{.a}). La opción \textit{--disable-network} podría obviarse.
+ \item En la carpeta \textit{/home/.../workspace/xerces-c-3.0.1-static/xerces-c-3.0.1/} ejecutar ``\textit{make}'' para compilar.
+ \item En la carpeta \textit{/home/.../workspace/xerces-c-3.0.1-static/xerces-c-3.0.1/} ejecutar ``\textit{sudo make install}'' para instalar
+		las librerías estáticas en el sistema. Por defecto, las mismas se instalan en \textit{/usr/local/bin}, \textit{/usr/local/lib}, \textit{/usr/local/include}.
+\end{enumerate}
+
+Por último, para compilar cualquier código fuente que incluya las librerías, es necesario indicarle al \textit{linker} que
+incluya las librerías estáticas \textit{/usr/local/lib/libxerces-c.a} y \textit{libpthread.a}. Si esto último se hace
+desde alguna IDE de programación en \texttt{C++} simplemente se agrega en las opciones del programa, \textit{Sección Linker}, la
+inclusión de las librerías mencionadas. Si la compilación se realiza manualmente, los parámetros son los siguientes:
+\texttt{g++ -static -o nombreEjecutable Codigo.cpp -lxerces-c -lpthread}
+
+\subsubsection{Windows 32 bits - Librerías Estáticas}
+Para recompilar las librerías del Xerces de forma estática en \textit{Windows}, los pasos son los siguientes:
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!
+
+
+\subsection{Compiladores}
+\subsubsection{C++ Linux 32 bits}
+Utilizamos los siguientes compiladores para C++:
+\begin{itemize}
+ \item gcc: GCC (GNU Compiler Collection) C compiler.
+ \item g++: GCC (GNU Compiler Collection) C++ compiler.
+\end{itemize}
+Ver \url{http://gcc.gnu.org/}
+
+\subsubsection{C++ Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+FALTA COMPLETAR ESTO!!! Para que los comandos como \textit{gcc}, \textit{g++}, \textit{make} (\textit{mingw32-make}) anden en la consola de windows, es necesario modificar la variable de sistema \texttt{PATH} de Windows y agregar la ruta \url{C:/MinGW/bin}.
+
+FALTA COMPLETAR ESTO!!! Ojo con esto, porque aunque simula el GNU-GCC, no necesariamente todas las librería incluidas andan, porque algunas son especificas de
+Linux, por ejemplo ``sys/socket.h'', que me parece que en Windows hay que cambiarla por ``winsock.h'0'.
+HAY QUE VER BIEN ESTO y ANOTAR !!!!
+
+FALTA COMPLETAR ESTO!!! Nota: cualquier cosa, probar también Cygwin 5.1.6 (GNU + Cygnus + Windows) que contiene de \url{http://www.cygwin.com/}. ojo con esto porque me parece que sí o sí necesita ``cygwin1.dll'' en la PC para que después pueda andar... Probar!!!
+
+
+
+\section{YAKS}
+YAKS es un simulador de cóìdigo abierto, escrito en \texttt{C++}, de robots tipo \texttt{Khepera}, desarrollado por Johan Carlsson.
+Su nombre proviene del acrónimo \textit{Yet Another Khepera Simulator}. Posee las siguientes características:
+\begin{itemize}
+ \item Permite incluir en el entorno obstáculos circulares, paredes, luces y definir zonas.
+ \item Permite definir y manipular un número ilimitado de robots.
+ \item Permite separar el programa de control del simulador, ya que los robots pueden ser manejados a través de una conexión \texttt{TCP/IP}.
+ \item Soporta una gran variedad de sensores: proximidad, luminosidad, energía, encoders de las ruedas, compás y sensor de tierra (para detección de zonas).
+\end{itemize}
+
+PONER UNA IMAGEN DEL YAKS!!!!!
+
+
+\subsection{Ejecución}
+\subsubsection{Linux 32 bits}
+El YAKS debe ejecutarse manualmente cada vez que se quiera utilizar com RAL desde la GUI. El YAKS se ejecuta de la siguiente forma: \textit{gsim yaks-params.opt}. Debido a que es necesario setear par\'ametros, tanto para el YAKS en \textit{yaks-params.opt} como en el sistema operativo para la librer\'ia GTK, se proporciona un script que tiene en cuenta estos detalles.
+\paragraph{Script}
+Para facilitar esta ejecuci\'on, se incluye un archivo script \textit{ERBPI/bin/yaks/yaks\_ejecutar.sh}.
+
+
+Una vez compilado el \textit{YAKS}, podemos proceder a su ejecución. Antes se deberán realizar las siguientes tareas:
+\begin{itemize}
+ \item Copiar el ejecutable \textit{gsim} del \textit{YAKS} (que en la compilación fue creado en \textit{src/bin}) en la carpeta raíz de los fuentes \textit{src}.
+ \item Crear el archivo \texttt{yaks-params.opt} de parámetros para la ejecución del \textit{YAKS} en la carpeta raíz del \textit{YAKS}.
+		Puede verse un ejemplo de este archivo en \url{http://www.exa.unicen.edu.ar/catedras/irobotic/yaks-params.htm}. \\
+		Es necesario tener en cuenta que la mayoría de estos ejemplos se encuentran hechos para Windows, por lo tanto es necesario editar todas las rutas
+		de archivos y carpetas de ``$.\backslash$'' a ``$./$'' para que funcione correctamente en Linux. Por ejemplo, en el archivo de parámetros de ejemplo, 
+		es necesario cambiar ``\texttt{WORLD\_PATH .$\backslash$worlds}'' por ``\texttt{WORLD\_PATH ./worlds}''.
+ \item Agregar en el archivo \texttt{yaks-params.opt} de parámetros la línea \texttt{CAMERA\_PATH ./cam} para que el \textit{YAKS} sepa dónde buscar estos archivos.
+ \item Ejecución: ejecutar el simulador \textit{YAKS} como \texttt{./gsim yaks-params.opt} en la carpeta raíz del \textit{YAKS}.
+\end{itemize}
+
+\paragraph{Errores en la Ejecución}
+Es muy posible que al intentar ejecutar, la librería \textit{GTK} arroje errores de ejecución como \texttt{Gdk-ERROR}.
+
+En Linux, esto se debe a que la librería \textit{GTK} necesita que los efectos visuales de pantalla del sistema operativo estén deshabilitados.
+
+En Windows, HAY PROBLEMAS ???  FALTA COMPLETAR ESTO!!!
+
+\textbf{Solución:} Para deshabilitar los efectos visuales, se ejecuta en la consola el comando: \\ \texttt{export XLIB\_SKIP\_ARGB\_VISUALS=1}
+
+\subsubsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+\subsection{Compilación}
+
+COMPLETAR ESTO CON \url{http://profesores.elo.utfsm.cl/~tarredondo/memorias/2005-memoria-fquiros.pdf} QUE EXPLICA MUUY BIEN TODO EL YAKS...
+
+
+\label{YAKSCompilacion}
+El código fuente del YAKS se encuentra en \url{http://www.exa.unicen.edu.ar/catedras/irobotic/YAKS.htm} En particular, bajamos dos archivos:
+\begin{itemize}
+ \item \url{http://www.exa.unicen.edu.ar/catedras/irobotic/SOFTWARE/YAKS-src-update-2.zip}: Código Fuente Completo para Linux.
+ \item \url{http://www.exa.unicen.edu.ar/catedras/irobotic/SOFTWARE/yaks-linux-patch.tar.gz}: Patch de YAKS para que no tire errores al compilarlo en Unix.
+\end{itemize}
+
+Luego se descomprime el contenido de los dos archivos fuentes en alguna carpeta, por ejemplo \texttt{yaks/src}.
+
+\subsection{Linux 32 bits}
+
+\begin{itemize}
+ \item En la carpeta donde se encuentra el código fuente del \textit{YAKS}, creamos dos carpetas \textit{bin} y \textit{lib},
+		que son necesarias para crear los archivos resultantes de la compilación.
+ \item Instalar la librería \textit{GTK}, que es una librería estandard de \texttt{C++} para el manejo de ventanas gráficas.
+	  Se puede instalar de la siguiente forma: \texttt{sudo apt-get install libgtk1.2-dev}
+ \item Compilar: en la carpeta donde se encuentra el código fuente del \textit{YAKS}, ejecutar \texttt{make}
+\end{itemize}
+
+\subsubsection{Errores en la Compilación}
+Es muy posible que al intentar compilar, el compilador arroje errores relacionados con \texttt{iostream.h}, \texttt{cout} y \texttt{endl} en los archivos fuentes
+\texttt{ann.cpp}, \texttt{ann.h}, \texttt{ga.cpp} y \texttt{ga.h}.
+
+En Linux, este problema se origina al enlazar con la librería \textit{GTK}, ya que no es posible utilizar \texttt{std::cout}
+porque no ``entiende'' a qué pantalla o consola tiene que mandar el \textit{stream}, puesto que la librería \textit{GTK} maneja varias pantallas.
+
+\textbf{Solución:} Es necesario editar los archivos fuentes \texttt{ann.h}, \texttt{ann.cpp} y \texttt{ga.h}, sacando de los mismos las líneas
+\texttt{\#include<iostream.h>} y \texttt{std::cout} (con sus respectivos operadores $<<$). Si se deseara mantener la impresión por pantalla, se deberían cambiar los
+\texttt{std::cout} por la función \texttt{printf} de \texttt{C}.
+
+\subsubsection{Error de Librer\'ia GTK}
+
+Al parecer, la librería \textit{libgtk1.2-dev} est\'a desactualizada (muy vieja) y no est\'a m\'as disponible en los repositorios de Ubuntu.
+La opción que queda es instalar la \textit{libgtk2.0-dev}. Pero con esta nueva versión, el YAKS da errores de compilaci\'on.
+
+\textbf{Soluci\'on 1:} Agregar en la lista de fuentes del \textit{apt} el lugar desde donde bajar la \textit{libgtk1.2-dev}, así:
+\begin{verbatim}
+        sudo gedit /etc/apt/sources.list
+\end{verbatim}
+agregar al final la línea ``\textit{deb http://cz.archive.ubuntu.com/ubuntu hardy main universe}'' y ejecutar:
+\begin{verbatim}
+        sudo apt-get update
+        sudo apt-get install libgtk1.2-dev
+\end{verbatim}
+ahora deber\'ia instalarse autom\'aticamente.
+
+Si no anda, es necesario bajar y compilar a mano la librería desde: \url{http://packages.ubuntu.com/hardy/i386/libgtk1.2-dev/download}.
+
+\textbf{Soluci\'on 2:} Corregir los fuentes del YAKS para que compile con la \textit{libgtk2.0-dev}. Parece complicado... ESTO EST\'A PENDIENTE !!!!
+
+Y HAY QUE HCERLO PORQUE EN LOS LABOS NO DAN MAS SOPORTE PARA \textit{libgtk1.2-dev}, S\'OLO VAN A TENER LA \textit{libgtk2.0-dev} !!!! HABLAR COM Maximiliano Geier !!!
+
+\subsubsection{Script}
+Para facilitar la compilacion, se incluye un archivo script ``yaks\_compilar.sh''. El mismo puede ejecutar simplemente con \texttt{./yaks\_compilar.sh}.
+
+
+\subsection{Windows 32 bits}
+
+FALTA COMPLETAR ESTO!!! Nota: cualquier cosa, probar también Cygwin 5.1.6 (GNU + Cygnus + Windows) que contiene de \url{http://www.cygwin.com/}. ojo con esto porque me parece que sí o sí necesita ``cygwin1.dll'' en la PC para que después pueda andar... Probar!!!
+
+
+
+\subsection{YAKS para Windows 32 bits}
+
+FALTA COMPLETAR ESTO!!!\\
+FALTA COMPLETAR ESTO!!!
+
+\subsection{Instalaci\'on}
+\subsubsection{Linux 32 bits}
+Para la instalaci\'on se ejecuta el script \textit{ERBPI/src/yaks/yaks\_instalar.sh}. Es necesario que el YAKS se encuentre compilado con anterioridad. Para compilaci\'on de YAKS ver punto \ref{YAKSCompilacion}.
+\subsubsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+
+
+\subsection{Compiladores}
+\subsubsection{C++ Linux 32 bits}
+Utilizamos los siguientes compiladores para C++:
+\begin{itemize}
+ \item gcc: GCC (GNU Compiler Collection) C compiler.
+ \item g++: GCC (GNU Compiler Collection) C++ compiler.
+\end{itemize}
+Ver \url{http://gcc.gnu.org/}
+
+\subsubsection{C++ Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+FALTA COMPLETAR ESTO!!! Para que los comandos como \textit{gcc}, \textit{g++}, \textit{make} (\textit{mingw32-make}) anden en la consola de windows, es necesario modificar la variable de sistema \texttt{PATH} de Windows y agregar la ruta \url{C:/MinGW/bin}.
+
+FALTA COMPLETAR ESTO!!! Ojo con esto, porque aunque simula el GNU-GCC, no necesariamente todas las librería incluidas andan, porque algunas son especificas de
+Linux, por ejemplo ``sys/socket.h'', que me parece que en Windows hay que cambiarla por ``winsock.h'0'.
+HAY QUE VER BIEN ESTO y ANOTAR !!!!
+
+FALTA COMPLETAR ESTO!!! Nota: cualquier cosa, probar también Cygwin 5.1.6 (GNU + Cygnus + Windows) que contiene de \url{http://www.cygwin.com/}. ojo con esto porque me parece que sí o sí necesita ``cygwin1.dll'' en la PC para que después pueda andar... Probar!!!
+
+
+\section{SimuladorExaBot}

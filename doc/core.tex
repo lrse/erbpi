@@ -1,0 +1,386 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Introducci\'on}
+
+The CORE module is in charge of executing the behaviour. It reads the XML
+behaviour file and establishes a connection with the appropriate RAL. At regular
+intervals, the core receives from the RAL the normalized values of the sensors,
+executes the behaviour, and gives to the RAL the normalized values to set the
+actuators. The CORE stops when the GUI signals the user has stopped the
+execution.
+To be able to execute the behaviour, the CORE has to transform the execu-
+tion graph defined by the GUI in the behaviour-file to a corresponding ordered
+execution list, to guarantee that all the inputs for a function are ready when its
+turn to execute is up. For this, we used a topological sorting [13] of the execution graph. 
+
+The CORE also performs different checkups to assure that the behaviour
+can be executed in the selected robot, for example that the graph is not cyclic
+(i.e, cannot be ordered) or that the robot has enough sensors and actuators
+to execute the behaviour. It also defines the communication frequency with the
+RAL depending on the robot, since each robot has a different working frequency.
+Finally, the CORE makes a log-file where all the values at a certain time are
+registered, including each sensor value, the output value of each function and
+the value of each actuator. This log file is communicated to the GUI. We plan
+to use it to implement a debug function in the future.
+
+El Core debería, a grandes rasgos, hacer las siguientes cosas:
+
+\begin{enumerate}
+  \item \textbf{Parsear el XML:} Levantar el archivo XML, chequear que no haya elementos repetidos por \textit{id},
+		chequear que no existan ciclos en el grafo formado por los sensores + cajas + actuadores, chequear
+		que los predecesores de cada elemento sean elementos existentes de modo que el grafo sea consistente,
+		realizar un \textit{topological sorting}\footnote{\textit{Topological Sort, Introduction to Algorithms}, Cormen, Leiserson, Rivest, and Stein.}
+		del grafo, y por último, devolver la \textit{tabla de orden de ejecución secuencial}
+		con la cual se realizará toda la ejecución posterior.
+  \item \textbf{Chequear que los sensores y actuadores del Core y el RAL se correpondan entre sí:}
+		Obtener la lista de sensores y actuadores del \textit{RAL} y realizar el chequeo de que el \textit{RAL} contenga
+		los sensores y actuadores que tiene el \textit{Core}.
+  \item \textbf{Definir la frecuencia de trabajo:} Obtener la \textit{frecuencia de trabajo} del \textit{RAL}
+		para luego ejecutar como máximo a esta \textit{frecuencia}.
+  \item \textbf{Ejecutar:} Obtener el nuevo estado (valor) de los sensores del \textit{RAL} y actualizar sus
+		valores en la\textit{ tabla de orden de ejecución}, para cada elemento de la \textit{tabla de orden de ejecución}
+		actualizar sus valores en función de sus predecesores, y por último, enviarle al \textit{RAL} el nuevo
+		valor para los actuadores y actualizar el archivo de \textit{LOG} con el valor de todos los elementos de
+		la tabla de orden de ejecución.
+\end{enumerate}
+
+\textbf{Observaciones:}
+\begin{itemize}
+  \item En el parseo, no se chequea que una \textit{Caja} no tenga como entrada a un \textit{Actuador}.
+  \item En el \textit{LOG}, no se guarda el estado de sensores del \textit{RAL}, se desprenden de la \textit{tabla de orden de ejecución}.
+  \item En el chequeo entre sensores y actuadores del \textit{Core} y el \textit{RAL},
+		no se chequea que estén en el mismo orden, sólo que los sensores y actuadores del \textit{Core} sean un subconjunto de
+		los sensores y actuadores del \textit{RAL}
+\end{itemize}
+
+
+\section{Implementaci\'on}
+
+Lo hacemos en \texttt{C++} para que sea lo más rápido y potente posible.
+
+Para la funcionalidad de parseo del XML utilizamos el \textit{Xerces XML Parser 3.0.1}\footnote{\textit{Xerces XML Parser 3.0.1}, \url{http://xerces.apache.org/xerces-c/}}
+para \texttt{C++}. Recompilamos las librerías del Xerces de forma estática para
+que estén incluidas en el ejecutable del \textit{Core} y no sea necesario transportalas.
+
+El parseo del XML es bastante estricto y flexible al mismo tiempo. Sólo se obtienen del XML los datos necesarios
+para la ejecución del Core, cualquier otro atributo o especificación son ignorados. De esta forma, el XML podría
+contener información adicional, que el Core ignorará, pero que serviría para otros módulos como la \textit{GUI}.
+Para más detalle sobre la estructura que el Core obtiene del XML,
+ver ``XML - Datos para la Ejecución del Core'' en el punto \ref{subsub:EjecXML} en la página \pageref{subsub:EjecXML}.
+
+\subsection{Estructuras}
+Para realizar el manejo en el \textit{Core} de los sensores, cajas y actuadores,
+se utilizarán los siguientes objetos (\texttt{C++ class}):
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+    clase Elemento (es una clase abstracta)
+        atributos:
+            string _id
+            int _valor        // es el valor de salida
+            int _entrada      // es la sumatoria de todas sus entradas
+            int _tipo         // tipo: sensor, caja o actuador
+
+        métodos:
+            string getId()    // devuelve _id
+            int setValor(int) // setea _valor y lo devuelve
+            int getValor()    // devuelve _valor
+            int getEntrada()  // devuelve _entrada
+            int ejecutar()    // es virtual, llama a la de la clase hija...
+
+    clase Sensor (hereda de clase Elemento)
+        atributos:
+            // ninguno
+        métodos:
+            int ejecutar()    // devuelve valor de Elmemento::_valor
+
+    clase Caja (hereda de clase Elemento)
+        atributos:
+            vector<Elemento*> _entradas;
+            vector<Punto> _puntos;
+        métodos:
+            int ejecutar()    // para cada "i" en _entradas, acumula *(_entradas[i]).getValor(),
+                              // realiza resultado = función(acumulador), y luego, setea
+                              // el "resultado" en Elemento::_valor, setea el "acumulador"
+                              // en Elemento::_entrada y devuelve Elemento::_valor
+
+    clase Actuador (hereda de clase Elemento)
+        atributos:
+            vector<Elemento*> _entradas;
+        métodos:
+            int ejecutar()    // para cada "i" en _entradas, acumula *(_entradas[i]).getValor()
+                              // luego setea el acumulador en Elemento::_valor
+                              // y devuelve Elmemento::_valor
+
+    struct Punto
+      int x;
+      int y;
+
+    string es la clase de C++ STL.
+    vector es la clase de C++ STL.
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+De esta forma, la \textit{tabla de orden de ejecución secuencial} será un vector de la clase \texttt{Elemento}:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+    vector<Elemento> TablaEjecucion
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Así, la ejecución sólo consistirá en recorrer la tabla secuencialmente y, por cada elemento,
+realizar el \texttt{ejecutar()} que se encargará de obtener los valores requeridos en $\mathcal{O}(1)$,
+ya que cada elemento contiene \textit{punteros} a los elementos que le son predecesores: \texttt{TablaEjecucion[i].ejecutar()}
+
+\textbf{Observaciones:}
+\begin{itemize}
+\item El método \texttt{Caja::ejecutar()}, asume que los 2 puntos están ordenados,
+	  es decir, \texttt{Caja.\_puntos[0].x} $\leqslant$ \texttt{Caja.\_puntos[1].x}.
+	  Por lo tanto, calcular el valor de la función se reduce a 3 casos:
+	  \begin{itemize}
+	  \item $entrada \leqslant x_0 \quad \Longrightarrow \quad resultado = y_0$
+	  \item $entrada \geqslant x_1 \quad \Longrightarrow \quad resultado = y_1$ 
+	  \item $x_0 < entrada < x_1 \quad \Longrightarrow \quad resultado = \displaystyle \frac{y_0-y_1}{x_0-x_1}\times(entrada - x_0) + y_0$ (ecuacion de la recta)
+	  \end{itemize}
+
+\item Por como están diseñadas las clases, y posteriormente los algoritmos, obliga a que los atributos
+	  \texttt{\_entradas} y \texttt{\_puntos} sean públicos. De lo contrario, habría que especificarlos como privados
+	  y especificar sus métodos correspondientes. Que sean atributos públicos y no tengan sus métodos correspondientes, hace que cualquier función pueda
+	  modificar a su antojo cualquier atributo de la clase, y que, en los algoritmos como el Parser, para crear
+	  los elementos haya que agregar las \texttt{\&(Elemento)} en \texttt{\_entradas} y los puntos en \texttt{\_puntos}
+	  manualmente...
+\end{itemize}
+
+
+\subsection{Pseudoc\'odigos}
+\subsubsection{\textit{Core}}
+\begin{algorithmic}
+\STATE \underline{\textit{Preprocesamiento:}}
+	\STATE vector$<$Elemento$>$ TablaEjecucion $\longleftarrow$ Parsear(ArchivoXML, TablaEjecucion)
+	\IF {(ids sensores en TablaEjecucion) $\nsubseteq$ (ids RAL.getListaSensores())}
+        \STATE Error: los sensores no se corresponden y Terminar
+	\ENDIF
+	\IF {(ids actuadores en TablaEjecucion) $\nsubseteq$ (ids RAL.getListaActuadores())}
+        \STATE Error: los actuadores no se corresponden y Terminar
+	\ENDIF
+	\STATE frecuencia $\longleftarrow$ RAL.getFrecuenciaTrabajo()
+\STATE \underline{\textit{Ejecución:}}
+	\WHILE{frecuencia lo permita}
+		\STATE vector$<<$id;valor$>>$ sensoresRAL $\longleftarrow$ RAL.getEstadoSensores()
+		\STATE actualizar el nuevo valor de cada sensor en TablaEjecucion con sensoresRAL
+		\FOR{cada elemento $i$ de TablaEjecucion}
+		  \STATE TablaEjecucion[i].ejecutar()
+		\ENDFOR
+		\STATE vector$<<$id;valor$>>$ actuadoresRAL $\longleftarrow$ generado con los actuadores de la TablaEjecucion
+		\STATE RAL.setEstadoActuadores(actuadoresRAL)
+		\STATE LOG $\longleftarrow$ actualizar con TablaEjecucion
+	\ENDWHILE
+\end{algorithmic}
+
+\subsubsection{\textit{Parsear(in ArchivoXML, inout TablaEjecucion)}}
+\begin{algorithmic}
+\STATE vector$<<$tipo:char; id:string; entradas:vector$<$string$>$; puntos:vector$<<$int;int$>>>>$ vectorAuxiliar $\longleftarrow$ generado con cada elemento (sensor, caja o actuador) parseado de ArchivoXML
+\FOR{cada elemento $i$ en vectorAuxiliar}
+	\IF {$\exists j, j \neq i$ $/$ vectorAuxiliar[j].id $=$ vectorAuxiliar[i].id}
+        \STATE Error: hay IDs repetidos y Terminar
+	\ENDIF
+\ENDFOR
+\FOR{cada elemento $i$ en vectorAuxiliar}
+  \FOR{cada elemento $j$ en vectorAuxiliar[i].entradas}
+	\IF {$\nexists k, 0 \leqslant k < \mathit{long(vectorAuxiliar)}$ $/$ vectorAuxiliar[k].id $=$ vectorAuxiliar[i].entradas[j]}
+        \STATE Error: hay elementos que tienen ``entradas'' que no existen y Terminar
+	\ENDIF
+  \ENDFOR
+\ENDFOR
+\IF {HayCiclos(vectorAuxiliar)}
+	\STATE Error: el grafo contiene ciclos y Terminar
+\ENDIF
+\STATE vectorAuxiliar $\longleftarrow$ TopologicalSorting(vectorAuxiliar)
+\STATE vector$<$Elemento$>$ TablaEjecucion $\longleftarrow$ vacío
+\FOR{cada elemento $i$ en vectorAuxiliar}
+  \IF {vectorAuxiliar[i].tipo $=$ Sensor}
+	\STATE nuevo sensor(vectorAuxiliar[i].id)
+	\STATE sensor.setValor(0)
+	\STATE agrego el sensor en TablaEjecucion al final
+  \ENDIF
+  \IF {vectorAuxiliar[i].tipo $=$ Caja}
+	\STATE nuevo caja(vectorAuxiliar[i].id)
+	\FOR{cada elemento $j$ en vectorAuxiliar[i].puntos}
+	  \STATE agrego vectorAuxiliar[i].puntos[j] en caja.\_puntos al final
+	\ENDFOR
+	\FOR{cada elemento $j$ en vectorAuxiliar[i].entradas}
+	  \FOR{cada elemento $k$ en TablaEjecucion $(0 \leqslant k \leqslant i)$}
+		\IF {vectorAuxiliar[i].entradas[j] $=$ TablaEjecucion[k].getId()}
+		  \STATE agrego \&(TablaEjecucion[k]) en caja.\_entradas al final
+		\ENDIF
+	  \ENDFOR
+	\ENDFOR
+	\STATE agrego la caja en TablaEjecucion al final
+  \ENDIF
+  \IF {vectorAuxiliar[i].tipo $=$ Actuador}
+	\STATE nuevo actuador(vectorAuxiliar[i].id)
+	\FOR{cada elemento $j$ en vectorAuxiliar[i].entradas}
+	  \FOR{cada elemento $k$ en TablaEjecucion $(0 \leqslant k \leqslant i)$}
+		\IF {vectorAuxiliar[i].entradas[j] $=$ TablaEjecucion[k].getId()}
+		  \STATE agrego \&(TablaEjecucion[k]) en actuador.\_entradas al final
+		\ENDIF
+	  \ENDFOR
+	\ENDFOR
+	\STATE agrego el actuador en TablaEjecucion al final
+  \ENDIF
+\ENDFOR
+\RETURN TablaEjecucion
+\end{algorithmic}
+
+\textbf{Observaciones:} Por el momento, al generar el \texttt{vectorAuxiliar} se 
+chequea que la \textit{caja} tenga definidos exactamente 2 puntos, de lo contrario, termina con \textit{ERROR}.
+
+
+
+\section{Ejecuci\'on}
+
+\subsection{Linux 32 bits}
+No es necesario ejecutar el Core manualmente, de esto se encarga la GUI.
+\subsubsection{Script}
+De todas formas, si se quisera probar manualmente su ejecuci\'on, puede utilizarse el script \textit{ERBPI/src/core/core\_ejecutar.sh}, edit\'andolo y  modific\'andolo con los par\'ametros requeridos.
+
+Para ejecutar el \textit{Core} se deberán especificar 3 parámetros:
+\begin{enumerate}
+ \item \textbf{ArchivoXML:} El archivo \textit{XML} a parsear.
+ \item \textbf{ArchivoLOG:} El archivo de \textit{LOG} donde se guardará el \textit{log} de la ejecución. 
+ \item \textbf{RAL\_ID:} la especificación del \textit{RAL} que se utilizará.  
+\end{enumerate}
+Por ejemplo: \texttt{./core ArchivoXML.xml ArchivoLOG.log RAL\_ID}
+
+donde \texttt{RAL\_ID} podría ser: \textit{exabot}, \textit{khepera}, \textit{yaks}, etc.
+
+\subsubsection{Ejecución del Core junto con el RAL}
+Como ya dijimos, el \textit{Core} se encuentra compilado con una \textit{librería dinámica} del \textit{RAL}.
+Por lo tanto, es necesario indicarle al \textit{sistema operativo} dónde buscar la librería dinámica \texttt{libRAL.so}
+cuando el \textit{Core} llame a funciones de la misma. De lo contrario, la ejecución falla.
+
+La forma de hacer esto en \textit{Linux} es, en la misma consola donde se ejecutará el \textit{Core}, ejecutar las siguientes dos líneas para agregar al sistema operativo un \textit{path} para la búsqueda de librerías:
+\begin{verbatim}
+         # LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<path>
+         # export LD_LIBRARY_PATH
+\end{verbatim}
+donde \textit{$<$path$>$} debe ser la ruta (absoluta) donde se encuentra la librería dinámica \textit{libRAL.so},
+por ejemplo:
+\begin{verbatim}
+         # LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/usuario/desktop/soft_src/ral/src
+\end{verbatim}
+
+También podría modificarse el archivo de configuración del usuario \texttt{.profile} para agregar esta ruta de forma permanente.
+Para más información sobre el manejo de librerías dinámicas en \textit{Linux}, puede consultarse \url{http://www.chuidiang.com/clinux/herramientas/librerias.php}
+
+\textbf{IMPORTANTE !!:} Por ahora las librerías del RAL se llaman todas iguales libRAL.so y vamos pisando
+con la que corresponde en la carpeta de ejecución del Core... Luego, hay que hacer un ``if'' en el Core,
+para que cargue en tiempo de ejecución la librería que corresponda (\textit{libRAL-yaks.so} o \textit{libRAL-exabot.so}).
+También va a ser necesario tocar unas cositas en el RAL para que esto quede bien.
+
+\subsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+\section{Finalización}
+\subsection{Linux 32 bits}
+Al comenzar a ejecutar el \textit{Core}, el mismo entra en un \textit{ciclo infinito} en el que va ejecutando
+y actualizando los valores de todos los elementos.
+
+Para terminar la ejecución del \textit{Core}, el mismo tiene definida un \textit{rutina de atención de señales},
+en particular, para la señal \texttt{SIGINT}, que al ser recibida por el \textit{Core} termina su ejecución
+de forma ordenada, cerrando correctamente el archivo de \textit{log}.
+
+Las señales se encuentran definidas en la librería estandar $<signal.h>$.
+Puede verse su especificación en \url{http://publications.gbdirect.co.uk/c_book/chapter9/signal_handling.html}.
+La señal \texttt{SIGINT}, es una señal de atención interactiva, generalmente generada por
+la teclas \texttt{Ctrl+C} en la consola de ejecución, pero que también puede ser enviada por otro programa.
+
+La idea es que sea la \textit{GUI} la que inicia la ejecución del \textit{Core} y la que termine la ejecución
+del mismo enviando la señal \texttt{SIGINT}.
+
+\subsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+\section{Compilaci\'on}
+\label{CoreCompilacion}
+
+El código fuente del Core cuenta con los siguientes archivos:
+\begin{enumerate}
+ \item \textbf{core.cpp} Código principal para la ejecución del \textit{Core}.
+ \item \textbf{Estructuras.h} Encabezados de las clases utilizadas para la ejecución del \textit{Core}.
+ \item \textbf{Estructuras.cpp} Código de las clases utilizadas para la ejecución del \textit{Core}.
+ \item \textbf{Parser.h} Encabezados de las funciones para el parseo del archivo \textit{XML}.
+ \item \textbf{Parser.cpp} Código de las funciones para el parseo del archivo \textit{XML}.
+\end{enumerate}
+
+Además, el código fuente del Core necesita para su compilación los siguientes archivos del \textit{RAL}:
+\begin{enumerate}
+ \item \textbf{RAL.h} Encabezados de las funciones del \textit{RAL}.
+ \item \textbf{libRAL.so} Librería dinámica del \textit{RAL}.
+\end{enumerate}
+Puede verse la especificación para la compilación de estos archivos del \textit{RAL} en el punto \ref{subsub:CompRAL} en la página \pageref{subsub:CompRAL}.
+
+\subsection{Linux 32 bits}
+
+\subsubsection{Makefile}
+El código fuente del Core incluye un archivo \textit{Makefile} con las siguientes funciones para facilitar
+la compilación, linkeo estático con el \textit{Xerces Parser}, linkeo dinámico con el \textit{RAL} y el testeo del Core:
+\begin{enumerate}
+ \item \textbf{all:} Ejecuta las funciones \textit{compilar\_core} y \textit{enlazar\_ejecutable}.
+ \item \textbf{compilar\_core:} Compila los archivos del código fuente del \textit{Core} generando los objetos (\textit{*.o}) necesarios para la creación del ejecutable del Core de la siguiente manera: \\
+						\textit{g++ -c Estructuras.cpp -o Estructuras.o} \\
+						\textit{g++ -c Parser.cpp -o Parser.o} \\
+						\textit{g++ -c core.cpp -o core.o}
+ \item \textbf{enlazar\_ejecutable:} Genera el ejecutable del \textit{Core} (\texttt{test\_core}) enlazando con las \textit{librerías estáticas} del \textit{Xerces} y con las \textit{librerías dinámicas} del \textit{RAL} de la siguiente manera: \\
+						\textit{g++ -o test\_core core.o Estructuras.o Parser.o -lxerces-c -lpthread -L$<$path$>$ -Bdynamic -lRAL} \\
+						donde \textit{$<$path$>$} debe ser la ruta (puede ser relativa) donde se encuentra la librería dinámica \textit{libRAL.so}, 
+						por ejemplo \texttt{-L../../ral/src}
+ \item \textbf{clean:} Borra todos los archivos \textit{*.o} y el ejecutable \textit{test\_core}.
+ \item \textbf{run:} Ejecuta \textit{test\_core} con los siguientes parámetros: \\
+					  \textit{./test\_core xml\_file\_test\_07.xml archivoLOG\_01.log yaks}
+\end{enumerate}
+
+\subsubsection{Script}
+Para faculitar algunas cuestiones en la compilacion, tambi\'en se incluye un archivo script ``core\_compilar.sh''. El mismo puede ejecutar simplemente con \texttt{./core\_compilar.sh}.
+
+\subsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!
+
+
+\section{Xerces XML Parser}
+ver Cap\'itulo \ref{cap:softadd} en p\'agina \pageref{cap:softadd}
+
+
+
+\section{Instalaci\'on}
+\subsection{Linux 32 bits}
+Para la instalaci\'on se ejecuta el script \textit{ERBPI/src/core/core\_instalar.sh}. Es necesario que el Core y las librer\'ias din\'amicas de cada RAL ya se encuentren compiladas con anterioridad. Para compilaci\'on de Core y RAL ver puntos \ref{CoreCompilacion} y \ref{RalCompilacion}.
+\subsection{Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+
+
+\section{Compiladores}
+\subsection{C++ Linux 32 bits}
+Utilizamos los siguientes compiladores para C++:
+\begin{itemize}
+ \item gcc: GCC (GNU Compiler Collection) C compiler.
+ \item g++: GCC (GNU Compiler Collection) C++ compiler.
+\end{itemize}
+Ver \url{http://gcc.gnu.org/}
+
+\subsection{C++ Windows 32 bits}
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+FALTA COMPLETAR ESTO!!! Para que los comandos como \textit{gcc}, \textit{g++}, \textit{make} (\textit{mingw32-make}) anden en la consola de windows, es necesario modificar la variable de sistema \texttt{PATH} de Windows y agregar la ruta \url{C:/MinGW/bin}.
+
+FALTA COMPLETAR ESTO!!! Ojo con esto, porque aunque simula el GNU-GCC, no necesariamente todas las librería incluidas andan, porque algunas son especificas de
+Linux, por ejemplo ``sys/socket.h'', que me parece que en Windows hay que cambiarla por ``winsock.h'0'.
+HAY QUE VER BIEN ESTO y ANOTAR !!!!
+
+FALTA COMPLETAR ESTO!!! Nota: cualquier cosa, probar también Cygwin 5.1.6 (GNU + Cygnus + Windows) que contiene de \url{http://www.cygwin.com/}. ojo con esto porque me parece que sí o sí necesita ``cygwin1.dll'' en la PC para que después pueda andar... Probar!!!
+

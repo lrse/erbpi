@@ -1,0 +1,179 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% XML
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Introducci\'on}
+El archivo \textit{XML} servirá, por un lado, para la definición de datos que la \textit{GUI} establecerá
+para que el \textit{Core} ejecute. Por otro lado, el \textit{XML} contendrá también información propia de la \textit{GUI}.
+
+El archivo \textit{XML} contendrá varias cosas:
+\begin{itemize}
+ \item Los datos necesarios para que el \textit{Core} pueda realizar la ejecución.
+ \item Los datos necesarios que la GUI requerirá para poder funcionar, como las especificaciones gráficas, objetos,
+	  ubicación de los mismos, etc; y todas las opciones sobre los proyectos realizados...
+ \item ¿algo más?
+\end{itemize}
+
+De esta forma, en principio el \textit{XML} podría tener en secciones separadas los datos para el \textit{Core}
+y para la \textit{GUI}. Tal vez, no necesariamente estén completamente separados. De modo que, por ejemplo,
+el \textit{Core} deberá buscar en el \textit{XML} sólo los datos necesarios para lograr la ejecución e ignorar
+el resto de los datos innecesarios...
+
+
+\section{Core Implementaci\'on}
+\subsection{Datos para la Ejecución del Core}\label{subsub:EjecXML}
+Básicamente, el \textit{Core} busca en la ``estructura de arbol'' del \textit{XML} el elemento raíz de
+nombre:
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <ejecucion>   ... </ejecucion>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+Cualquier otro elemento distinto de $<ejecucion>$ será ignorado.
+
+\textbf{Importante:} El elemento $<ejecucion>$ debe ser el primero en orden de definición dentro del \textit{XML}
+ya que el \textit{Core} parsea al \textit{XML} utilizando la API que implementa el estandar DOM\footnote{Document Object Model (DOM), \url{http://xerces.apache.org/xerces-c/api-3.html}, \url{http://www.w3.org/DOM/}}. Cualquier otro elemento posterior es ignorado.
+
+Entonces, la definición de los datos para la ejecución del \textit{Core} en el \textit{XML} constaran de 3 grandes cosas:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <ejecucion>
+            <sensores>   ... </sensores>
+            <cajas>      ... </cajas>
+            <actuadores> ... </actuadores>
+        </ejecucion>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+
+\subsubsection{Sensores}
+
+Por un lado estaría la definición de los sensores existentes y su identificación (\textit{id}). Por ahora, el \textit{id} indicará todo lo referido al sensor, es decir, su tipo (sonar, telémetro, encoder, random) y su ubicación relativa al robot en ángulos (de 0º a 360º), por ejemplo:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+          <sensor id='sonar.0'/>
+          <sensor id='telemetro.20'/>
+          <sensor id='telemetro.340'/>
+          <sensor id='encoder.motor.izquierda'/>
+          <sensor id='encoder.motor.derecha'/>
+          <sensor id='sonar.180'/>
+          <sensor id='random'/>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Vimos de agregar un tipo de sensor \textit{random}, que no sería un sensor real en el hardware, sino un sensor simulado en software para poder agregar ``aleatoriedad''...
+
+
+\subsubsection{Cajas}
+
+Después, definir las \textit{cajas} que irían entre los sensores y actuadores.
+En principio, estas \textit{cajas} sólo tendrían definidas las \textit{entradas} (sensores y otras cajas) y la función. Por ahora sólo tenemos en cuenta
+la ``función partida'' en tres tramos (constante + lineal + constante) que la definimos con 2 puntos en el
+plano $(x_{1};y_{1})$ y $(x_{2},y_{2})$. También definir el \textit{id} de la funcion.
+
+Internamente, la salida de la \textit{caja} será el resultado de aplicar la \textit{función}, definida por los
+puntos $(x_{1};y_{1})$ y $(x_{2},y_{2})$, a la sumatoria de todas sus entradas.
+
+Por ejemplo:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+          <caja id='caja1'>
+            <entradas>
+              <entrada id='sonar.0'/>
+              <entrada id='telemetro.340'/>
+              <entrada id='random'/>
+            </entradas>
+            <puntos>
+              <punto x='100' y='0'/>
+              <punto x='150' y='255'/>
+            </puntos>
+          </caja>
+
+          <caja id='caja2'>
+            <entradas>
+              <entrada id='telemetro.20'/>
+              <entrada id='caja1'/>
+            </entradas>
+            <puntos>
+              <punto x='150' y='255'/>
+              <punto x='100' y='0'/>
+            </puntos>
+          </caja>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Algo así:
+\begin{figure}
+	\centering
+	\includegraphics[scale=1.0]{images/funcion_partida.jpg}
+	\caption{GUI FUNCION PARTIDA}
+	\label{Fig:FunPartida}
+\end{figure}
+
+Las funciones \textit{lineal} y \textit{lineal invertida} podrían representarse con $\{(0;0),(255;255)\}$ y $\{(255;255),(0;0)\}$.
+
+Algo así:
+\begin{figure}
+	\centering
+	\includegraphics[scale=1.0]{images/funcion_partida_lineal.jpg}
+	\caption{GUI FUNCION PARTIDA LINEAL}
+	\label{Fig:FunPartidaLineal}
+\end{figure}
+
+
+\subsubsection{Actuadores}
+
+Ahora sólo nos queda definir los actuadores, su \textit{id} y cúales \textit{cajas} son sus entradas. El sentido del \textit{id} es igual al que se intenta dar en los sensores, por ejemplo:
+
+Internamente, la salida del \textit{actuador} será la sumatoria de todas sus entradas.
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+          <actuador id='motor.izquierda'>
+            <entradas>
+              <entrada id='caja1'/>
+              <entrada id='caja2'/>
+            </entradas>
+          </actuador>
+
+          <actuador id='motor.derecha'>
+            <entradas>
+              <entrada id='caja2'/>
+            </entradas>
+          </actuador>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+\subsubsection{Importante}
+
+Las etiquetas y atributos definidos anteriormente deben ser estrictamente definidos de esa forma
+en el \textit{XML} (en minúsculas). \textbf{Cualquier otra etiqueta o atributo distintos de:}
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <ejecucion></ejecucion>
+            <sensores></sensores>
+                <sensor id='?'/>
+            <cajas></cajas>
+                <caja></caja>
+                    <entradas></entradas>
+                        <entrada id='?'/>
+                    <puntos>
+                        <punto x='?' y='?'/>
+            <actuadores></actuadores>
+                <actuador></actuador>
+                    <entradas></entradas>
+                        <entrada id='?'/>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+\textbf{serán ignorados.}
+
+
+
+
+\section{GUI Implementaci\'on}
+\subsection{Datos para la GUI}

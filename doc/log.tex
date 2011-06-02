@@ -1,0 +1,47 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LOG
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introducci\'on}
+
+El archivo de \textit{log} de cada ejecución se encarga de esribirlo el \textit{Core}.
+Siempre sobreescribe el archivo especificado, o lo crea si no existe, es decir, sólo queda en el archivo el contenido de la última ejecución.
+
+El \textit{log} tiene la siguiente especificación:
+\begin{enumerate}
+ \item \textbf{La primera línea.} Consiste de la secuencia, separada por comas, de los \textit{ids} de la tabla de ejecución en el orden en que se encuentran en la misma.
+ \item \textbf{Siguientes líneas.} Son todas iguales. Consiste de varios valores, separados por comas, de la siguiente forma:
+	\begin{itemize}
+	\item \textit{TimeStamp}. Es el tiempo en \textit{milisegundos} para cada línea relativo al comienzo, es decir, comienza en cero.
+	\item \textit{Valor de los elementos}. En el mismo orden en que fueron detallados en la primera línea, 
+		  si es una \texttt{caja} son los valores \textit{entrada} y \textit{salida} de la caja, y si es un \textit{sensor} o un \textit{actuador} es simplemente el valor de \textit{salida}.
+	\end{itemize}
+\end{enumerate}
+
+Por ejemplo, el siguiente archivo de \textit{log} corresponde a 10 ejecuciones del \textit{Core}:
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        sonar.0, sonar.1, sonar.2, actuador.0, caja.0, caja.1, actuador.1, 
+        0, 6, 8, 7, 8, 22, 13, 8, -9, 20, 
+        103, 3, 7, 6, 7, 17, 13, 7, -8, 19, 
+        204, 8, 3, 2, 3, 14, 13, 3, -6, 15, 
+        304, 7, 4, 10, 4, 15, 13, 4, -6, 23, 
+        405, 7, 3, 7, 3, 13, 13, 3, -6, 20, 
+        505, 10, 8, 9, 8, 26, 13, 8, -9, 22, 
+        606, 4, 3, 1, 3, 10, 13, 3, -6, 14, 
+        707, 3, 10, 6, 10, 23, 13, 10, -13, 19, 
+        807, 8, 10, 9, 10, 28, 13, 10, -13, 22, 
+        1009, 3, 2, 7, 2, 7, 8, 2, -6, 15, 
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+
+\textbf{PENDIENTE}
+
+REPLAY Y DEBUG...
+
+
+\section{Core Implementaci\'on}
+
+

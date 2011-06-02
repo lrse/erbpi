@@ -1,0 +1,117 @@
+\documentclass[a4paper,10pt,twoside]{template/ThesisStyle}
+\include{template/formatAndDefs}
+
+
+
+\begin{document}
+
+
+	\include{caratula}
+
+	\dominitoc
+
+	\pagenumbering{roman}
+
+	\cleardoublepage
+
+	\include{agradecimientos}
+
+	\tableofcontents
+
+
+	\mainmatter
+	%\include{Chapter1_BORRAR}
+
+% #############################
+\chapter{Introducci\'on}
+\label{cap:intro}
+\input{introduccion}
+
+% #############################
+\chapter{ERBPI: Easy Robot Behaviour Programming Interface}
+\label{cap:erbpi}
+\input{erbpi}
+
+% #############################
+\chapter{Dise\~no}
+\label{cap:disenio}
+\input{disenio}
+
+% #############################
+\chapter{Core}
+\label{cap:core}
+\input{core}
+
+% #############################
+\chapter{RAL: Robot Abstraction Layer}
+\label{cap:ral}
+\input{ral}
+
+% #############################
+\chapter{GUI: Graphical User Interface}
+\label{cap:gui}
+\input{gui}
+
+% #############################
+\chapter{XML: Configuración y Comportamiento}
+\label{cap:xml}
+\input{xml}
+
+% #############################
+\chapter{Log}
+\label{cap:log}
+\input{log}
+
+% #############################
+\chapter{Software adicional}
+\label{cap:softadd}
+\input{softadd}
+
+% #############################
+\chapter{Compilaci\'on, Instalaci\'on y Ejecuci\'on}
+\label{cap:CompInstExec}
+\input{compInstExec}
+
+% #############################
+\chapter{Referencias}
+\label{cap:ref}
+\input{referencias}
+
+
+
+	\appendix
+	\include{apendice1}
+
+
+	\bibliographystyle{template/ThesisStyle}
+	\bibliography{bibliografia}
+
+	%\printnomenclature
+
+
+% 	\cleardoublepage
+% 	\begin{vcenterpage}
+% 		\noindent\rule[2pt]{\textwidth}{0.5pt}
+% 		\begin{center}
+% 			{\large\textbf{Design and Use of Numerical Anatomical Atlases for Radiotherapy\\}}
+% 		\end{center}
+% 		{\large\textbf{Abstract:}}
+% 		The main objective of this thesis is to provide radio-oncology specialists with automatic tools for delineating organs at risk of a patient undergoing a radiotherapy treatment of cerebral or head and neck tumors.
+% 		\\
+% 		To achieve this goal, we use an anatomical atlas, i.e. a representative anatomy associated to a clinical image representing it. The registration of this atlas allows to segment automatically the patient structures and to accelerate this process. Contributions in this method are presented on three axes.
+% 		\\
+% 		First, we want to obtain a registration method which is as independent as possible w.r.t. the setting of its parameters. This setting, done by the clinician, indeed needs to be minimal while guaranteeing a robust result. We therefore propose registration methods allowing to better control the obtained transformation, using outlier rejection techniques or locally affine transformations.
+% 		\\
+% 		The second axis is dedicated to the consideration of structures associated with the presence of the tumor. These structures, not present in the atlas, indeed lead to local errors in the atlas-based segmentation. We therefore propose methods to delineate these structures and take them into account in the registration.
+% 		\\
+% 		Finally, we present the construction of an anatomical atlas of the head and neck region and its evaluation on a database of patients. We show in this part the feasibility of the use of an atlas for this region, as well as a simple method to evaluate the registration methods used to build an atlas.
+% 		\\
+% 		All this research work has been implemented in a commercial software (Imago from DOSIsoft), allowing us to validate our results in clinical conditions.
+% 		\\
+% 		{\large\textbf{Keywords:}}
+% 		Atlas-based Segmentation, non rigid registration, radiotherapy, atlas creation
+% 		\\
+% 		\noindent\rule[2pt]{\textwidth}{0.5pt}
+% 	\end{vcenterpage}
+
+\end{document}
