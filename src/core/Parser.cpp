@@ -1,173 +1,35 @@
 #include "Parser.h"
 
-// ESTRUCTURA AUXILIAR PARA EL PARSER	
-struct TuplaAuxiliar {
-  int tipo;
-  string id;
-  vector<string> entradas;
-  vector<Punto> puntos;
-};
+/* estructuras auxiliares */
 
-int inicializar_xerces(){
-	try{
-		XMLPlatformUtils::Initialize();
-	}
-	catch (const XMLException& toCatch){
-		char* message = XMLString::transcode( toCatch.getMessage() );
-		cout << "Error: Al inicializar el XML Parser: " << message << endl;
-		XMLString::release( &message );
-		return 1;
-	}
-	return 0;
-}
+typedef pair<ElementoConEntradas*,string> EntradaAuxiliar;
 
-int terminar_xerces(){
-	XMLPlatformUtils::Terminate();
-	return 0;
-}
+typedef struct
+{
+	Transicion* transicion;
+	string id_timer;
+} ActualizacionTimerAuxiliar;
 
-XercesDOMParser* crear_y_configurar_parser(){
-	// creo el Parser XML
-	XercesDOMParser *nuevoParser;
-	nuevoParser = new XercesDOMParser;
-	// configuro DOM Parser
-	nuevoParser->setValidationScheme( XercesDOMParser::Val_Never );
-	nuevoParser->setDoNamespaces( false );
-	nuevoParser->setDoSchema( false );
-	nuevoParser->setLoadExternalDTD( false );
-	return nuevoParser;
-}
+typedef struct
+{
+	Transicion* transicion;
+	string id_contador;
+	Accion_t accion;
+} ActualizacionContadorAuxiliar;
 
-char* leer_id(DOMElement* xmlElemento){
-	XMLCh* atributoId = XMLString::transcode(NOMBRE_ATRIBUTO_ID); // recasteo
-	const XMLCh* xmlId = xmlElemento->getAttribute(atributoId); // obtengo el atributo ID y recasteo
-	return (XMLString::transcode(xmlId)); // recasteo y retorno el ID
-}
+/* variable global auxiliar */
 
-int leer_entradas(DOMElement* xmlElemento, vector<string>& vectorAux){
-	DOMNodeList* xmlElementoHijos = xmlElemento->getChildNodes(); // Obtengo la "LISTA de Hijos del Elemento"
-	const  XMLSize_t xmlElementoHijosCantidad = xmlElementoHijos->getLength(); // Obtengo la "CANTIDAD de Entradas"
-	for( XMLSize_t i = 0; i < xmlElementoHijosCantidad; i++ ){
-		DOMNode* xmlNodo = xmlElementoHijos->item(i); // obtengo el HIJO(i)
-		if( xmlNodo->getNodeType() && xmlNodo->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-			DOMElement* xmlElemento2 = dynamic_cast< xercesc::DOMElement* >( xmlNodo );
-			if( XMLString::equals(xmlElemento2->getTagName(), XMLString::transcode(NOMBRE_ENTRADAS))){ // obtengo el ¿NOMBRE=ENTRADAS? del elemento y recasteo
-				DOMNodeList* xmlEntradas = xmlElemento2->getChildNodes(); // Obtengo la "LISTA de Entradas"
-				const  XMLSize_t xmlEntradasCantidad = xmlEntradas->getLength(); // Obtengo la "CANTIDAD de Entradas"
-				for( XMLSize_t j = 0; j < xmlEntradasCantidad; j++ ){ // Lleno el vector de entradas
-					DOMNode* xmlNodoActual2 = xmlEntradas->item(j); // obtengo el HIJO(j)
-					if( xmlNodoActual2->getNodeType() && xmlNodoActual2->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-						DOMElement* xmlElementoActual2 = dynamic_cast< xercesc::DOMElement* >( xmlNodoActual2 );
-						if( XMLString::equals(xmlElementoActual2->getTagName(), XMLString::transcode(NOMBRE_ENTRADA))) // obtengo el ¿NOMBRE=<entrada>? => lo agrego, si no, no!
-							vectorAux.push_back(leer_id(xmlElementoActual2)); // Obtengo el ID y lo agrego al vector resultado
-					}
-				}
-			}
-		}
-	}
-	return 0;
-}
+set<EntradaAuxiliar> entradas_auxiliares;
+set<ActualizacionTimerAuxiliar*> actualizaciones_timer_auxiliares;
+set<ActualizacionContadorAuxiliar*> actualizaciones_contador_auxiliares;
 
-int leer_puntos(DOMElement* xmlElemento, vector<Punto>& vectorAux){
-	XMLCh* atributoX = XMLString::transcode(NOMBRE_ATRIBUTO_PUNTO_X); // recasteo
-	XMLCh* atributoY = XMLString::transcode(NOMBRE_ATRIBUTO_PUNTO_Y); // recasteo
-	DOMNodeList* xmlElementoHijos = xmlElemento->getChildNodes(); // Obtengo la "LISTA de Hijos del Elemento"
-	const  XMLSize_t xmlElementoHijosCantidad = xmlElementoHijos->getLength(); // Obtengo la "CANTIDAD de Entradas"
-	for( XMLSize_t i = 0; i < xmlElementoHijosCantidad; i++ ){
-		DOMNode* xmlNodo = xmlElementoHijos->item(i); // obtengo el HIJO(i)
-		if( xmlNodo->getNodeType() && xmlNodo->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-			DOMElement* xmlElemento2 = dynamic_cast< xercesc::DOMElement* >( xmlNodo );
-			if( XMLString::equals(xmlElemento2->getTagName(), XMLString::transcode(NOMBRE_PUNTOS))){ // obtengo el ¿NOMBRE=PUNTOS? del elemento y recasteo
-				DOMNodeList* xmlPuntos = xmlElemento2->getChildNodes(); // Obtengo la "LISTA de Puntos"
-				const  XMLSize_t xmlPuntosCantidad = xmlPuntos->getLength(); // Obtengo la "CANTIDAD de Puntos"
-				for( XMLSize_t j = 0; j < xmlPuntosCantidad; j++ ){ // Lleno el vector de puntos
-					DOMNode* xmlNodoActual2 = xmlPuntos->item(j); // obtengo el HIJO(j)
-					if( xmlNodoActual2->getNodeType() && xmlNodoActual2->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-						DOMElement* xmlElementoActual2 = dynamic_cast< xercesc::DOMElement* >( xmlNodoActual2 );
-						if( XMLString::equals(xmlElementoActual2->getTagName(), XMLString::transcode(NOMBRE_PUNTO))){ // obtengo el ¿NOMBRE=<punto>? => lo agrego, si no, no!
-							const XMLCh* xmlX = xmlElementoActual2->getAttribute(atributoX); // obtengo el atributo X y recasteo
-							const XMLCh* xmlY = xmlElementoActual2->getAttribute(atributoY); // obtengo el atributo Y y recasteo
-							Punto nuevoPunto; // creo el nuevo punto
-							nuevoPunto.x = atoi((XMLString::transcode(xmlX))); // seteo X del punto y recasteo
-							nuevoPunto.y = atoi((XMLString::transcode(xmlY))); // seteo Y del punto y recasteo
-							vectorAux.push_back(nuevoPunto); // agrego el punto al vector resultado
-						}
-					}
-				}
-			}
-		}
-	}
-	return 0;
-}
+/* funciones auxiliares */
 
-int leer_sensores(DOMNodeList* listaNodos, XMLSize_t cantidadNodos, vector<TuplaAuxiliar>& vectorAux){
-	TuplaAuxiliar tupla;
-	for( XMLSize_t i = 0; i < cantidadNodos; i++ ){
-		DOMNode* xmlNodoActual = listaNodos->item(i); // obtengo el HIJO(i)
-		if( xmlNodoActual->getNodeType() && xmlNodoActual->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-			DOMElement* xmlElementoActual = dynamic_cast< xercesc::DOMElement* >( xmlNodoActual ); 
-			if( XMLString::equals(xmlElementoActual->getTagName(), XMLString::transcode(NOMBRE_SENSOR))){ // obtengo el ¿NOMBRE=<sensor>? => lo agrego, si no, no!
-				// seteo tipo y id del sensor
-				tupla.tipo = TIPO_SENSOR;
-				tupla.id = leer_id(xmlElementoActual);
-				vectorAux.push_back(tupla); // agrego el sensor al vector
-			}
-		}
-	}
-	return 0;
-}
-
-int leer_cajas(DOMNodeList* listaNodos, XMLSize_t cantidadNodos, vector<TuplaAuxiliar>& vectorAux){
-	TuplaAuxiliar tupla;
-	vector<string> vectorEntradasId;
-	vector<Punto> vectorPuntosXY;
-	for( XMLSize_t i = 0; i < cantidadNodos; i++ ){
-		DOMNode* xmlNodoActual = listaNodos->item(i); // obtengo el HIJO(i)
-		if( xmlNodoActual->getNodeType() && xmlNodoActual->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-			DOMElement* xmlElementoActual = dynamic_cast< xercesc::DOMElement* >( xmlNodoActual );
-			if( XMLString::equals(xmlElementoActual->getTagName(), XMLString::transcode(NOMBRE_CAJA))){ // obtengo el ¿NOMBRE=<caja>? => lo agrego, si no, no!
-				vectorEntradasId.clear(); // limpio el vector
-				vectorPuntosXY.clear(); // limpio el vector
-				leer_entradas(xmlElementoActual, vectorEntradasId); // obtengo el vector con los IDs de las entradas de la caja
-				leer_puntos(xmlElementoActual, vectorPuntosXY); // obtengo el vector con los XYs de los puntos de la caja
-				if ( vectorPuntosXY.size() != 2 ){
-					cout << "Error: las cajas deben tener exactamente 2 puntos definidos !!!" << endl;
-					return 1;
-				}
-				// seteo tipo, id, entradas y puntos de la caja
-				tupla.tipo = TIPO_CAJA;
-				tupla.id = leer_id(xmlElementoActual);
-				tupla.entradas = vectorEntradasId;
-				tupla.puntos = vectorPuntosXY;
-				vectorAux.push_back(tupla); // agrego el sensor al vector
-			}
-		}
-	}
-	return 0;
-}
-
-int leer_actuadores(DOMNodeList* listaNodos, XMLSize_t cantidadNodos, vector<TuplaAuxiliar>& vectorAux){
-	TuplaAuxiliar tupla;
-	vector<string> vectorEntradasId;
-	for( XMLSize_t i = 0; i < cantidadNodos; i++ ){
-		DOMNode* xmlNodoActual = listaNodos->item(i); // obtengo el HIJO(i)
-		if( xmlNodoActual->getNodeType() && xmlNodoActual->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-			DOMElement* xmlElementoActual = dynamic_cast< xercesc::DOMElement* >( xmlNodoActual );
-			if( XMLString::equals(xmlElementoActual->getTagName(), XMLString::transcode(NOMBRE_ACTUADOR))){ // obtengo el ¿NOMBRE=<caja>? => lo agrego, si no, no!
-				vectorEntradasId.clear(); // limpio el vector
-				leer_entradas(xmlElementoActual, vectorEntradasId); // obtengo el vector con los IDs de las entradas del actuador
-				// seteo tipo, id y entradas del actuador
-				tupla.tipo = TIPO_ACTUADOR;
-				tupla.id = leer_id(xmlElementoActual);
-				tupla.entradas = vectorEntradasId;
-				vectorAux.push_back(tupla); // agrego el actuador al vector
-			}
-		}
-	}
-	return 0;
-}
-
-int ordenar_topologicamente(vector<TuplaAuxiliar>& vectorAux){
+/* int ordenar_topologicamente(vector<TuplaAuxiliar>& vectorAux)
+ * 
+ * TODO
+ * 
+{
 	// el orden totoplogico lo devuelve por "vectorAux"
 	// esta función detecta ciclos y devuelve error si los hay...
 	// Ojo con abusar de esta función, creo que pertenece a O(n^3)...
@@ -230,18 +92,312 @@ int ordenar_topologicamente(vector<TuplaAuxiliar>& vectorAux){
 	vectorAux.clear();
 	for (i = 0; i < n; i++)
 		vectorAux.push_back( vectorAux2[i] );
-	
+	return 0;
+}
+*/
+
+int inicializar_xerces()
+{
+	try{
+		XMLPlatformUtils::Initialize();
+	}
+	catch (const XMLException& toCatch){
+		char* message = XMLString::transcode( toCatch.getMessage() );
+		cout << "Error: Al inicializar el XML Parser: " << message << endl;
+		XMLString::release( &message );
+		return 1;
+	}
 	return 0;
 }
 
-int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
-	int i, j, k;
-	vector<TuplaAuxiliar> vectorAuxiliar; // vectorAuxiliar para el parseo inicial
-	Sensor* nuevoSensor; // sensor para agregar a tabla_ejecucion
-	Caja* nuevaCaja; // caja para agregar a tabla_ejecucion
-	Actuador* nuevoActuador; // actuador para agregar a tabla_ejecucion
+int terminar_xerces()
+{
+	XMLPlatformUtils::Terminate();
+	return 0;
+}
+
+XercesDOMParser* crear_y_configurar_parser()
+{
+	// creo el Parser XML
+	XercesDOMParser *nuevoParser;
+	nuevoParser = new XercesDOMParser;
+	// configuro DOM Parser
+	nuevoParser->setValidationScheme( XercesDOMParser::Val_Never );
+	nuevoParser->setDoNamespaces( false );
+	nuevoParser->setDoSchema( false );
+	nuevoParser->setLoadExternalDTD( false );
+	return nuevoParser;
+}
+
+// devuelve el valor del atributo de un tag
+char* leer_atributo(DOMElement* xmlElemento, const char* atributo)
+{
+	XMLCh* atributoId = XMLString::transcode(atributo); // recasteo
+	const XMLCh* xmlId = xmlElemento->getAttribute(atributoId); // obtengo el atributo
+	return (XMLString::transcode(xmlId)); // recasteo y retorno el atributo
+}
+
+// llama a la funcion cargar_elemento
+// para cada tag <nombre_elemento_hijo> hijo de xml_padre
+template <class T>
+void CargarElementosDeListaAObjeto
+(
+	T* objeto,
+	DOMElement* xml_padre,
+	const char* nombre_elemento_hijo,
+	void (*cargar_elemento)(T*,DOMElement*)
+)
+{
+	// obtengo la lista de hijos de actuadores
+	DOMNodeList* xml_lista_de_hijos = xml_padre->getChildNodes();
 	
-// 1. GENERO EL "VECTORAUXILIAR" CON LOS ELEMENTOS PARSEADOS DEL XML
+	// Si tiene algun hijo
+	if ( xml_lista_de_hijos )
+	{
+		// Obtengo la cantidad de hijos
+		const  XMLSize_t cantidad_de_hijos = xml_lista_de_hijos->getLength();
+
+		// Itero sobre los hijos
+		for( XMLSize_t i = 0; i < cantidad_de_hijos; i++ )
+		{
+			// agarro el i-esimo nodo
+			DOMNode* xml_nodo = xml_lista_de_hijos->item(i);
+			
+			// Si el nodo es un elemento (podria ser texto, y nidea que mas...)
+			if( xml_nodo->getNodeType() && xml_nodo->getNodeType() == DOMNode::ELEMENT_NODE )
+			{
+				// lo casteo
+				DOMElement* xml_hijo = dynamic_cast< xercesc::DOMElement* >( xml_nodo );
+				
+				// me fijo si el tag es nombre_elemento
+				if ( XMLString::equals(xml_hijo->getTagName(), XMLString::transcode(nombre_elemento_hijo)))
+					cargar_elemento(objeto,xml_hijo);
+				else
+					cout << "hay un tag <" << XMLString::transcode(xml_hijo->getTagName()) << "> donde solo se esperaban tags <" << nombre_elemento_hijo << ">" << endl;
+			}
+		}
+	}
+}
+
+Comparacion_t Comparacion(const char* nombre)
+{
+	if (!strcmp(nombre,"igual"))
+		return IGUAL;
+	else if (!strcmp(nombre,"menor"))
+		return MENOR;
+	else if (!strcmp(nombre,"menor_igual"))
+		return MENOR_IGUAL;
+	else if (!strcmp(nombre,"mayor"))
+		return MAYOR;
+	else if (!strcmp(nombre,"mayor_igual"))
+		return MAYOR_IGUAL;
+	else
+		cout << "OJO! comparacion desconocida '" << nombre << "'. Se devuelve IGUAL." << endl;
+		
+	return IGUAL;
+}
+
+Accion_t Accion(const char* nombre)
+{
+	if (!strcmp(nombre,"resetear"))
+		return RESETEAR;
+	else if (!strcmp(nombre,"incrementar"))
+		return INCREMENTAR;
+	else if (!strcmp(nombre,"decrementar"))
+		return DECREMENTAR;
+	else
+		cout << "OJO! accion desconocida '" << nombre << "'. Se devuelve RESETEAR." << endl;
+		
+	return RESETEAR;
+}
+
+// =====================================================================
+// funciones que cargan los distintos elementos
+
+void CargarCondicion(Transicion* transicion, DOMElement* xml_condicion)
+{
+	string id_elemento = string(leer_atributo(xml_condicion,"id_elemento"));
+	Comparacion_t comparacion = Comparacion(leer_atributo(xml_condicion,"comparacion"));
+	int umbral = atoi(leer_atributo(xml_condicion,"umbral"));
+	
+	Condicion* condicion = new Condicion(id_elemento,comparacion,umbral);
+	transicion->AgregarCondicion(condicion);
+}
+
+void CargarActualizacion(Transicion* transicion, DOMElement* xml_actualizacion)
+{
+	const char* tipo = leer_atributo(xml_actualizacion,"tipo");
+	
+	if ( !strcmp(tipo,"timer") )
+	{
+		ActualizacionTimerAuxiliar* actualizacion = new ActualizacionTimerAuxiliar();
+		actualizacion->transicion = transicion;
+		actualizacion->id_timer = leer_atributo(xml_actualizacion,"id_timer");
+		
+		actualizaciones_timer_auxiliares.insert( actualizacion );
+		
+	}
+	else if ( !strcmp(tipo,"contador") )
+	{
+		ActualizacionContadorAuxiliar* actualizacion = new ActualizacionContadorAuxiliar();
+		actualizacion->transicion = transicion;
+		actualizacion->id_contador = leer_atributo(xml_actualizacion,"id_contador");;
+		actualizacion->accion = Accion(leer_atributo(xml_actualizacion,"accion"));
+		
+		actualizaciones_contador_auxiliares.insert( actualizacion );
+	}
+	else
+		cout << "OJO! actualizacion con tipo desconocido '" << tipo << "'" << endl;
+}
+
+void CargarEntrada(ElementoConEntradas* elemento, DOMElement* xml_entrada)
+{
+	EntradaAuxiliar entrada(elemento,leer_atributo(xml_entrada,"id_entrada"));
+	entradas_auxiliares.insert( entrada );
+}
+
+void CargarEntradas(ElementoConEntradas* elemento, DOMElement* xml_entradas)
+{
+	CargarElementosDeListaAObjeto<ElementoConEntradas>(elemento,xml_entradas,"entrada",&CargarEntrada);
+}
+
+void CargarActuador(Comportamiento* comportamiento, DOMElement* xml_actuador)
+{
+	Actuador* actuador = new Actuador(leer_atributo(xml_actuador,"id"));
+	comportamiento->AgregarActuador(actuador);
+	
+	CargarElementosDeListaAObjeto<ElementoConEntradas>(actuador,xml_actuador,"entradas",&CargarEntradas);
+}
+
+void CargarCaja(Comportamiento* comportamiento, DOMElement* xml_caja)
+{
+	Punto punto_min;
+	Punto punto_max;
+	
+	DOMNodeList* xml_hijos_punto = xml_caja->getElementsByTagName(XMLString::transcode("punto"));
+	if ( xml_hijos_punto && xml_hijos_punto->getLength() > 1 )
+	{
+		DOMElement* xml_punto_min = dynamic_cast< xercesc::DOMElement* >( xml_hijos_punto->item(0) );
+		DOMElement* xml_punto_max = dynamic_cast< xercesc::DOMElement* >( xml_hijos_punto->item(1) );
+		
+		punto_min.x = atoi( leer_atributo(xml_punto_min,"x") );
+		punto_min.y = atoi( leer_atributo(xml_punto_min,"y") );
+		
+		punto_max.x = atoi( leer_atributo(xml_punto_max,"x") );
+		punto_max.y = atoi( leer_atributo(xml_punto_max,"y") );
+	}
+	else
+		cout << "Error: Hay una caja que no tiene suficientes puntos definidos" << endl;
+	
+	Caja* caja = new Caja(leer_atributo(xml_caja,"id"),punto_min,punto_max);
+	comportamiento->AgregarCaja(caja);
+	
+	DOMNodeList* xml_lista_entradas = xml_caja->getElementsByTagName(XMLString::transcode("entradas"));
+	if ( xml_lista_entradas && xml_lista_entradas->getLength() > 0 )
+	{
+		DOMElement* xml_entradas = dynamic_cast< xercesc::DOMElement* >( xml_lista_entradas->item(0) );
+		CargarElementosDeListaAObjeto<ElementoConEntradas>(caja,xml_entradas,"entrada",&CargarEntrada);
+	}
+}
+
+void CargarSensor(Conducta* conducta, DOMElement* xml_sensor)
+{
+	Sensor* sensor = new Sensor(leer_atributo(xml_sensor,"id"));
+	conducta->AgregarSensor(sensor);
+}
+
+void CargarTransicion(Comportamiento* comportamiento, DOMElement* xml_transicion)
+{
+	// Todo: construyendo string de char*. asegurarse que esto funcione
+	string id = string(leer_atributo(xml_transicion,"id"));
+	string id_comportamiento_destino = string(leer_atributo(xml_transicion,"id_destino"));
+	
+	Transicion* transicion = new Transicion(id,id_comportamiento_destino);
+	comportamiento->AgregarTransicion(transicion);
+	
+	DOMNodeList* xml_lista_condiciones = xml_transicion->getElementsByTagName(XMLString::transcode("condiciones"));
+	if ( xml_lista_condiciones && xml_lista_condiciones->getLength() > 0 )
+	{
+		DOMElement* xml_condiciones = dynamic_cast< xercesc::DOMElement* >( xml_lista_condiciones->item(0) );
+		CargarElementosDeListaAObjeto<Transicion>(transicion,xml_condiciones,"condicion",&CargarCondicion);
+	}
+	
+	DOMNodeList* xml_lista_actualizaciones = xml_transicion->getElementsByTagName(XMLString::transcode("actualizaciones"));
+	if ( xml_lista_actualizaciones && xml_lista_actualizaciones->getLength() > 0 )
+	{
+		DOMElement* xml_actualizaciones = dynamic_cast< xercesc::DOMElement* >( xml_lista_actualizaciones->item(0) );
+		CargarElementosDeListaAObjeto<Transicion>(transicion,xml_actualizaciones,"actualizacion",&CargarActualizacion);
+	}
+}
+
+void CargarTimer(Conducta* conducta, DOMElement* xml_timer)
+{
+	Timer* timer = new Timer(leer_atributo(xml_timer,"id"));
+	conducta->AgregarTimer(timer);
+}
+
+void CargarContador(Conducta* conducta, DOMElement* xml_contador)
+{
+	Contador* contador = new Contador(leer_atributo(xml_contador,"id"));
+	conducta->AgregarContador(contador);
+}
+
+void CargarComportamiento(Conducta* conducta, DOMElement* xml_comportamiento)
+{
+	Comportamiento* comportamiento = new Comportamiento(leer_atributo(xml_comportamiento,"id"));
+	conducta->AgregarComportamiento(comportamiento);
+	
+	// obtengo la lista de hijos de actuadores
+	DOMNodeList* xml_lista_hijos_comportamiento = xml_comportamiento->getChildNodes();
+	
+	// Si tiene algun hijo
+	if ( xml_lista_hijos_comportamiento )
+	{
+		// Obtengo la cantidad de hijos de <comportamiento>
+		const  XMLSize_t cantidad_xml_hijos_comportamiento = xml_lista_hijos_comportamiento->getLength();
+
+		// Itero sobre los hijos de <timers>
+		for( XMLSize_t i = 0; i < cantidad_xml_hijos_comportamiento; i++ )
+		{
+			// agarro el i-esimo nodo
+			DOMNode* xml_nodo = xml_lista_hijos_comportamiento->item(i);
+			
+			// Si el nodo es un elemento (podria ser texto, y nidea que mas...)
+			if( xml_nodo->getNodeType() && xml_nodo->getNodeType() == DOMNode::ELEMENT_NODE )
+			{
+				// lo casteo
+				DOMElement* xml_hijo_de_comportamiento = dynamic_cast< xercesc::DOMElement* >( xml_nodo );
+				
+				// me fijo si el tag es <actuadores>
+				if ( XMLString::equals(xml_hijo_de_comportamiento->getTagName(), XMLString::transcode("actuadores")))
+					CargarElementosDeListaAObjeto<Comportamiento>(comportamiento,xml_hijo_de_comportamiento,"actuador",&CargarActuador);
+				
+				// me fijo si el tag es <cajas>
+				else if ( XMLString::equals(xml_hijo_de_comportamiento->getTagName(), XMLString::transcode("cajas")))
+					CargarElementosDeListaAObjeto<Comportamiento>(comportamiento,xml_hijo_de_comportamiento,"caja",&CargarCaja);
+				
+				// me fijo si el tag es <transiciones>
+				else if ( XMLString::equals(xml_hijo_de_comportamiento->getTagName(), XMLString::transcode("transiciones")))
+					CargarElementosDeListaAObjeto<Comportamiento>(comportamiento,xml_hijo_de_comportamiento,"transicion",&CargarTransicion);
+				
+				else
+				{
+					cout << "hay un tag no esperado <" << XMLString::transcode(xml_hijo_de_comportamiento->getTagName()) << "> como hijo de un comportamiento" << endl;
+				}
+			}
+		}
+	}
+}
+
+// =====================================================================
+
+int parsear(string XMLArchivo, Conducta* conducta)
+{
+	// limpio los vectores auxiliares
+	
+	entradas_auxiliares.clear();
+	actualizaciones_timer_auxiliares.clear();
+	actualizaciones_contador_auxiliares.clear();
 	
 	// inicio la infraestructura del Xerces
 	if ( inicializar_xerces() ){
@@ -269,53 +425,121 @@ int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
 		miParser->parse( XMLArchivo.c_str() );
 		// Obtener el "DOCUMENTO" XML // no es necesario liberar este puntero...
 		DOMDocument* xmlDoc = miParser->getDocument();
-		// Obtener "Elemento RAIZ" del XML y chequear que sea "<ejecucion>" y que no esté vacío...
-		DOMElement* xmlEjecucion = xmlDoc->getDocumentElement();
-		if( !(XMLString::equals(xmlEjecucion->getTagName(), XMLString::transcode(NOMBRE_EJECUCION))) ){ // obtengo el ¿NOMBRE=EJECUCION? de la raiz
+		
+		// Obtener "Elemento RAIZ" del XML
+		DOMElement* xml_conducta = xmlDoc->getDocumentElement();
+		
+		// chequear que sea <conducta>
+		if( !(XMLString::equals(xml_conducta->getTagName(), XMLString::transcode("conducta"))) )
+		{
 			cout << "Error: La especificación del XML no corresponde !!!" << endl;
 			return 1;
-			// NOTA: el XML puede contener otras cosas, pero debe comenzar con "<ejecucion></ejecucion>"	
+			// NOTA: el XML puede contener otras cosas, pero debe comenzar con "<conducta></conducta>"	
 		}
-		if( !xmlEjecucion ){
+		
+		// chequear que <conducta> no esté vacío...
+		if( !xml_conducta )
+		{
 			cout << "Error: El archivo XML está vacío !!!" << endl;
 			return 1;
 		}
 
-		// Obtengo los "Nodos HIJOS de la Raiz" y chequeo que no esté vacío // me meto 1 nivel adentro de la RAIZ
-		DOMNodeList* xmlHijos = xmlEjecucion->getChildNodes();
-		if( !xmlHijos ){
+		// Obtengo los "Nodos HIJOS de la Raiz"
+		DOMNodeList* xml_hijos_conducta = xml_conducta->getChildNodes();
+		// chequeo que no esté vacío
+		if( !xml_hijos_conducta )
+		{
 			cout << "Error: El archivo XML está vacío !!!" << endl;
 			return 1;
 		}
+		
 		// Obtengo la "CANTIDAD de Hijos" // debería ser CANTIDAD == 3 (sensores, cajas y actuadores)
-		const  XMLSize_t xmlHijosCantidad = xmlHijos->getLength();
+		const  XMLSize_t cantidad_xml_hijos_conducta = xml_hijos_conducta->getLength();
 
-		// Me fijo por c/u hijo si es sensor, caja o actuador y lo agrego a vectorAuxiliar
-		for( XMLSize_t i = 0; i < xmlHijosCantidad; i++ ){
-			DOMNode* xmlNodo = xmlHijos->item(i); // obtengo el HIJO(i)
-			if( xmlNodo->getNodeType() && xmlNodo->getNodeType() == DOMNode::ELEMENT_NODE ){ // El Nodo es un elemento => lo re-casteo como un elemento // getNodeType() = TRUE => (es != NULL) // getNodeType() = DOMNode::ELEMENT_NODE => (es un elemento)
-				DOMElement* xmlElemento = dynamic_cast< xercesc::DOMElement* >( xmlNodo );
-				if( XMLString::equals(xmlElemento->getTagName(), XMLString::transcode(NOMBRE_SENSORES))){ // obtengo el ¿NOMBRE=SONSORES? del elemento y recasteo
-					DOMNodeList* xmlSensores = xmlElemento->getChildNodes(); // Obtengo la "LISTA de Sensores"
-					const  XMLSize_t xmlSensoresCantidad = xmlSensores->getLength(); // Obtengo la "CANTIDAD de Sensores"
-					leer_sensores(xmlSensores, xmlSensoresCantidad, vectorAuxiliar); // Llamo a leer_sensores que llena el vector auxiliar con los sensores
-				}
-				if( XMLString::equals(xmlElemento->getTagName(), XMLString::transcode(NOMBRE_CAJAS))){ // obtengo el ¿NOMBRE=CAJAS? del elemento y recasteo
-					DOMNodeList* xmlCajas = xmlElemento->getChildNodes(); // Obtengo la "LISTA de Cajas"
-					const  XMLSize_t xmlCajasCantidad = xmlCajas->getLength(); // Obtengo la "CANTIDAD de Cajas"
-					if ( leer_cajas(xmlCajas, xmlCajasCantidad, vectorAuxiliar) ){ // Llamo a leer_cajas que llena el vector auxiliar con las cajas
-						cout << "Error: Algo no anduvo bien con las cajas !!!" << endl;
-						return 1;
-					}
-				}
-				if( XMLString::equals(xmlElemento->getTagName(), XMLString::transcode(NOMBRE_ACTUADORES))){ // obtengo el ¿NOMBRE=ACTUADORES? del elemento y recasteo
-					DOMNodeList* xmlActuadores = xmlElemento->getChildNodes(); // Obtengo la "LISTA de Actuadores"
-					const  XMLSize_t xmlActuadoresCantidad = xmlActuadores->getLength(); // Obtengo la "CANTIDAD de Actuadores"
-					leer_actuadores(xmlActuadores, xmlActuadoresCantidad, vectorAuxiliar); // Llamo a leer_actuadores que llena el vector auxiliar con los actuadores
-				}
+		// Itero sobre los hijos de <conducta> y cargo cada uno
+		for( XMLSize_t i = 0; i < cantidad_xml_hijos_conducta; i++ )
+		{
+			// agarro el i-esimo nodo
+			DOMNode* xml_nodo = xml_hijos_conducta->item(i);
+			
+			// Si el nodo es un elemento (podria ser texto, y nidea que mas...)
+			if( xml_nodo->getNodeType() && xml_nodo->getNodeType() == DOMNode::ELEMENT_NODE )
+			{
+				// lo casteo
+				DOMElement* xml_hijo_de_conducta = dynamic_cast< xercesc::DOMElement* >( xml_nodo );
+				
+				// me fijo si el tag es <sensores>
+				if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("sensores")))
+					CargarElementosDeListaAObjeto<Conducta>(conducta,xml_hijo_de_conducta,"sensor",&CargarSensor);
+				
+				// me fijo si el tag es <timers>
+				else if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("timers")))
+					CargarElementosDeListaAObjeto<Conducta>(conducta,xml_hijo_de_conducta,"timer",&CargarTimer);
+				
+				// me fijo si el tag es <contadores>
+				else if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("contadores")))
+					CargarElementosDeListaAObjeto<Conducta>(conducta,xml_hijo_de_conducta,"contador",&CargarContador);
+				
+				// me fijo si es un <comportamiento>
+				else if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("comportamiento")))
+					CargarComportamiento(conducta,xml_hijo_de_conducta);
+				
+				else
+					cout << "hay un tag no esperado <" << XMLString::transcode(xml_hijo_de_conducta->getTagName()) << "> como hijo de una conducta" << endl;
 			}
 		}
+		
+		const char* inicial = leer_atributo(xml_conducta,"id_comportamiento_inicial");
+		conducta->SetComportamientoInicial(inicial);
+		
+		// Ya estan cargados todos los elementos
+		// asi que puedo definir las entradas
+		forall(it,entradas_auxiliares)
+		{
+			Elemento* entrada = conducta->ElementoPorId(it->second);
+			
+			// corroboro que exista una entrada con ese id
+			if (!entrada)
+			{
+				cout << "Error: no existe un elemento con id " << it->second << " para usar como entrada" << endl;
+				return 1;
+			}
+			
+			(it->first)->AgregarEntrada(entrada);
+		}
+		
+		forall(it,actualizaciones_timer_auxiliares)
+		{
+			
+			Timer* timer = (Timer*) (conducta->ElementoPorId((*it)->id_timer));
+			
+			// corroboro que exista una timer con ese id
+			if (!timer)
+			{
+				cout << "Error: no existe un timer con id " << (*it)->id_timer << " para usar en actualizador" << endl;
+				return 1;
+			}
+			
+			(*it)->transicion->AgregarActualizacion(new ActualizacionDeTimer(timer));
+		}
+		
+		forall(it,actualizaciones_contador_auxiliares)
+		{
+			
+			Contador* contador = (Contador*) (conducta->ElementoPorId((*it)->id_contador));
+			
+			// corroboro que exista un contador con ese id
+			if (!contador)
+			{
+				cout << "Error: no existe un contador con id " << (*it)->id_contador << " para usar en actualizador" << endl;
+				return 1;
+			}
+			
+			(*it)->transicion->AgregarActualizacion(new ActualizacionDeContador(contador,(*it)->accion));
+		}
+		
 	} // end try
+	
 	catch (const XMLException& toCatch){
 		char* message = XMLString::transcode( toCatch.getMessage() );
 		cout << "Error: algún error parseando el archivo: " << message << endl;
@@ -325,61 +549,20 @@ int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
 
 	// terminar la infraestructura del Xerces
 	terminar_xerces();
-	
 
 // 2. CHEQUEAR QUE NO HAYA IDs REPETIDOS
-	for (i = 0; i < vectorAuxiliar.size(); i++)
-		for (j = 0; j < vectorAuxiliar.size(); j++)
-			if ( (j != i) && (vectorAuxiliar[j].id == vectorAuxiliar[i].id) ){
-				cout << "Error: hay IDs repetidos !!" << endl;
-				return 1;
-			}
 
-// 3. CHEQUEAR QUE "ENTRADAS" DE C/U SE CORRESPONDAN CON ELEMENTOS EXISTENTES
-	for (i = 0; i < vectorAuxiliar.size(); i++)
-		for (j = 0; j < ((vectorAuxiliar[i]).entradas).size(); j++){
-			for (k = 0; k < vectorAuxiliar.size(); k++)
-				if ( vectorAuxiliar[k].id == vectorAuxiliar[i].entradas[j] )
-					break;
-			if ( k == vectorAuxiliar.size() ){
-				cout << "Error: hay elementos que tienen entradas que no existen !!" << endl;
-				return 1;
-			}
-		}
+// TODO...
 
 // 4. TOPOLOGICAL SORTING CON CHEQUEO DE CICLOS
+/*
+ * TODO
+ * 
 	if ( ordenar_topologicamente(vectorAuxiliar) ){
 		cout << "Error: el grafo tiene ciclos !!!" << endl;
 		return 1;
 	}
-	
-// 5. ARMO EL "tabla_ejecucion" CON TODOS LOS PUNTEROS
-	tabla_ejecucion.clear();
-	for (i = 0; i < vectorAuxiliar.size(); i++){
-		if ( vectorAuxiliar[i].tipo == TIPO_SENSOR ){ // es un sensor
-			nuevoSensor = new Sensor(vectorAuxiliar[i].id); // creo el sensor y lo agrego a TablaEjecucion...
-			tabla_ejecucion.push_back(nuevoSensor);
-		}
-		if ( vectorAuxiliar[i].tipo == TIPO_CAJA ){ // es una caja
-			nuevaCaja = new Caja(vectorAuxiliar[i].id); // creo la caja...
-			for (j = 0; j < (vectorAuxiliar[i].puntos).size(); j++)
-				(*((*nuevaCaja)._puntos)).push_back( (vectorAuxiliar[i]).puntos[j] );
-			for (j = 0; j < (vectorAuxiliar[i].entradas).size(); j++)
-				for (k = 0; k < i; k++)
-					if ( (*(tabla_ejecucion[k])).getId() == (vectorAuxiliar[i]).entradas[j] )
-						(*((*nuevaCaja)._entradas)).push_back( tabla_ejecucion[k] ); // agrego el puntero al elemento
-			tabla_ejecucion.push_back(nuevaCaja);
-		}
-		if ( vectorAuxiliar[i].tipo == TIPO_ACTUADOR ){ // es un actuador
-			nuevoActuador = new Actuador(vectorAuxiliar[i].id); // creo el actuador...
-			for (j = 0; j < (vectorAuxiliar[i].entradas).size(); j++)
-				for (k = 0; k < i; k++)
-					if ( (*(tabla_ejecucion[k])).getId() == (vectorAuxiliar[i]).entradas[j] )
-						(*((*nuevoActuador)._entradas)).push_back( tabla_ejecucion[k] ); // agrego el puntero al elemento
-			tabla_ejecucion.push_back(nuevoActuador);
-		}
-	}
-
-// 6. RETORNO LA "tabla_ejecucion"
+*/
 	return 0;
 }
+

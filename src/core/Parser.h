@@ -1,21 +1,5 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
-
-	// defino los nombres de las entidades y atributos que estarán en el XML...
-	#define NOMBRE_EJECUCION "ejecucion"
-	#define NOMBRE_SENSORES "sensores"
-	#define NOMBRE_SENSOR "sensor"
-	#define NOMBRE_CAJAS "cajas"
-	#define NOMBRE_CAJA "caja"
-	#define NOMBRE_ACTUADORES "actuadores"
-	#define NOMBRE_ACTUADOR "actuador"
-	#define NOMBRE_ATRIBUTO_ID "id"
-	#define NOMBRE_ENTRADAS "entradas"
-	#define NOMBRE_ENTRADA "entrada"
-	#define NOMBRE_PUNTOS "puntos"
-	#define NOMBRE_PUNTO "punto"
-	#define NOMBRE_ATRIBUTO_PUNTO_X "x"
-	#define NOMBRE_ATRIBUTO_PUNTO_Y "y"
 	
 	// incluir las cosas para el manejo de errores de archivos
 	#include <sys/stat.h>
@@ -38,6 +22,6 @@
 	// usar namespace para Parser XML
 	using namespace xercesc;
 
-	int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion);	
+	int parsear(string XMLArchivo, Conducta* consucta);	
 
 #endif // _PARSER_H_

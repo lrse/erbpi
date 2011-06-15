@@ -8,7 +8,7 @@ WINRALDIR=./ral/win
 LNXRALDIR=./ral/lnx
 COREDIR=./core
 
-MAKE=make --no-print-directory --silent
+MAKE=make
 
 all: 
 	@echo "Se inicia la compilacion de todo el proyecto..."
@@ -48,10 +48,10 @@ win:
 	@#mv $(COREDIR)/*.exe $(DIRWIN)
 	
 lnx:
-	@echo "Compilando el codigo fuente para Linux..."
-	@$(MAKE) lnxxerces -C $(LIBDIR)
-	@$(MAKE) -C $(LNXRALDIR)
-	@#~ $(MAKE) lnx -C $(COREDIR)
+	echo "Compilando el codigo fuente para Linux..."
+	# $(MAKE) lnxxerces -C $(LIBDIR)
+	$(MAKE) -C $(LNXRALDIR)
+	#~ $(MAKE) lnx -C $(COREDIR)
 
 	@echo "Moviendo los archivos binarios generados a la carpeta de archivos binarios para Linux... "
 	@mv $(LNXRALDIR)/*.so $(DIRLNX)/lib
