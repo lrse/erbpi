@@ -30,6 +30,19 @@ ElementoConEntradas::ElementoConEntradas(Elemento_t tipo, const string& id, int 
 {
 }
 
+const set<Elemento*>& ElementoConEntradas::Entradas() const
+{
+	return _entradas;
+}
+
+bool ElementoConEntradas::TieneEntrada(Elemento* entrada) const
+{
+	forall(it,_entradas)
+		if ( (*it)==entrada )
+			return true;
+	return false;
+}
+
 void ElementoConEntradas::AgregarEntrada(Elemento* entrada)
 {
 	pair<set<Elemento*>::iterator,bool> ret;
@@ -338,6 +351,29 @@ Elemento* Conducta::ElementoPorId(const string& id_elemento)
 	return NULL;
 }
 
+bool Conducta::OrdenarElementosTopologicamente()
+{
+	bool no_hay_ciclos = true;
+	forall(it,_comportamientos)
+		no_hay_ciclos = no_hay_ciclos && it->second->OrdenarElementosTopologicamente();
+	
+	return no_hay_ciclos;
+}
+
+bool Conducta::LosIdsSonUnicos()
+{
+	set<const Elemento*> elementos;
+	forall(it,_timers) elementos.insert(it->second);
+	forall(it,_contadores) elementos.insert(it->second);
+	forall(it,_sensores) elementos.insert(it->second);
+	
+	bool son_unicos = true;
+	forall(it,_comportamientos)
+		son_unicos = son_unicos && it->second->LosIdsSonUnicos(elementos);
+	
+	return son_unicos;
+}
+
 void Conducta::CambiarAComportamiento( const string& id )
 {
 	map<string,Comportamiento*>::iterator it;
@@ -418,18 +454,9 @@ const string& Comportamiento::Id() const
 void Comportamiento::EjecutarElementos()
 {
 	// Se supone que se ejecutaron antes todos los elementos
-	// que puedan servir como entrada que no sean cajas
-	// las cajas estan ordenadas topologicamente
-	
-	forall(it,_cajas)
-		(it->second)->Ejecutar();
-	
-	// los actuadores se ejecutan por ultimo
-	// porque nunca son usados como entrada
-	// TODO: es cierto? lo puedo suponer?
-	
-	forall(it,_actuadores)
-		(it->second)->Ejecutar();
+	// que no tengan entradas y que puedan servir como entrada.
+	forall(it,_elementos_en_orden_topologico)
+		(*it)->Ejecutar();
 }
 
 const EstadoDeActuadores* Comportamiento::EstadoActuadores() const
@@ -461,10 +488,8 @@ Transicion* Comportamiento::TransicionActiva(Elementos& elementos)
 
 void Comportamiento::LoguearEncabezadoDeElementos(ostream& log_stream)
 {
-	forall(it,_cajas)
-		log_stream << (it->second)->Id() << ", ";
-	forall(it,_actuadores)
-		log_stream << (it->second)->Id() << ", ";
+	forall(it,_elementos_en_orden_topologico)
+		log_stream << (*it)->Id() << ", ";
 }
 
 void Comportamiento::LoguearEstadoDeElementos(ostream& log_stream)
@@ -480,17 +505,19 @@ void Comportamiento::AgregarActuador(Actuador* actuador)
 	pair<map<string,Actuador*>::iterator,bool> ret;
 	ret = _actuadores.insert( pair<string,Actuador*>(actuador->Id(),actuador) );
 	if (ret.second==false)
-		Error("Comportamiento::AgregarActuador - se trato de insertar un actuador con un id ya existente");
+		Error("Comportamiento::AgregarActuador - se trato de insertar un actuador con un id ya existente en _actuadores");
+	
+	AgregarElementoConEntradas(actuador);
 }
 
 void Comportamiento::AgregarCaja(Caja* caja)
 {
-	// TODO: deberia insertarla ordenada en orden topologico
-	
 	pair<map<string,Caja*>::iterator,bool> ret;
 	ret = _cajas.insert( pair<string,Caja*>(caja->Id(),caja) );
 	if (ret.second==false)
 		Error("Comportamiento::AgregarCaja - se trato de insertar una caja con un id ya existente");
+	
+	AgregarElementoConEntradas(caja);
 }
 
 void Comportamiento::AgregarTransicion(Transicion* transicion)
@@ -499,6 +526,81 @@ void Comportamiento::AgregarTransicion(Transicion* transicion)
 	ret = _transiciones.insert( transicion );
 	if (ret.second==false)
 		Error("Comportamiento::AgregarTransicion - se trato de agregar una transicion que ya existia");
+}
+
+void Comportamiento::AgregarElementoConEntradas(ElementoConEntradas* elemento)
+{
+	pair<set<ElementoConEntradas*>::iterator,bool> ret;
+	ret = _elementos.insert( elemento );
+	if (ret.second==false)
+		Error("Comportamiento::AgregarElementoConEntradas - se trato de insertar un actuador con un id ya existente en _elementos");
+}
+
+bool Comportamiento::OrdenarElementosTopologicamente()
+{
+	int size = _elementos.size();
+	list<int> elementos_sin_entradas;
+	_elementos_en_orden_topologico.clear();
+	
+	// armo un vector con las cajas
+	ElementoConEntradas* vector_cajas[size];
+	int k=0;
+	forall(it,_elementos)
+	{
+		vector_cajas[k] = *it;
+		k++;
+	}
+	
+	// armo la matriz de aristas (n^3) :s
+	vector<vector<bool> > aristas(size,vector<bool>(size,false));
+	
+	forn(i,size)
+	{
+		bool tiene_entradas = false;
+		forn(j,size)
+		{
+			if ( i!=j && vector_cajas[i]->TieneEntrada(vector_cajas[j]) )
+			{
+				tiene_entradas = true;
+				aristas[i][j] = true;
+			}
+		}
+		
+		if (!tiene_entradas)
+			elementos_sin_entradas.push_back(i);
+	}
+	
+	// Armo la lista
+	while (!elementos_sin_entradas.empty())
+	{
+		int index = elementos_sin_entradas.front();
+		elementos_sin_entradas.pop_front();
+		
+		_elementos_en_orden_topologico.push_back(vector_cajas[index]);
+		
+		// para cada elemento
+		forn(i,size)
+			// Si tenia como entrada a 'index'
+			if ( aristas[i][index] )
+			{
+				// saco esa arista
+				aristas[i][index] = false;
+				
+				// me fijo si le queda alguna entrada
+				bool tiene_entradas = false;
+				forn(j,size)
+					if ( aristas[i][j] )
+						tiene_entradas=true;
+				
+				// si no tiene entrada es un nuevo nodo para la lista
+				if (!tiene_entradas)
+					elementos_sin_entradas.push_back(i);
+			}
+	}
+	
+	// si pude cargar todos los elementos, esta perfecto, devuelvo true
+	// si no, el grafo tenia ciclos y devuelvo false
+	return (size==(int)_elementos_en_orden_topologico.size());
 }
 
 bool Comportamiento::ChequearActuadores(const ListaDeActuadores* actuadores) const
@@ -527,6 +629,18 @@ Elemento* Comportamiento::ElementoPorId(const string& id_elemento)
 		if ( (it->second)->Id() == id_elemento ) return it->second;
 	
 	return NULL;
+}
+
+bool Comportamiento::LosIdsSonUnicos(set<const Elemento*> elementos) const
+{
+	forall(it,_cajas) elementos.insert(it->second);
+	forall(it,_actuadores) elementos.insert(it->second);
+	
+	forall(it,elementos)
+		forall(it2,elementos)
+			if ( it!=it2 && (*it)->Id()==(*it2)->Id() )
+				return false;
+	return true;
 }
 
 /* Clase Transicion */

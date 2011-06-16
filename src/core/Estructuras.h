@@ -4,6 +4,7 @@
 	// incluir las cosas estandard
 	#include <set>
 	#include <map>
+	#include <list>
 	#include <math.h>
 	#include <string>
 	#include <vector>
@@ -75,6 +76,9 @@
 			/* agrega una entrada a la caja.
 			 * Se usa al construir la caja a partir del xml */
 			void AgregarEntrada(Elemento* entrada);
+			
+			const set<Elemento*>& Entradas() const;
+			bool TieneEntrada(Elemento* entrada) const;
 			
 		protected:
 			
@@ -311,6 +315,11 @@
 			void AgregarCaja(Caja* caja);
 			void AgregarTransicion(Transicion* transicion);
 			
+			/* Ordena los elementos topologicamente.
+			 * Devuelve true si todo va bien,
+			 * y false si encuentra ciclos */
+			bool OrdenarElementosTopologicamente();
+			
 			/* Para chequear que los sensores y actuadores
 			 * coincidan con los de la RAL */
 			bool ChequearActuadores(const ListaDeActuadores* actuadores) const;
@@ -321,6 +330,9 @@
 			 * cuando se construyen en el parser */
 			Elemento* ElementoPorId(const string& id_elemento);
 			
+			/* chequea que el id de cada elemento sea unico */
+			bool LosIdsSonUnicos(set<const Elemento*> elementos) const;
+			
 		private:
 			
 			string _id;
@@ -328,7 +340,14 @@
 			map<const string,Caja*> _cajas;
 			map<const string,Actuador*> _actuadores;
 			
+			set<ElementoConEntradas*> _elementos;
+			list<ElementoConEntradas*> _elementos_en_orden_topologico;
+			
 			set<Transicion*> _transiciones;
+			
+			// funciones auxiliares
+			
+			void AgregarElementoConEntradas(ElementoConEntradas* elemento);
 	};
 
 	class Conducta
@@ -372,6 +391,13 @@
 			 * Sirve al resolver las entradas de cajas y actuadores
 			 * cuando se construyen en el parser */
 			Elemento* ElementoPorId(const string& id_elemento);
+			
+			/* ordena los elementos de cada comportamiento,
+			 * que son los unicos con entradas, topologicamente */
+			bool OrdenarElementosTopologicamente();
+			
+			/* chequea que el id de cada elemento sea unico */
+			bool LosIdsSonUnicos();
 			
 		private:
 			

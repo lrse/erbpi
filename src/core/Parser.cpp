@@ -25,77 +25,6 @@ set<ActualizacionContadorAuxiliar*> actualizaciones_contador_auxiliares;
 
 /* funciones auxiliares */
 
-/* int ordenar_topologicamente(vector<TuplaAuxiliar>& vectorAux)
- * 
- * TODO
- * 
-{
-	// el orden totoplogico lo devuelve por "vectorAux"
-	// esta función detecta ciclos y devuelve error si los hay...
-	// Ojo con abusar de esta función, creo que pertenece a O(n^3)...
-	// esta función asume que no hay elementos repetidos por IDs...
-	int flag, i, j, k, gradoEntradaCero;
-	int n = vectorAux.size(); // calculo el tamaño
-	vector<TuplaAuxiliar> vectorAux2; // será una copia "ordenada topologicamente" de vectorAux
-	int matrizAdyacenciaAux[n][n]; // creo la matrizAdyacenciaAux para el sorting
-	int incluidos[n]; // vector auxiliar para el sorting, son lo que ya fueron ordenados...
-
-	// inicializo "incluidos" todo en "false" y la matriz de adyacencia toda en "-1"
-	for (i = 0; i < n; i++){
-		incluidos[i] = false;
-		for (j = 0; j < n; j++)
-			matrizAdyacenciaAux[i][j] = -1;
-	}
-	
-	// configuro la "matrizAdyacenciaAux", si (matrizAdyacenciaAux[i][j] == 1) => (i-->j), o sea, "i" es antecesor de "j".
-	// o sea, hay que recorrerla por columnas para que ande bien...
-	for (i = 0; i < n; i++)
-		for (j = 0; j < ((vectorAux[i]).entradas).size(); j++)
-			for (k = 0; k < n; k++)
-				if ( vectorAux[i].entradas[j] == vectorAux[k].id ){
-					matrizAdyacenciaAux[k][i] = 1;
-					break;
-				}
-	
-	// ahora empiezo el sorting...
-	vectorAux2.clear(); // limpio el vectorAux2 antes de empezar el soroting...
-	flag = true;
-	while ( flag ){
-		for (i = 0; i < n; i++){ // recorro por columnas
-			if ( !incluidos[i] ){ // el "i" todavía no está incluido
-				gradoEntradaCero = true;
-				for (j = 0; j < n; j++){ // busco si "i" tiene predecesores
-					if ( matrizAdyacenciaAux[j][i] > 0 ){ // el "i" todavía tiene predecesores
-						gradoEntradaCero = false;
-						break;
-					}
-				}
-				if ( gradoEntradaCero ){ // "i" no tiene predecesores => lo agrego al resultado
-					incluidos[i] = true; // incluyo a "i"
-					vectorAux2.push_back( vectorAux[i] ); // pongo el nuevo item en el vectorAux2 al final
-					for (j = 0; j < n; j++){ // corrijo la matriz de adyacencia porque "saqué" a "i", todos los que tenían a "i" como predecesor ya no lo tienen...
-						matrizAdyacenciaAux[i][j] = -1;
-						matrizAdyacenciaAux[j][i] = -1;
-					}
-					break;
-				}
-			}
-		}
-		if ( i == n ){
-			if ( !gradoEntradaCero )
-				return 1; // OJO: EL GRAFO TIENE CICLOS !!!  => retornar ERROR !!
-			else flag = false;
-		}
-	}
-	
-	// ordeno vectorAux para devolver con el orden del sorting en vectorAux2
-	vectorAux.clear();
-	for (i = 0; i < n; i++)
-		vectorAux.push_back( vectorAux2[i] );
-	return 0;
-}
-*/
-
 int inicializar_xerces()
 {
 	try{
@@ -489,6 +418,14 @@ int parsear(string XMLArchivo, Conducta* conducta)
 			}
 		}
 		
+		// chequear que no haya ids repetidos
+		if ( !conducta->LosIdsSonUnicos() )
+		{
+			cout << "Error: Hay ids repetidos !!!" << endl;
+			return 1;
+		}
+		
+		// seteo el comportamiento inicial
 		const char* inicial = leer_atributo(xml_conducta,"id_comportamiento_inicial");
 		conducta->SetComportamientoInicial(inicial);
 		
@@ -506,6 +443,13 @@ int parsear(string XMLArchivo, Conducta* conducta)
 			}
 			
 			(it->first)->AgregarEntrada(entrada);
+		}
+		
+		// topological sorting con chequeo de ciclos
+		if ( !conducta->OrdenarElementosTopologicamente() )
+		{
+			cout << "Error: el grafo de elementos tiene ciclos !!!" << endl;
+			return 1;
 		}
 		
 		forall(it,actualizaciones_timer_auxiliares)
@@ -549,20 +493,7 @@ int parsear(string XMLArchivo, Conducta* conducta)
 
 	// terminar la infraestructura del Xerces
 	terminar_xerces();
-
-// 2. CHEQUEAR QUE NO HAYA IDs REPETIDOS
-
-// TODO...
-
-// 4. TOPOLOGICAL SORTING CON CHEQUEO DE CICLOS
-/*
- * TODO
- * 
-	if ( ordenar_topologicamente(vectorAuxiliar) ){
-		cout << "Error: el grafo tiene ciclos !!!" << endl;
-		return 1;
-	}
-*/
+	
 	return 0;
 }
 
