@@ -1,20 +1,18 @@
 MAKE=make --no-print-directory --silent
 
 all: 
-	@$(MAKE) -C ./lnx
-	@$(MAKE) -C ./win
-	@mv ./lnx/*.o ./
-	@mv ./win/*.o ./
-	
+	@echo "Compilando RALs..."
+	@$(MAKE) -C ./yaks
+	@$(MAKE) -C ./khepera/cable
+	@$(MAKE) -C ./exabot
+#	@$(MAKE) -C ./exabotPlayer
+	@cp libyaksRAL.so libRAL.so
+
 new: clean all
 
-lnx:
-	@$(MAKE) -C ./lnx
-	
-win:
-	@$(MAKE) -C ./win
-		
 clean:
-	@$(MAKE) clean -C ./lnx
-	@$(MAKE) clean -C ./win
-	@$(RM) *.so
+	@$(MAKE) clean -C ./yaks
+	@$(MAKE) clean -C ./khepera/cable
+	@$(MAKE) clean -C ./exabot
+	#@$(MAKE) clean -C ./exabotPlayer
+	@$(RM) *.so ../lib/*.so

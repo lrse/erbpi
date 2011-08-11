@@ -1,76 +1,44 @@
-SRCDIR=../src
 BINDIR=../bin
-WINDIR=../bin/win
-LNXDIR=../bin/lnx
-
+SRCDIR=../src
 LIBDIR=./lib
-WINRALDIR=./ral/win
-LNXRALDIR=./ral/lnx
+RALDIR=./ral
+GUIDIR=./gui
 COREDIR=./core
 
-MAKE=make 
+MAKE=make
 
-.PHONY.: common
+all: 
+	@$(RM) -rf $(BINDIR)
+	@$(MAKE) compile install
 
-all: common
+compile: 
 	@echo "Se inicia la compilacion de todo el proyecto..."
-	@$(MAKE) win
-	@$(MAKE) lnx
-	@echo "Listo!"
+	@#echo "Compilando la GUI..."
+	@#~ $(MAKE) -C $(GUIDIR)
+	@$(MAKE) -C $(RALDIR)
+	@$(MAKE) core -C $(COREDIR)
+	@echo "Los ejecutables fueron creados correctamente."
 
-new: 
-	@$(MAKE) distclean
-	@$(MAKE) common
-	@$(MAKE) all
-
-common:
+install:
 	@echo "Creando los directorios para guardar los archivos binarios ..."
-	@mkdir -p $(BINDIR)
-	@mkdir -p $(WINDIR)/lib $(WINDIR)/comportamientos
-	@mkdir -p $(LNXDIR)/lib $(LNXDIR)/comportamientos
-
+	@mkdir $(BINDIR)
+	@mkdir $(BINDIR)/core
 	@echo "Copiando los comportamientos basicos a la carpeta de archivos binarios..."
-	@cp -r comportamientos/* $(WINDIR)/comportamientos/ $(LNXDIR)/comportamientos
+	@cp -r ./comportamientos $(BINDIR)
+	@cp -r ./gui $(BINDIR)
+	@echo "Copiando las distintas RALs a la carpeta de archivos binarios..."
+	@cp -r ./ral/*.so $(BINDIR)/core
+	@echo "Copiando el core a la carpeta de archivos binarios..."
+	@cp $(COREDIR)/core $(BINDIR)/core/core_exe
+	@cp $(COREDIR)/core.sh $(BINDIR)/core/
 
-	@echo "Compilando la GUI..."
-	@#~ $(MAKE) gtk -C ./libs
-	@$(MAKE) gui -C ./gui
-
-win:
-	@echo "Compilando el codigo fuente para Windows..."
-	@#$(MAKE) winxerces -C $(LIBDIR)
-	@#$(MAKE) -C $(WINRALDIR)
-	@#$(MAKE) win -C $(COREDIR)
-	
-	@echo "Moviendo los archivos binarios generados a la carpeta de archivos binarios para Windows... "
-	@#mv $(WINRALDIR)/*.dll $(DIRWIN)/lib
-	@#mv $(COREDIR)/*.exe $(DIRWIN)
-	
-lnx:
-	@echo "Compilando el codigo fuente para Linux..."
-	@#$(MAKE) lnxxerces -C $(LIBDIR)
-	@$(MAKE) -C $(LNXRALDIR)
-	@#~ $(MAKE) lnx -C $(COREDIR)
-
-	@echo "Moviendo los archivos binarios generados a la carpeta de archivos binarios para Linux... "
-	@mv $(LNXRALDIR)/*.so $(LNXDIR)/lib
-	@#mv $(COREDIR)/core $(LNXDIR)
-
-cleanwin:
-	@echo "Eliminando archivos de compilacion de las RAL de Windows..."
-	@$(MAKE) clean -C $(LNXRALDIR)
-	
-cleanlnx:
-	@echo "Eliminando archivos compilacion de las RAL de Linux..."
-	@$(MAKE) clean -C $(LNXRALDIR)
-	
 clean:
-	@$(MAKE) cleanwin
-	@$(MAKE) cleanlnx
-	@echo "Eliminando archivos de compilacion de las librerias..."
-	#@$(MAKE) -C $(LIBDIR) clean
+	@#~ $(MAKE) clean -C $(GUIDIR)
+	@$(MAKE) clean -C $(RALDIR)
+	@$(MAKE) clean -C $(COREDIR)
+	@echo "Se limpiaron todos los archivos de codigo objeto."
 
 distclean:
 	@$(MAKE) clean
-	@echo "Limpiando carpeta de archivos binarios..."
 	@$(RM) -rf $(BINDIR)
+	@echo "Se eliminaron todos los archivos binarios generados."
