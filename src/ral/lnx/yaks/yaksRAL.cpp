@@ -1,4 +1,4 @@
-#include "../RAL.h"
+#include <RAL.h>
 #include "yaksRAL.h"
 
 // DEFINICION DE VARIABLES DE NORMALIZACION DE SENSORES Y MOTORES
@@ -27,8 +27,7 @@ int sock; // global variable sock
 // -------------  DEFINICION DE FUNCIONES PRIVADAS  --------------------
 // ---------------------------------------------------------------------
 
-int connectSocket(void)
-{
+int connectSocket(void){
 	struct sockaddr_in stSockAddr;
 	int Res;
 	int SocketFD = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -64,15 +63,13 @@ int connectSocket(void)
 	return SocketFD;	
 }
 
-int disconnectSocket(int SocketFD)
-{
+int disconnectSocket(int SocketFD){
 	shutdown(SocketFD, SHUT_RDWR);
 	close(SocketFD);
 	return 0;
 }
 
-void readProximitySensors(int *sensors)
-{
+void readProximitySensors(int *sensors){
 	char buf[512], *p;
 	int i;
 
@@ -101,8 +98,7 @@ void readProximitySensors(int *sensors)
 	}
 }
 
-void readLightSensors(int *sensors)
-{
+void readLightSensors(int *sensors){
 	char buf[512], *p;
 	int i;
 
@@ -131,8 +127,7 @@ void readLightSensors(int *sensors)
 	}
 }
 
-float readGroundSensor()
-{
+float readGroundSensor(){
 	char buf[512], *p;
 
 	send(sock,"#G\n",strlen("#G\n"),0);
@@ -150,8 +145,7 @@ float readGroundSensor()
 	return (float)atof(&buf[3]);
 }
 
-float readEnergySensor()
-{
+float readEnergySensor(){
 	char buf[512], *p;
 
 	send(sock,"#E\n",strlen("#E\n"),0);
@@ -169,8 +163,7 @@ float readEnergySensor()
 	return (float)atof(&buf[3]);
 }
 
-void setMotors(int *motors)
-{
+void setMotors(int *motors){
 	char cmd[512], resp[512];
 
 	sprintf(cmd,"D,%d,%d\n",motors[0],motors[1]);
@@ -180,8 +173,7 @@ void setMotors(int *motors)
 	recv(sock,resp,sizeof(resp),0);
 }
 
-void normalizarSensores( int *sensors, int tamanio, std::string tipo )
-{
+void normalizarSensores( int *sensors, int tamanio, std::string tipo ){
 	/*
 	// muestro lo obtenido...
 	printf("Valor sensores Desnorm es: [");
@@ -219,8 +211,7 @@ void normalizarSensores( int *sensors, int tamanio, std::string tipo )
 	*/
 }
 
-void desNormalizarMotores( int *motors, int tamanio )
-{
+void desNormalizarMotores( int *motors, int tamanio ){
 	/*
 	// muestro lo obtenido...
 	printf("Valor motores Norm es: [");
@@ -254,54 +245,47 @@ void desNormalizarMotores( int *motors, int tamanio )
 // --------------  FIN DE LAS FUNCIONES PRIVADAS  ----------------------
 // ---------------------------------------------------------------------
 
-void inicializarRAL()
-{
+void inicializarRAL(){
 	sock = connectSocket();
 }
 
-void finalizarRAL()
-{
-	disconnectSocket(sock);
+void finalizarRAL(){
+	int res = disconnectSocket(sock);
 }
 
-const ListaDeSensores* getListaSensores()
-{
-	ListaDeSensores* sensors = new ListaDeSensores(16);
-	
-	(*sensors)[0] = SENSOR_00;
-	(*sensors)[1] = SENSOR_01;
-	(*sensors)[2] = SENSOR_02;
-	(*sensors)[3] = SENSOR_03;
-	(*sensors)[4] = SENSOR_04;
-	(*sensors)[5] = SENSOR_05;
-	(*sensors)[6] = SENSOR_06;
-	(*sensors)[7] = SENSOR_07;
-	(*sensors)[8] = SENSOR_08;
-	(*sensors)[9] = SENSOR_09;
-	(*sensors)[10] = SENSOR_10;
-	(*sensors)[11] = SENSOR_11;
-	(*sensors)[12] = SENSOR_12;
-	(*sensors)[13] = SENSOR_13;
-	(*sensors)[14] = SENSOR_14;
-	(*sensors)[15] = SENSOR_15;
-	
+std::vector<std::string> getListaSensores(){
+	std::vector<std::string> sensors(16);
+	sensors[0] = SENSOR_00;
+	sensors[1] = SENSOR_01;
+	sensors[2] = SENSOR_02;
+	sensors[3] = SENSOR_03;
+	sensors[4] = SENSOR_04;
+	sensors[5] = SENSOR_05;
+	sensors[6] = SENSOR_06;
+	sensors[7] = SENSOR_07;
+	sensors[8] = SENSOR_08;
+	sensors[9] = SENSOR_09;
+	sensors[10] = SENSOR_10;
+	sensors[11] = SENSOR_11;
+	sensors[12] = SENSOR_12;
+	sensors[13] = SENSOR_13;
+	sensors[14] = SENSOR_14;
+	sensors[15] = SENSOR_15;
 	return sensors;
 }
 
-const ListaDeActuadores* getListaActuadores()
-{
-	ListaDeActuadores* motors = new ListaDeActuadores(2);
-	(*motors)[0] = MOTOR_00;
-	(*motors)[1] = MOTOR_01;
+std::vector<std::string> getListaActuadores(){
+	std::vector<std::string> motors(2);
+	motors[0] = MOTOR_00;
+	motors[1] = MOTOR_01;
 	return motors;
 }
 
-const EstadoDeSensores* getEstadoSensores()
-{
+std::vector<Item> getEstadoSensores(){
 	Item item;
-	const ListaDeSensores* sensorsName = getListaSensores();
-	EstadoDeSensores* sensors = new EstadoDeSensores();
-	
+	std::vector<std::string> sensorsName = getListaSensores();
+	//std::vector<Item> sensors(16);
+	std::vector<Item> sensors;
 	int proximitySensors[8];
 	int lightSensors[8];
 	
@@ -313,31 +297,29 @@ const EstadoDeSensores* getEstadoSensores()
 	normalizarSensores( lightSensors, 8, "light" );
 
 	for(int i=0; i<8; i++){
-		item.id = (*sensorsName)[i];
+		item.id = sensorsName[i];
 		item.valor = proximitySensors[i];
-		sensors->push_back(item);
+		sensors.push_back(item);
 	} 
 	for(int i=8; i<16; i++){
-		item.id = (*sensorsName)[i];
+		item.id = sensorsName[i];
 		item.valor = lightSensors[i-8];
-		sensors->push_back(item);
+		sensors.push_back(item);
 	}
 	return sensors;
 }
 
-unsigned long getFrecuenciaTrabajo()
-{
+unsigned long getFrecuenciaTrabajo(){
 	return CTR_FREC;
 }
 
-void setEstadoActuadores(const EstadoDeActuadores* actuadores)
-{
+void setEstadoActuadores(std::vector<Item> actuators){
 	int motors[2];
-	
-	forall(it,*actuadores)
-	{
-		if ( it->id == MOTOR_00) motors[0] = it->valor;
-		if ( it->id == MOTOR_01) motors[1] = it->valor;
+	//int* motors[2];
+	for(int i=0; i < actuators.size(); i++){
+		//printf("Valor motor %s es %d \n", (actuators[i].id).c_str(), actuators[i].valor);
+		if ( actuators[i].id == MOTOR_00){ motors[0] = actuators[i].valor;}
+		if ( actuators[i].id == MOTOR_01){ motors[1] = actuators[i].valor;}
 	}
 	
 	// desnormalizo los valores de motores de la GUI...
@@ -346,4 +328,3 @@ void setEstadoActuadores(const EstadoDeActuadores* actuadores)
 	// seteo
 	setMotors(motors);	
 }
-

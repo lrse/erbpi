@@ -8,9 +8,11 @@ WINRALDIR=./ral/win
 LNXRALDIR=./ral/lnx
 COREDIR=./core
 
-MAKE=make
+MAKE=make 
 
-all: 
+.PHONY.: common
+
+all: common
 	@echo "Se inicia la compilacion de todo el proyecto..."
 	@$(MAKE) win
 	@$(MAKE) lnx
@@ -23,23 +25,20 @@ new:
 
 common:
 	@echo "Creando los directorios para guardar los archivos binarios ..."
-	@mkdir $(BINDIR)
-	@mkdir $(WINDIR)
-	@mkdir $(WINDIR)/lib
-	@mkdir $(LNXDIR)
-	@mkdir $(LNXDIR)/lib
+	@mkdir -p $(BINDIR)
+	@mkdir -p $(WINDIR)/lib $(WINDIR)/comportamientos
+	@mkdir -p $(LNXDIR)/lib $(LNXDIR)/comportamientos
 
 	@echo "Copiando los comportamientos basicos a la carpeta de archivos binarios..."
-	@cp -r ./comportamientos $(WINDIR)
-	@cp -r ./comportamientos $(LNXDIR)
+	@cp -r comportamientos/* $(WINDIR)/comportamientos/ $(LNXDIR)/comportamientos
 
 	@echo "Compilando la GUI..."
 	@#~ $(MAKE) gtk -C ./libs
-	@#~ $(MAKE) gui -C ./gui
+	@$(MAKE) gui -C ./gui
 
 win:
 	@echo "Compilando el codigo fuente para Windows..."
-	@$(MAKE) winxerces -C $(LIBDIR)
+	@#$(MAKE) winxerces -C $(LIBDIR)
 	@#$(MAKE) -C $(WINRALDIR)
 	@#$(MAKE) win -C $(COREDIR)
 	
@@ -48,13 +47,13 @@ win:
 	@#mv $(COREDIR)/*.exe $(DIRWIN)
 	
 lnx:
-	echo "Compilando el codigo fuente para Linux..."
-	# $(MAKE) lnxxerces -C $(LIBDIR)
-	$(MAKE) -C $(LNXRALDIR)
-	#~ $(MAKE) lnx -C $(COREDIR)
+	@echo "Compilando el codigo fuente para Linux..."
+	@#$(MAKE) lnxxerces -C $(LIBDIR)
+	@$(MAKE) -C $(LNXRALDIR)
+	@#~ $(MAKE) lnx -C $(COREDIR)
 
 	@echo "Moviendo los archivos binarios generados a la carpeta de archivos binarios para Linux... "
-	@mv $(LNXRALDIR)/*.so $(DIRLNX)/lib
+	@mv $(LNXRALDIR)/*.so $(LNXDIR)/lib
 	@#mv $(COREDIR)/core $(LNXDIR)
 
 cleanwin:
@@ -69,7 +68,7 @@ clean:
 	@$(MAKE) cleanwin
 	@$(MAKE) cleanlnx
 	@echo "Eliminando archivos de compilacion de las librerias..."
-	@$(MAKE) -C $(LIBDIR) clean
+	#@$(MAKE) -C $(LIBDIR) clean
 
 distclean:
 	@$(MAKE) clean
