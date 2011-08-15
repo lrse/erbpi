@@ -7,11 +7,11 @@
 using namespace std;
 
 /* constantes */
-#define SENSOR_00                       "telemetro.270"
-#define SENSOR_01                       "telemetro.315"
+#define SENSOR_00                       "telemetro.90"
+#define SENSOR_01                       "telemetro.45"
 #define SENSOR_02                       "telemetro.0"
-#define SENSOR_03                       "telemetro.45"
-#define SENSOR_04                       "telemetro.90"
+#define SENSOR_03                       "telemetro.315"
+#define SENSOR_04                       "telemetro.270"
 #define SENSOR_05                       "telemetro.180"
 #define SENSOR_06                       "sonar.0"
 #define SENSOR_07                       "linea.0"
@@ -25,24 +25,24 @@ using namespace std;
 /* variables */
 PlayerCc::PlayerClient* player_client;
 PlayerCc::Position2dProxy* position_proxy;
-PlayerCc::LaserProxy* laser_proxy;
+PlayerCc::RangerProxy* ranger_proxy;
 
 /* funciones */
 extern "C" {
 void inicializarRAL(void) {
-  player_client = new PlayerCc::PlayerClient;
+  player_client = new PlayerCc::PlayerClient("localhost");
   position_proxy = new PlayerCc::Position2dProxy(player_client);
-  laser_proxy = new PlayerCc::LaserProxy(player_client);
+  ranger_proxy = new PlayerCc::RangerProxy(player_client);
   
   player_client->StartThread();
   player_client->Read();
-  position_proxy->SetMotorEnable(false);
+  position_proxy->SetMotorEnable(true);
 }
 
 void finalizarRAL(void) {
   position_proxy->SetMotorEnable(false);
   player_client->StopThread();
-  delete laser_proxy;
+  delete ranger_proxy;
   delete position_proxy;
   delete player_client;
 }
@@ -78,14 +78,13 @@ std::vector<Item> getEstadoSensores(void) {
   // telemetros
   boost::mutex::scoped_lock(player_client->mMutex);
   
-  for (size_t i = 0; i < 5; i++) {
+  for (size_t i = 0; i < 6; i++) {
     sensors[i].id = sensorsName[i];
-    double a = laser_proxy->GetRange(i) - MIN_TELEMETER_RANGE;
-    sensors[i].valor = (int)round((max(0.0, laser_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 255);
+    double a = ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE;
+    sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 255);
     sensors[i].valor = 255 - min(sensors[i].valor, 255);
-    cout << "laser(" << i << "): " << laser_proxy->GetRange(i) << " valor: " << sensors[i].valor << " a: " << a << endl;
+    cout << "laser(" << i << "): " << ranger_proxy->GetRange(i) << " valor: " << sensors[i].valor << " a: " << a << endl;
   }
-  sensors[5].valor = 0; // TODO: se estan simulando solo los 5 telemetros de adelante
 
   // sonar
   sensors[6].id = sensorsName[6];
@@ -111,8 +110,8 @@ unsigned long getFrecuenciaTrabajo(){
 }
 
 void setEstadoActuadores(std::vector<Item> actuators){
-  double ML = ((double)actuators[0].valor / 200.0) * 0.1;
-  double MR = ((double)actuators[1].valor / 200.0) * 0.1;
+  double ML = ((double)actuators[0].valor / 200.0) * 0.5;
+  double MR = ((double)actuators[1].valor / 200.0) * 0.5;
   
   const double wheelbase = 0.183;
   

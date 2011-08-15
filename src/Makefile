@@ -31,6 +31,8 @@ install:
 	@echo "Copiando el core a la carpeta de archivos binarios..."
 	@cp $(COREDIR)/core $(BINDIR)/core/core_exe
 	@cp $(COREDIR)/core.sh $(BINDIR)/core/
+	@mkdir $(BINDIR)/player
+	@cp -r ./ral/exabot_player/player_config/* $(BINDIR)/player
 
 clean:
 	@#~ $(MAKE) clean -C $(GUIDIR)
