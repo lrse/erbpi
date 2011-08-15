@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 <robot id="khepera" nombre="Khepera">
   <imagen id='esquema' href='robots/robot_khepera.png' />
-  <ral href='kheperaRAL.so'/>
+  <ral href='libkheperaRAL.so'/>
   <sensores>
     <sensor id='proximidad.320' tipo='proximidad' default='true'>
       <mapaimagen imagen='esquema'>

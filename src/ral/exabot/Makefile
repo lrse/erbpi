@@ -4,7 +4,7 @@ all:	exabotRAL.so
 
 exabotRAL.so: RAL.o teles_lineal.o
 	g++ -fPIC -shared $^ -o $@
-	cp $@ ../
+	cp $@ ../libexabotRAL.so
 
 clean:
 	rm -f *.o *.so

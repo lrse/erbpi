@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 <robot id="exabot-player" nombre="ExaBotPlayer">
   <imagen id='esquema' href='robots/robot_exabot.png' />
-  <ral href='exabotPlayerRAL.so'/>
+  <ral href='libexabotPlayerRAL.so'/>
   <sensores>
     <!--  ******* TELEMETROS ******* -->
     <sensor id='telemetro.315' tipo='telemetro' default='true'>
