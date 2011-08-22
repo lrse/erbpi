@@ -1,6 +1,0 @@
-
-Para generar el binario hay que ejecutar "ExtensionRobotica/src/gui/gui_instalar.sh" para que copie los binarios...
-
-Luego, el binario se ejecuta desde "ExtensionRobotica/bin/gui/gui_ejecutar.sh"
-
-Y listo!
