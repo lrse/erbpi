@@ -52,11 +52,12 @@ To the date, we have implemented RALs for the Khepera [14] and Exabot
 [15] robots, and for the YAKS (Yet another Khepera Simulator) [16] and the
 Player/Stage [17] simulator adapted for the ExaBot.
 
-\subsection{Normalización de Mediciones}
-El RAL debe normalizar las mediciones de los sensores entre 0 y 1 !!!!
+\subsection{Normalización de Valores}
+El m\'odulo RAL se encarga adem\'as de normalizar los valores de sensores y actuadores. De esta forma, se abstrae para el m\'odulo GUI c\'omo es el manejo e interpretaci\'on de los valores de cada sensor y actuador dependiendo del robot o simulador que se est\'e utilizando.
 
-FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
+Para esto, el m\'odulo GUI s\'olo maneja valores relativos de los sensores y actuadores. Es decir, para sensores maneja valores en el rango \verb=[0:100]= que indican el porcentaje del valor del sensor (\verb=[0%:100%]=). Para motores, maneja valores en el rango \verb=[-100:100]= que indican el porcentaje del valor del motor (\verb=[-100%:100%]=). El m\'odulo RAL recibe del m\'odulo GUI estos valores relativos (normalizados), se encarga de desnormalizarlos adecuadamente en funci\'on del robot o simulador que se est\'e utilizando, y enviar los valores desnormalizados al robot. Cuando el m\'odulo RAL recibe valores del robot, se encarga de normalizarlos (relativizarlos) antes de entregar estos valores al m\'odulo GUI.
 
+Para m\'as informaci\'on de la normalizaci\'on espec\'ifica para cada robot y simulador, ver apartados \ref{normKhepera}, \ref{normYaks}, \ref{normExa} y \ref{normExaSim}.
 
 \section{Ejecuci\'on}
 la llama din\'amicamente el Core
@@ -135,34 +136,91 @@ infrarojos, que pueden funcionar como sensores de proximidad o de luz direcciona
 robots pueden ser controlados desde una PC a través de una interface serie o de una interface
 de radio.
 
-Para más información ver:
-\begin{itemize}
- \item \url{http://ftp.k-team.com/khepera/documentation/}
- \item \url{http://ftp.k-team.com/khepera/documentation/KheperaUserManual.pdf}
- \item \url{http://ftp.k-team.com/khepera/documentation/RadioBaseManual.pdf}
- \item \url{http://ftp.k-team.com/khepera/documentation/RadioTurretManual.pdf}
-\end{itemize}
+Para más información ver \cite{kheperaDoc}, \cite{kheperaManual}, \cite{kheperaBase} y \cite{kheperaTurret}.
+
 
 \subsection{Implementaci\'on}
 
 En función de las especificaciones del robot \textit{Khepera} y las características particulares necesarias para
-la conexión con el mismo, ya sea a través de \textit{Cable Serial} o \textit{Radio Frecuencia}, en los distintos sistemas
-operativos, fue necesario crear cuatro \textit{RALs} de \textit{Khepera} destintos para cada una de las posibilidades:
-\begin{itemize}
- \item RAL Khepera Linux - Cable
- \item RAL Khepera Windows - Cable
- \item RAL Khepera Linux - Radio
- \item RAL Khepera Windows - Radio
-\end{itemize}
-A continuación se detallan cada una de ellas:
+la conexión con el mismo, ya sea a través de \textit{Cable Serial} o \textit{Radio Frecuencia}, realizamos dos \textit{RALs} de \textit{Khepera}, una para 
+Linux y otra para Windows.
+
+\subsubsection{Normalizaci\'on de Sensores y Actuadores}
+\label{normKhepera}
+
+Los valores absolutos (desnormalizados) y normalizados que maneja el Khepera para sensores y actuadores son:
+
+\begin{tabular}{|r|cc|cc|}
+\hline
+\textbf{componente} & \textbf{valor m\'inimo} & \textbf{normalizado} & \textbf{valor m\'aximo} & \textbf{normalizado} \\
+\hline
+sensor proximidad & 0 & 0\% & 1023 & 100\% \\
+sensor luz        & 0 & 0\% & 512  & 100\% \\
+motores           & -20 & -100\% & 20  & 100\% \\
+\hline
+\end{tabular} 
+
+La funci\'on de normalizaci\'on-desnormalizaci\'on se encuentra implementada en las funciones \verb=normalizarSensores()= y \verb=desNormalizarMotores()=.
+Estas funciones simplemente son una conversi\'on lineal (regla de tres simple) entre el valor del sensor o motor y los valores m\'aximos y m\'inimos. Una vez normalizados o desnormalizados los valores, los mismos son saturados a los valores m\'aximos y m\'inimos permitidos para evitar problemas tanto en el robot como en la GUI. Los valores absolutos posibles para los motores son limitados, aunque el robot Khepera admite valores mayores, no se deben superar los indicados en el rango \verb=[-20:20]= para cuidar la mec\'anica del robot. Para m\'as informaci\'on sobre este punto ver \cite{kheperaManual}(p\'agina 25).
+
+FALTA PONER QU\'E QUIERE DECIR EL VALOR EN MILIMETROS DE \verb=[0:1023]= Y \verb=[0:512]= PARA LOS SENSORES !!!!!\\FALTA PONER QU\'E QUIERE DECIR EL VALOR EN MILIMETROS DE \verb=[0:1023]= Y \verb=[0:512]= PARA LOS SENSORES !!!!!\\FALTA PONER QU\'E QUIERE DECIR EL VALOR EN MILIMETROS DE \verb=[0:1023]= Y \verb=[0:512]= PARA LOS SENSORES !!!!!\\
+
+\textbf{Nota:} tener en cuenta al hacer los c\'alculos de normalizaci\'on-desnormalizaci\'on que deben manejarse los datos en valores \texttt{float} para no perder precisi\'on ni entrar en casos en los que devuelva \textit{cero} por truncamiento a \texttt{int}.
+
 
 \subsection{Conexión por Cable}
 Primero es importante chequear que el robot esté correctamente configurado para este tipo de conexión.
-En la sección \textit{3.1.3 - Jumpers, reset button and settings} del manual de usuario se detalla los modos de conexión.
+En la sección \textit{3.1.3 - Jumpers, reset button and settings} del manual de usuario se detalla los modos de conexión. 
+La configuración correcta es \texttt{\textbf{MODE 1}}, que implica una conexión \textit{serial RS232 a 9600 Baud}.  Ver Figura \ref{Fig:kheperaJumpersMode}.
 
-\textbf{Importante:} La configuración correcta es \texttt{\textbf{MODE 1}}, que implica una conexión por \textit{cable serial a 9600 Baud}.
+\subsubsection{Configuraci\'on Serial RS232}
+Para saber c\'omo es el protocolo de comunicación serial ver manual Khepera p\'agina 18, punto \textit{6. The serial communication protocol}.
 
-\subsubsection{RAL Khepera Linux 32 bits}
+\textbf{Cuidado:} No hay que tener la torreta puesta y tiene que estar bien configurado el modo de RS232, ver Figura \ref{Fig:kheperaJumpersMode}.
+
+La conexion desde la PC-host siempre es por RS232 y configurada a ``\textit{XXXX Baud, 8 bit, 1 start bit, 2 stop bit, no parity}'', lo único que puede cambiar son los \textit{XXXX Baud}, que los configuramos a ``\textit{9600 Baud}'', entonces nuestra configuración de \textit{RS232}:
+\begin{itemize}
+	\item Port /dev/ttyS0 (para linux)
+	\item 9600 Baud
+	\item 8 Bit
+	\item 1 StartBit
+	\item 2 StopBit
+	\item NONE Parity
+	\item RTS/CTS FlowControl
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{images/khepera_jumpers_mode1b.png}
+	\caption{Configuraci\'on de jumpers para el control del robot en ``\textit{Modo 1}'' para el protocolo de comunicaci\'on serial a 9600 Baudios.}
+	\label{Fig:kheperaJumpersMode}
+\end{figure}
+
+\subsubsection{Alimentaci\'on del robot}
+Si el switch de las baterias está en \textbf{ON:} el robot se power-alimenta de las baterias internas. Si est\'a en \textbf{OFF:} el robot se power-alimenta con el cable serial de datos (6 pines). Ver Figura \ref{Fig:kheperaJumpersBattery}. Ver manual Khepera, p\'agina 15, punto 5.2 \textit{Configuration for robot-computer communication} dice: ``\textit{Between the robot and the interface/charger module by the S serial cable. This cable also supports the power supply of the robot. This external power supply is available when the general battery switch is OFF. If the switch is ON, the robot uses its own batteries for power supply.}''
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{images/khepera_jumpers_batteryb.png}
+	\caption{Configuraci\'on de jumpers para el control de la bater\'ia del robot.}
+	\label{Fig:kheperaJumpersBattery}
+\end{figure}
+
+\subsection{Conexión por Radio}
+No cambia nada, es lo mismo comunicarse con el robot ``con cable'' y con ``torreta-radio''. Para usar con ``torreta-radio'' sólo hace falta agregar (enviar) el comando ``\verb=*ID_destination\n='', donde \verb=ID_destination= podr\'ian ser distintos valores en funci\'on de estar utilizando simult\'aneamente distintos robots. En nuestro caso, usamos por defecto el Robot Nº 1 por lo que el comando debe ser ``\verb=*1\n='' antes de empezar la transmisi\'on para que el ``radio base'' sepa a qué robot mandar. Adem\'as, la torreta del khepera en el robot tiene que estar switcheada en ``1'' para aceptar los comandos, o sea, s\'olo trabajaremos con todo configurado en Robot Nº 1.
+Para simplidicar y unificar las RALs (cable y radio) simplemente agregamos siempre el comando ``\verb=*1\n='', que sirve para \textit{radio} y es ignorado para \textit{cable}.
+
+\subsubsection{Configuraci\'on  Torreta-Radio}
+Para usar el robot con \textit{torreta-radio}, adem\'as de montarla sobre el robot, hay que configurar la misma. Ver Figura \ref{Fig:kheperaJumpersTurret}. Ver manual Khepera Radio Turret User, p\'agina 6, punto 4.5 \textit{Running mode and ID selector}. Switches 1 to 6 are used to specify running mode and the radio turret ID. Switches 7 and 8 are not used and have to be always set to 0. Switches 1 to 5 define the 5 bits of the turret ID. Switch 6 defines the running mode of the turret: when this switch is in the OFF position, the turret is a normal extension turret. When this switch is in the ON position, the turret is used as main communication channel of the module COM. We set Switch 1 y 6 to ON, y los switchs 2, 3, 4, 5, 7 y 8 to OFF. The radio turret ID should be never set to 0.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.35]{images/khepera_jumpers_turretb.png}
+	\caption{Configuraci\'on de jumpers para la torreta-radio del robot.}
+	\label{Fig:kheperaJumpersTurret}
+\end{figure}
+
+
+\subsection{RAL Khepera Linux 32 bits}
 En Linux, para controlar el puerto serial, o más conocido como \texttt{COM1}, se realiza a través del archivo de sistema \url{/dev/ttyS0}, donde en general:
 \begin{itemize}
  \item \url{/dev/ttyS0} ó \url{/dev/cua0} corresponde con el puerto \texttt{COM1} en Windows
@@ -252,8 +310,16 @@ para el manejo del puerto (como el \textit{hyperterminal} de Windows):
    sudo apt-get install setserial
 \end{verbatim}
 
+\subsubsection{BUGs}
+Hay un bug en la ejecuci\'on, ver \ref{bugSA01}
+
+Hay un problema con el RAL Khepera-Torreta-Radio, no anda!!! Ver \ref{bugSA02}
 
 
+
+\subsection{RAL Khepera Windows 32 bits}
+
+FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
 
 
 
@@ -273,13 +339,247 @@ PONER UNA IMAGEN DEL YAKS!!!!!
 
 \subsection{Implementaci\'on}
 
+\subsubsection{Bug}
+Hab\'ia un bug en el valor que se seteaba a los motores a diferencia del Khepera. Ver en \ref{bugA04}.
 
+\subsubsection{Normalización de Sensores y Actuadores}
+\label{normYaks}
+
+Los valores absolutos (desnormalizados) y normalizados que maneja el Yaks para sensores y actuadores son:
+
+\begin{tabular}{|r|cc|cc|}
+\hline
+\textbf{componente} & \textbf{valor m\'inimo} & \textbf{normalizado} & \textbf{valor m\'aximo} & \textbf{normalizado} \\
+\hline
+sensor proximidad & 0 & 0\% & 1023 & 100\% \\
+sensor luz        & 0 & 0\% & 512  & 100\% \\
+%motores           & -9 & -100\% & 10  & 100\% \\
+motores           & -20 & -100\% & 20  & 100\% \\
+\hline
+\end{tabular} 
+
+La funci\'on de normalizaci\'on-desnormalizaci\'on se encuentra implementada en las funciones \verb=normalizarSensores()= y \verb=desNormalizarMotores()=.
+Estas funciones simplemente son una conversi\'on lineal (regla de tres simple) entre el valor del sensor o motor y los valores m\'aximos y m\'inimos. Una vez normalizados o desnormalizados los valores, los mismos son saturados a los valores m\'aximos y m\'inimos permitidos para evitar problemas tanto en el robot como en la GUI.
+
+Hay que tener mucho cuidado con los valores absolutos que se env\'ian al Yaks para los motores. Por alguna raz\'on de la implementaci\'on del Yaks, si se superan los valores del rango \verb=[-9:10]= el Yaks satura a \texttt{0} (cero) el valor de los motores y el robot no se mueve.
+A pesar de esto, por una cuesti\'on de compatibilidad Yaks-Khepera en la GUI, mantuvimos en el Yaks los valores absolutos de motores del Khepera para la desnormalizaci\'on. Luego de esto, saturamos los valores absolutos antes de envi\'arselos al robot dentro del rango \verb=[-9:10]=, esto hace que en el Yaks, los motores nunca superen el rango relativo \verb=[-50%:50%]=.
+
+
+FALTA PONER QU\'E QUIERE DECIR EL VALOR EN MILIMETROS DE \verb=[0:1023]= Y \verb=[0:512]= PARA LOS SENSORES !!!!!\\FALTA PONER QU\'E QUIERE DECIR EL VALOR EN MILIMETROS DE \verb=[0:1023]= Y \verb=[0:512]= PARA LOS SENSORES !!!!!\\FALTA PONER QU\'E QUIERE DECIR EL VALOR EN MILIMETROS DE \verb=[0:1023]= Y \verb=[0:512]= PARA LOS SENSORES !!!!!\\
+
+\textbf{Nota:} tener en cuenta al hacer los c\'alculos de normalizaci\'on-desnormalizaci\'on que deben manejarse los datos en valores \texttt{float} para no perder precisi\'on ni entrar en casos en los que devuelva \textit{cero} por truncamiento a \texttt{int}.
 
 
 \section{RAL ExaBot}
 \subsection{ExaBot}
 \subsection{Implementaci\'on}
 
+
+\textbf{Nota:} Falta hacer una funci\'on \texttt{inicializarRAL(lista sensores)}, ver bug \ref{bugSA05}.
+
+
+\subsubsection{Normalización de Sensores y Actuadores}
+\label{normExa}
+
+Los valores absolutos (desnormalizados) y normalizados que maneja el Exabot para sensores y actuadores son:
+
+\begin{tabular}{| p{4.0cm}|p{1,5cm}c|p{1,5cm}c|}
+\hline
+\textbf{componente} & \textbf{valor m\'inimo} & \textbf{normalizado} & \textbf{valor m\'aximo} & \textbf{normalizado} \\
+\hline
+sensor infrarrojo de proximidad (tel\'emetro) & 39 & 0\% & 157 & 100\% \\
+sensor infrarrojo de l\'inea (line-following) & \verb=[=2:255\verb=]= & 0\% & 1 & 100\% \\
+sensor contacto (bumper) & 0 & 0\% & 255 & 100\% \\
+sensor radio (sonar) & 31250 & 0\% & 125 & 100\% \\
+motores           & -30 & -100\% & 30  & 100\% \\
+\hline
+\end{tabular} 
+
+La funci\'on de normalizaci\'on-desnormalizaci\'on se encuentra implementada en las funciones \verb=linealizar()=, \verb=normalizarLinea()=, \verb=normalizarBumper()=, \verb=normalizarSonar()= y \verb=setEstadoActuadores()=. A continuaci\'on, y en funci\'on de c\'omo está configurado el hardware del robot en cada caso, describimos cada una de ellas:
+
+\paragraph{linealizar():}
+Esta funci\'on corresponde a la normalizaci\'on de los sensores infrarrojos de proximidad (tel\'emetro). 
+
+Estos sensores arrojan valores entre \verb=[0:159]=. Este rango de valores no se corresponde con una funci\'on lineal, por lo que ser\'a necesario posteriormente linealizar estos valores. De esta forma el primer paso en la normalizaci\'on es traducir el valor absoluto del sensor en un valor de distancia en mil\'imetros, donde $0=800mm$ y $159=60mm$. Notar que al traducir estos valores a distancia, se invierte la relaci\'on de m\'aximo y m\'inimo, ahora el valor \texttt{60mm} es el m\'aximo, donde el tel\'emetro est\'a viendo mucho o un objeto muy cercano, y el valor \texttt{800mm} es el m\'inimo, donde el tel\'emetro est\'a viendo poco o un objeto muy lejano. 
+
+Para linealizar a distancia los valores de estos sensores no se cuenta con una funci\'on. Para esto, se ha desarrollado una tabla de conversi\'on sobre la base de experimentos que indican con qu\'e valores de distancia en mil\'imetros se corresponde cada valor del rango \verb=[0:159]=.
+
+Una vez linealizado el sensor, saturamos los valores. El sensor se encuentra dentro del robot a 70mm del borde del chasis, por lo que a partir de aqu\'i tomaremos nuestra referencia del objeto m\'as cercano, un objecto a 0mm del chasis, es decir, el valor normalizado \texttt{100\%}. Por otro lado, si bien el sensor tiene la capacidad de ver objetos hasta los 800mm, sobre la base de experimentos determinamos m\'as pr\'actico limitar el sensor a los 350mm. Entonces los valores del sensor son saturados en el rango \verb=[39:157]=, que equivale linealmente a \verb=[350mm:70mm]= y relativamente (normalizado) a \verb=[0%:100%]=.
+
+Una vez obtenido linealmente en distancia y saturado el valor del sensor, procedemos a normalizar esta distancia teniendo en cuenta que se encuentran invertidos el m\'aximo y m\'inimo. Para esto simplemente realizamos una conversi\'on lineal (regla de tres simple) entre el valor del sensor y los valores m\'aximos y m\'inimos invertidos. Una vez normalizados estos valores, pueden ser entregados el m\'odulo GUI en el rango \verb=[0%:100%]=.
+
+\paragraph{normalizarLinea():}
+Esta funci\'on corresponde a la normalizaci\'on de los sensores infrarrojos de l\'inea (line-following) para detecci\'on de l\'inea blanca en el piso. 
+
+Estos sensores arrojan valores entre \verb=[1:255]= indicando el tiempo transcurrido desde la \'ultima vez que visualiz\'o la l\'inea, donde $255 = \infty \textit{ tiempo}$. En funci\'on de esto, el primer paso ser\'a interpretar estos valores absolutos.
+
+Por una cuesti\'on pr\'actica, en esta funci\'on de normalizaci\'on, interpretaremos el valor absoluto \texttt{1} como que se est\'a viendo la l\'inea en ese preciso momento y los valores absolutos en el rango \verb=[2:255]= como que no se est\'a viendo la l\'inea. 
+
+Como \'ultimo paso, normalizamos los valores absolutos a $1=100\%$ y cualquier otro valor a $0\%$ (valor $\neq 1 \Rightarrow 0\%$)
+
+Tener en cuenta que esta iterpretaci\'on del tiempo devuelto por el sensor podr\'ia cambiarse para obtener linealmente valores de tiempo en milisegundos indicando cu\'ando fue la \'ultima vez que se visualiz\'o la l\'inea.
+
+\paragraph{normalizarBumper():}
+Esta funci\'on corresponde a la normalizaci\'on de los sensores de contacto (bumper). 
+
+Estos sensores s\'olo arrojan dos valores \verb=0= y \verb=255=. El valor \verb=0= indica que el sensor est\'a libre (no apretado) y el valor \verb=255= indica que el sensor est\'a apretado. No existe rango de valores.
+Por lo que la normalizaci\'on simplemente consiste en que los dos valor absolutos posibles se traducen como $0=0\%$ y $255=100\%$
+
+
+\paragraph{normalizarSonar():}
+Esta funci\'on corresponde a la normalizaci\'on del sensor de radio (sonar). 
+
+Este sensor arroja valores entre \verb=[125:31250]= indicando el tiempo transcurrido desde la \'ultima vez que visualiz\'o un objeto. Estos valores se corresponden con $125 = 100 \mu s = 0.1 ms = 1 cm = 100\%$ y $31250 = 25000 \mu s = 25 ms = 400 cm = 0\%$. Notar que, como en el tel\'emetro, se encuentra invertida la relación de máximo y mínimo, el valor $125 = 1 cm$ es el máximo, donde el sonar está viendo mucho o un objeto muy cercano, y el valor
+$31250 = 400 cm$ es el mínimo, donde el telémetro está viendo poco o un objeto muy lejano.
+
+Una vez obtenido e interpretado el valor del sensor, se satura en el rango \verb=[125:31250]= y se procede a normalizar este valor teniendo en cuenta que se encuentran invertidos el m\'aximo y m\'inimo. Para esto simplemente realizamos una conversi\'on lineal (regla de tres simple) entre el valor del sensor y los valores m\'aximos y m\'inimos invertidos. Una vez normalizados estos valores, pueden ser entregados el m\'odulo GUI en el rango \verb=[0%:100%]=.
+
+
+\paragraph{setEstadoActuadores():}
+Esta funci\'on contiene la desnormalizaci\'on (a valores absolutos) de los datos de motores antes de ser enviados al robot. 
+
+La GUI env\'ia a la RAL valores para los motores normalizados en el rango \verb=[-100%:100%]=, por lo que esta funci\'on se encargar\'a de convertir estos valores a valores absolutos para ser entregados al robot en su rango absoluto \verb=[-30:30]=. De esta forma, simplemente se procede a realizar una conversi\'on lineal (regla de tres simple) entre los valores normalizados y desnomalizados, donde $-30 = -100\%$ y $30 = 100\%$. Una vez desnormalizados estos valores, pueden ser entregados al robot en el rango \verb=[-30:30]=.
+
+Una cuesti\'on que se realiza durante el proceso es saturar los valores m\'inimos de los motores. Los motores del ExaBot no funcionan correctamente si se les asigna menos del $20\%$ de su capacidad, por lo que es necesario manejar los valores en estos intervalos peque\~nos. Para esto, definimos la siguiente saturaci\'on de valores antes de desnormalizar:
+\begin{center}
+\begin{tabular}{ccl}
+\verb=(-10:10)= & $\longrightarrow$ & \texttt{0\%} \\
+\verb=[10:20)= & $\longrightarrow$ & \texttt{20\%} \\
+\verb=(-20:-10]= & $\longrightarrow$ & \texttt{-20\%} \\
+\end{tabular} 
+\end{center}
+
+Otra cuesti\'on a tener en cuenta es que los motores del robot giran invertidos, por lo que para que ambos motores vayan en el mismo sentido la RAL debe enviar al robot un valor de motor como positivo $(+)$ y otro negativo $(-)$ seg\'un el sentido.
+
+\textbf{Nota:} tener en cuenta al hacer los c\'alculos de normalizaci\'on-desnormalizaci\'on que deben manejarse los datos en valores \texttt{float} para no perder precisi\'on ni entrar en casos en los que devuelva \textit{cero} por truncamiento a \texttt{int}.
+
+\subsection{Conexión por UDP}
+La conexi\'on con el robot se establece mediante el protocolo UDP. B\'asicamente la implementaci\'on consiste en dos procesos (threads) que corren en paralelo: \verb=udp_receive= y \verb=udp_send=, que comparten la memoria para intercomunicarse mediante un proceso central.
+
+Un detalle importante de la implementaci\'on es que fue necesario configurar como desacoplados del m\'odulo Core a los procesos \verb=udp_receive= y \verb=udp_send=. El Core es el que crea estos procesos y, al terminar el Core, esto tambi\'en terminaba sus procesos hijos (\verb=udp_receive= y \verb=udp_send=) y perd\'iamos la comunicaci\'on con el robot. Para desacoplar (\textit{desatachear}) estos procesos del Core se utiliz\'o la funci\'on \verb=setsid()=.
+
+\subsubsection{Configuraci\'on IP}
+Se estableci\'o la siguiente configuraci\'on de direcciones IPs para la conexi\'on UDP:
+\footnotesize
+\begin{center}
+\begin{tabular}{lcccl}
+Cable Ethernet IP ExaBot    & $\longrightarrow$ & \verb=0xC0A80032= & $\longrightarrow$ & \verb=192.168.0.50= \\
+Cable Ethernet IP PC        & $\longrightarrow$ & \verb=0xC0A80033= & $\longrightarrow$ & \verb=192.168.0.51  | 255.255.255.0 | 192.168.0.1= \\
+\\
+WiFi IP ExaBot              & $\longrightarrow$ & \verb=0xC0A80132= & $\longrightarrow$ & \verb=192.168.1.50= \\
+WiFi IP PC                  & $\longrightarrow$ & \verb=0xC0A801FE= & $\longrightarrow$ & \verb=192.168.1.254 | 255.255.255.0 | 192.168.1.1= \\
+\end{tabular} 
+\end{center}
+\normalsize
+
+\paragraph{Definiciones IPs:}
+Las IPs, tanto en el ExaBot como en la RAL-Exabot, est\'an definidas en tiempo de compilaci\'on. Por lo que los ejecutables y librer\'ias din\'amicas tienen definido de antemano la IP (cable o WiFi) a la que se conectar\'an.
+Para la RAL, estas definiciones se encuetran en \verb=exabotRAL.h= en las constantes \verb=IP_EXA_CABLE= y \verb=IP_EXA_WIFI=.
+Para la aplicaci\'on del robot, estas definiciones se encuetran en \verb=udp_send.c=.
+
+Notar que si las direcciones IPs no coinciden, no s\'olo en los c\'odigos de las aplicaciones que se ejecutan, sino tambi\'en f\'isicamente en las placas de red del robot y la PC host, la conexi\'on no podr\'a ser establecida.
+
+La \textit{submask} y \textit{gateway} no son neesarios, pero conviene definirlos.
+
+\subsection{Software ExaBot para conexi\'on}
+El robot cuenta con software espec\'ifico para la conexi\'on UDP, v\'ia cable ethernet y WiFi, para enviar y recibir los comandos necesarios. Para que la GUI pueda comunicarse con el robot, es necesario previamente que la aplicaci\'on de conexi\'on UDP est\'e corriendo en el robot.
+
+\subsubsection{Aplicaci\'on UDP}
+La aplicación de conexión del robot se encuentra en el ExaBot en su PC embebida en \url{/pc104/1004_codigo_completo}. Se ejecuta desde esa ubicaci\'on con \verb=./test_threads=. Para ampliar los distintos comandos de esta aplicaci\'on ver \ref{????}.
+
+AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\AGREGAR SECCION SOFT ADICIONAL MANUAL DE COMANDOS DEL EXA !!! \\
+
+
+En esta aplicaci\'on, al igual que en RAL-ExaBot, la IP de conexi\'on a la PC remota (GUI) est\'a definida en tiempo de compilaci\'on, por lo que el ejecutable se encuentra definido de forma fija para un tipo de IP y conexi\'on. Para facilitar esto, ya se encuentran en \url{/usr/bin/} compiladas las dos versiones: \verb=gui_test_threads= (cable ethernet) y \verb=gui_test_threads_254= (WiFi) seg\'un la tabla de IPs anterior.
+
+El ejecutable \verb=gui_test_threads= conectar\'a entre \verb=192.168.0.50= (robot) y \verb=192.168.0.51= (PC host).
+
+El ejecutable \verb=gui_test_threads_254= conectar\'a entre \verb=192.168.1.50= (robot) y \verb=192.168.1.254= (PC host).
+
+Lo más cómodo, si es que se utilizar\'a intensivamente el robot junto con la GUI, es que esta aplicación de conexi\'on se ejecute automáticamente en el boot del robot.
+Para esto, ver \ref{bootExa}
+
+\paragraph{Compilaci\'on:}
+Si fuese necesario recompilar esta aplicaci\'on, el código fuente se encuentra en \url{/pc104/1004_codigo_completo} en la PC104. Es necesario conectarse por \verb=telnet 192.168.0.50=, se hace \verb=rm test_threads= y \verb=make test_threads=, y con \verb=./test_threads= se ejecuta para que espere comandos.
+
+\subsubsection{Boot autom\'atico en ExaBot:}
+\label{bootExa}
+
+
+poner c\'omo hacer para que bootee autom\'atico la aplicaci\'on!!\\poner c\'omo hacer para que bootee autom\'atico la aplicaci\'on!!\\poner c\'omo hacer para que bootee autom\'atico la aplicaci\'on!!\\poner c\'omo hacer para que bootee autom\'atico la aplicaci\'on!!\\poner c\'omo hacer para que bootee autom\'atico la aplicaci\'on!!\\
+
+
+ADEM\'AS hay que cargar \textit{loadUSBModules.sh} y \textit{loadUSB.sh} para que anden el PenWiFiUSB...
+
+	-> en EXABOT: pusimos el \verb=gui_test_threads_254= en el booteo !!!!\\
+		-> \verb="PC104"/usr/bin/gui_test_threads_254=\\
+		-> \verb="PC104"/usr/bin/loadGuiWifi.sh=\\
+		-> \verb="PC104"/etc/rc.local=\\
+		-> \verb="PC104"/etc/rc.d/rc3.d/S99loadGuiWifi=
+
+
+\subsection{Conexi\'on WiFi desde PC host}
+Por cuestiones de seguridad y estandarizaci\'on, definimos que la conexi\'on entre el robot y la PC host se realiza a trav\'es de un router LinkSys. En el router se encuentra configurado para que acepte por WiFi \'unicamente 2 MacAddress, la del pendriveWifi del robot y el pendriveWifi de la PC host.
+
+Para la PC host utilizamos el pendriveWifi de marca \textit{IOgear} (color blanco) macaddress \verb=00:02:72:6A:E0:21=.
+Para el robot utilizamos el pendriveWifi de marca \textit{Eusso} (color azul con antena) macaddress \verb=00:02:72:69:28:B0=.
+
+Adem\'as, configuramos el router para que asigne din\'amicamente (DHCP) al pendriveWifi de la PC host la IP \verb=192.168.1.254=. De esta forma, el robot tiene configurada la IP \verb=192.168.1.50= que el router acepta por su macaddress y la PC host se conecta normalmente a trav\'es del sistema operativo, como a un router wireless com\'un, con el pendriveWifi \textit{IOgear} obteniendo por DHCP la IP \verb=192.168.1.254=. El router wireless tiene definido como Network Name (SSID): \textit{exabot}.
+
+Utilizamos espec\'ificamente estos pendriveWiFi por el \textit{chipset zd1211} que poseen, ya que seg\'un ARM (fabricante PC104) el TS-Kernel (Kernel de la PC104) está preparado para soportar este chipset... Si quici\'eramos usar otro chipset, sería necesario conseguir drivers y recompilar el kernel del robot...
+
+\subsubsection{Configuraci\'on Router Wireless}
+Utilizamos un router LinkSys Wi-Fi WRT54G como router ExaBot. La configuraci\'on es la siguiente:
+\begin{itemize}
+	\item http://192.168.1.1/, user: admin, pass: iogear.
+	\item Setup > Basic Setup:
+		\begin{itemize}
+			\item Automatic Configuration - DHCP
+			\item Local IP Address: 192.168.1.1
+			\item Subnet Mask: 255.255.255.0
+			\item DHCP Server: Enabled
+			\item Starting IP Address: 192.168.1.254
+			\item Maximum Number of DHCP Users: 1
+		\end{itemize}
+	\item Wireless > Basic Wireless Settings:
+		\begin{itemize}
+			\item Wireless Configuration: Manual
+			\item Wireless Network Mode: Mixed
+			\item Wireless Network Name (SSID): exabot
+			\item Wireless Channel: 6
+			\item Wireless SSID Broadcast: Enabled
+		\end{itemize}
+	\item Wireless > Wireless Security:
+		\begin{itemize}
+			\item Security Mode: Disabled
+		\end{itemize}
+	\item Wireless > Wireless MAC Filter:
+		\begin{itemize}
+			\item Wireless MAC Filter: Enabled (Permit only)
+				\begin{itemize}
+					\item \verb=00:02:72:6A:E0:21= - Pen WiFi IOGear (Blanco)
+					\item \verb=00:02:72:69:28:B0= - Pen WiFi Eusso (Azul con antena)
+					\item \verb=00:1B:77:86:2F:B6= - Notebook Matias
+					\item \verb=D8:5D:4C:89:F7:89= - Pen WiFi TP-LINK TL-WN422G (Blanco nuevos con antena)
+					\item \verb=D8:5D:4C:89:8F:4B= - Pen WiFi TP-LINK TL-WN422G (Blanco nuevos con antena)
+					\item \verb=D8:5D:4C:89:97:FA= - Pen WiFi TP-LINK TL-WN422G (Blanco nuevos con antena)
+				\end{itemize}
+		\end{itemize}
+\end{itemize}
+
+\textbf{Importante:} Esto hace que sólo asigne la IP \verb=192.168.1.254= y sólo al ``Pen WiFi IOGear (Blanco)''. O sea que, cualquier PC que se conecte con ese "Pen WiFi IOGear (Blanco)" va a tener la IP \verb=192.168.1.254=. El robot por WiFi siempre debe comunicarse a esa IP !!!
+
+\textbf{Nota:} Es importante chequear dos cosas:
+\begin{enumerate}
+	\item Que la IP del ExaBot est\'e configurada correctamente seg\'un el caso.
+	\item Que est\'e corriendo la aplicaci\'on correcta (Cable o Wifi) de conexi\'on en el robot.
+\end{enumerate}
+de lo contrario la conexi\'on no podr\'a ser establecida.
+
 \section{RAL SimuladorExaBot}
 \subsection{SimuladorExaBot}
 \subsection{Implementaci\'on}
+\subsubsection{Normalización de Sensores y Actuadores}
+\label{normExaSim}
+
+FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\FALTA VER ESTO!!! VER EN CODIGO DE MATI!!!!\\

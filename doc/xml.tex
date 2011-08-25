@@ -6,52 +6,60 @@
 
 \section{Introducci\'on}
 El archivo \textit{XML} servirá, por un lado, para la definición de datos que la \textit{GUI} establecerá
-para que el \textit{Core} ejecute. Por otro lado, el \textit{XML} contendrá también información propia de la \textit{GUI}.
+para que el \textit{Core} ejecute. Por otro lado, el \textit{XML} contendrá también información propia de la \textit{GUI}. \\
+
+\textcolor{red}{LO ANTERIOR NO ES DEL TODO CIERTO, ARREGLAR!!!!\\LO ANTERIOR NO ES DEL TODO CIERTO, ARREGLAR!!!!\\LO ANTERIOR NO ES DEL TODO CIERTO, ARREGLAR!!!!\\}
 
 El archivo \textit{XML} contendrá varias cosas:
 \begin{itemize}
  \item Los datos necesarios para que el \textit{Core} pueda realizar la ejecución.
  \item Los datos necesarios que la GUI requerirá para poder funcionar, como las especificaciones gráficas, objetos,
 	  ubicación de los mismos, etc; y todas las opciones sobre los proyectos realizados...
- \item ¿algo más?
+ \item \textcolor{red}{¿algo más?}
 \end{itemize}
 
+\textcolor{red}{
 De esta forma, en principio el \textit{XML} podría tener en secciones separadas los datos para el \textit{Core}
 y para la \textit{GUI}. Tal vez, no necesariamente estén completamente separados. De modo que, por ejemplo,
 el \textit{Core} deberá buscar en el \textit{XML} sólo los datos necesarios para lograr la ejecución e ignorar
 el resto de los datos innecesarios...
+}
 
 
 \section{Core Implementaci\'on}
+
+ESTO CAMBIO POR ALGO M\'AS COMPLEJO QUE HIZO THOMAS, ARREGLAR!!!!\\ESTO CAMBIO POR ALGO M\'AS COMPLEJO QUE HIZO THOMAS, ARREGLAR!!!!\\ESTO CAMBIO POR ALGO M\'AS COMPLEJO QUE HIZO THOMAS, ARREGLAR!!!!\\
+
 \subsection{Datos para la Ejecución del Core}\label{subsub:EjecXML}
 Básicamente, el \textit{Core} busca en la ``estructura de arbol'' del \textit{XML} el elemento raíz de
 nombre:
 \footnotesize	% esto hace que el verbatim se vea chiquitito
 \begin{verbatim}
-        <ejecucion>   ... </ejecucion>
+        <conducta> ... </conducta>
 \end{verbatim}
 \normalsize	% esto termina el verbatim se vea chiquitito
-Cualquier otro elemento distinto de $<ejecucion>$ será ignorado.
+Cualquier otro elemento distinto de $<conducta>$ será ignorado. \\
 
-\textbf{Importante:} El elemento $<ejecucion>$ debe ser el primero en orden de definición dentro del \textit{XML}
-ya que el \textit{Core} parsea al \textit{XML} utilizando la API que implementa el estandar DOM\footnote{Document Object Model (DOM), \url{http://xerces.apache.org/xerces-c/api-3.html}, \url{http://www.w3.org/DOM/}}. Cualquier otro elemento posterior es ignorado.
+\textbf{Importante:} El elemento $<conducta>$ debe ser el primero en orden de definición dentro del \textit{XML}
+ya que el \textit{Core} parsea al \textit{XML} utilizando la API que implementa el estandar DOM \cite{dom}. Cualquier otro elemento posterior es ignorado.
 
-Entonces, la definición de los datos para la ejecución del \textit{Core} en el \textit{XML} constaran de 3 grandes cosas:
+Entonces, la definición de los datos de la conducta a ejecutarse en el \textit{Core} dentro del \textit{XML} constara de 4 cosas:
 
 \footnotesize	% esto hace que el verbatim se vea chiquitito
 \begin{verbatim}
-        <ejecucion>
-            <sensores>   ... </sensores>
-            <cajas>      ... </cajas>
-            <actuadores> ... </actuadores>
-        </ejecucion>
+        <conducta>
+            <sensores> ... </sensores>
+            <timers> ... </timers>
+            <contadores> ... </contadores>
+            <comportamiento> ... </comportamiento>
+        </conducta>
 \end{verbatim}
 \normalsize	% esto termina el verbatim se vea chiquitito
 
 
 \subsubsection{Sensores}
 
-Por un lado estaría la definición de los sensores existentes y su identificación (\textit{id}). Por ahora, el \textit{id} indicará todo lo referido al sensor, es decir, su tipo (sonar, telémetro, encoder, random) y su ubicación relativa al robot en ángulos (de 0º a 360º), por ejemplo:
+Por un lado esta la definición de los sensores existentes y su identificación (\textit{id}). Por ahora, el \textit{id} indicará todo lo referido al sensor, es decir, su tipo (sonar, telémetro, encoder, random) y su ubicación relativa al robot en ángulos (de 0º a 360º), por ejemplo:
 
 \footnotesize	% esto hace que el verbatim se vea chiquitito
 \begin{verbatim}
@@ -65,115 +73,320 @@ Por un lado estaría la definición de los sensores existentes y su identificación
 \end{verbatim}
 \normalsize	% esto termina el verbatim se vea chiquitito
 
+\textcolor{red}{
 Vimos de agregar un tipo de sensor \textit{random}, que no sería un sensor real en el hardware, sino un sensor simulado en software para poder agregar ``aleatoriedad''...
+}
 
+\subsubsection{Timers}
 
-\subsubsection{Cajas}
+Los timers son elementos globales, que representan relojes abstractos
+que son simulados en el software del core,
+y son exclusiavamente elementos de este.
+El robot no tiene ningun conocimiento de ellos.
+Sirven como condiciones para disparar transiciones
+entre distintos comportamientos, y únicamente pueden ser reseteados
+como actualizaciones durante éstas.
 
-Después, definir las \textit{cajas} que irían entre los sensores y actuadores.
-En principio, estas \textit{cajas} sólo tendrían definidas las \textit{entradas} (sensores y otras cajas) y la función. Por ahora sólo tenemos en cuenta
-la ``función partida'' en tres tramos (constante + lineal + constante) que la definimos con 2 puntos en el
-plano $(x_{1};y_{1})$ y $(x_{2},y_{2})$. También definir el \textit{id} de la funcion.
+Estos relojes llevan la cuenta del tiempo en segundos,
+y únicamente pueden ser reseteados o consultado su valor.
 
-Internamente, la salida de la \textit{caja} será el resultado de aplicar la \textit{función}, definida por los
-puntos $(x_{1};y_{1})$ y $(x_{2},y_{2})$, a la sumatoria de todas sus entradas.
+Comienzan en $0$ al comenzar a ejecutarse el core
+y este se ocupa de actualizarlos automaticamente.
 
-Por ejemplo:
+Su definición únicamente exige un string
+de identificación (\textit{id}). \\
+
+Ejemplo de uso:
 
 \footnotesize	% esto hace que el verbatim se vea chiquitito
 \begin{verbatim}
-          <caja id='caja1'>
-            <entradas>
-              <entrada id='sonar.0'/>
-              <entrada id='telemetro.340'/>
-              <entrada id='random'/>
-            </entradas>
-            <puntos>
-              <punto x='100' y='0'/>
-              <punto x='150' y='255'/>
-            </puntos>
-          </caja>
-
-          <caja id='caja2'>
-            <entradas>
-              <entrada id='telemetro.20'/>
-              <entrada id='caja1'/>
-            </entradas>
-            <puntos>
-              <punto x='150' y='255'/>
-              <punto x='100' y='0'/>
-            </puntos>
-          </caja>
+        <timers>
+            <timer id="timer.1"></timer>
+            <timer id="timer.2"></timer>
+        </timers>
 \end{verbatim}
 \normalsize	% esto termina el verbatim se vea chiquitito
 
-Algo así:
-\begin{figure}
-	\centering
-	\includegraphics[scale=1.0]{images/funcion_partida.jpg}
-	\caption{GUI FUNCION PARTIDA}
-	\label{Fig:FunPartida}
-\end{figure}
+\subsubsection{Contadores}
 
-Las funciones \textit{lineal} y \textit{lineal invertida} podrían representarse con $\{(0;0),(255;255)\}$ y $\{(255;255),(0;0)\}$.
+Los contadores son otro tipo de elemento global, que como los timers,
+son simulados en el software del core e independientes del robot,
+y sirven igualmente para usar como condiciones
+para transiciones entre distintos comportamientos.
 
-Algo así:
-\begin{figure}
-	\centering
-	\includegraphics[scale=1.0]{images/funcion_partida_lineal.jpg}
-	\caption{GUI FUNCION PARTIDA LINEAL}
-	\label{Fig:FunPartidaLineal}
-\end{figure}
+Los contadores son variables globales que almacenan un número.
+Comienzan en $0$ al comenzar a ejecutarse el core, y pueden ser
+reseteados, incrtementados (\texttt{+1}) o decrementados (\texttt{-1})
+únicamente durante las actualizaciones de una transición.
 
+Su definición únicamente exige un string
+de identificación (\textit{id}). \\
 
-\subsubsection{Actuadores}
-
-Ahora sólo nos queda definir los actuadores, su \textit{id} y cúales \textit{cajas} son sus entradas. El sentido del \textit{id} es igual al que se intenta dar en los sensores, por ejemplo:
-
-Internamente, la salida del \textit{actuador} será la sumatoria de todas sus entradas.
+Ejemplo de uso:
 
 \footnotesize	% esto hace que el verbatim se vea chiquitito
 \begin{verbatim}
-          <actuador id='motor.izquierda'>
-            <entradas>
-              <entrada id='caja1'/>
-              <entrada id='caja2'/>
-            </entradas>
-          </actuador>
+        <contadores>
+            <contador id="contador.1"></contador>
+            <contador id="contador.2"></contador>
+        </contadores>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
 
-          <actuador id='motor.derecha'>
-            <entradas>
-              <entrada id='caja2'/>
-            </entradas>
-          </actuador>
+\subsubsection{Comportamiento}
+
+Los comportamientos constituyen el segundo y último nivel
+en una jerarquía de subsumisión de la conducta del robot.
+La conducta puede alternar entre distintos comportamientos
+mediante transiciones que se disparan bajo ciertas condiciones,
+que son revisadas en cada ciclo del \textit{core}.
+
+Un comportamiento está constituído por cajas (\textcolor{red}{LLAMARLAS FUNCIONES, O ALGO MAS FELIZ EN ALGUN MOMENTO}), actuadores y transiciones.
+
+Su definición además requiere un string
+de identificación (\textit{id}). \\
+
+Ejemplo de uso:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <comportamiento id="comportamiento_adelante">
+            <cajas> ... </cajas>
+            <actuadores> ... </actuadores>
+            <transiciones> ... </transiciones>
+        </comportamiento>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Sus elementos se detallan a continuación.
+
+\subsubsection{Cajas}
+
+Definen las \textit{cajas} que representan las funciones 
+que modifican los valores entre los sensores y actuadores.
+Estas \textit{cajas} deben tener definidas sus \textit{entradas}
+(sensores y otras cajas) y la función que se ejecuta
+sobre los respectivos valors de éstas.
+Por ahora sólo existe la ``función partida'' en tres tramos (constante + lineal + constante) cuya definición requiere dos puntos en el
+plano $(x_{1};y_{1})$ y $(x_{2},y_{2})$.
+También es requerido un string de identificación (\textit{id})
+de la funcion.
+
+Internamente, la salida de la \textit{caja} será el resultado
+de aplicar la \textit{función}, definida por los puntos
+$(x_{1};y_{1})$ y $(x_{2},y_{2})$, a la sumatoria de los valores
+de todas sus entradas. \\
+
+Ejemplo de uso:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <cajas>
+            <caja id='caja1'>
+                <entradas>
+                    <entrada id='sonar.0'/>
+                    <entrada id='telemetro.340'/>
+                    <entrada id='random'/>
+                </entradas>
+                <puntos>
+                    <punto x='100' y='0'/>
+                    <punto x='150' y='255'/>
+                </puntos>
+            </caja>
+        </cajas>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=1.0]{images/funcion_partida.jpg}
+	\caption{Aca vemos graficada la función partida en función de sus puntos.}
+	\label{Fig:FunPartida}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=1.0]{images/funcion_partida_lineal.jpg}
+	\caption{Las funciones \textit{lineal} y \textit{lineal invertida} podrían representarse usando funciones partidas con los puntos $\{(0;0),(255;255)\}$ y $\{(255;255),(0;0)\}$}
+	\label{Fig:FunPartidaLineal}
+\end{figure}
+
+\textcolor{red}{SACAR LOS TITULOS DE LOS GRAFICOS EN LAS IMAGENES Y PONERLES UN TITLE A LAS FIGURAS.} \\
+
+\textcolor{red}{SERIA FANTASTICO INCORPORAR Y EXPLICAR TAMBIEN UNA FUNCION CONSTANTE, LA QUE LLAMAMOS BOLA DE ENERGIA}
+
+\subsubsection{Actuadores}
+
+Define los actuadores. Para cada uno, hace falta un string
+de identificación (\textit{id}) así como los \textit{ids}
+de los elementos cuyos valores usa como entradas.
+Internamente, la salida del \textit{actuador} será la sumatoria
+de todas sus entradas. \\
+
+Ejemplo de uso:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <actuadores>
+            <actuador id='motor.izquierda'>
+                <entradas>
+                    <entrada id='caja1'/>
+                    <entrada id='caja2'/>
+                </entradas>
+            </actuador>
+            <actuador id='motor.derecha'>
+                <entradas>
+                    <entrada id='caja2'/>
+                    <entrada id='telemetro.1'/>
+                </entradas>
+            </actuador>
+        </actuadores>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+\subsubsection{Transiciones}
+
+Define las transiciones que existen para cambiar de éste comportamiento
+a otro.
+Las mismas, además de un string
+de identificación (\textit{id}), requieren la definición
+de las condiciones (necesarias y suficientes) para su activación,
+así como de las actualizaciones que se ejecutan sobre elementos
+globales, como timers y contadores, al activarse la misma. \\
+
+Ejemplo de uso:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <transiciones>
+            <transicion id="transicion.1" id_destino="comportamiento_atras">
+                <condiciones> ... </condiciones>
+                <actualizaciones> ... </actualizaciones>
+            </transicion>
+        </transiciones>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+Sus elementos se detallan a continuación.
+
+\subsubsection{Condiciones}
+
+Las condiciones son expresiones booleanas necesarias y suficientes
+que se deben cumplir para que se dispare la transición
+a la cuál refieren.
+La expresión requiere de un elemento, de un tipo de comparación
+y de un umbral. El valor de verdad de la condición se obtiene
+comparando el valor del elemento de la forma especificada
+contra el valor del umbral.
+Los valores que puede tomar el campo de tipo de comparación son
+\textit{igual}, \textit{menor}, \textit{menor\_igual}, \textit{mayor}
+y \textit{mayor\_igual}. \\
+
+Ejemplo de uso:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <condiciones>
+            <condicion id_elemento='proximidad.350' comparacion='mayor' umbral='1' />
+            <condicion id_elemento='proximidad.10' comparacion='menor_igual' umbral='90' />
+        </condiciones>
+\end{verbatim}
+\normalsize	% esto termina el verbatim se vea chiquitito
+
+\subsubsection{Actualizaciones}
+
+Define las actualizaciones que se disparan al activarse la transición
+a la que refieren.
+Las actualizaciones pueden ser sobre \textit{Timers} o
+\textit{Contadores} unicamente, siendo esto especificado en una
+propiedad de tipo que únicamente toma los valores \textit{timer} o
+\textit{contador}, acompañado del string identificatorio (\textit{id})
+del \textit{Timer} o \textit{Contador} correspondiente.
+En el caso de un \textit{Timer}, Se da por sentado que se lo quiere resetear,
+la cuál es la única accion disponible sobre este elemento.
+En el caso de un \textit{Contador}, se requiere además el tipo
+de acción a ejecutarse, siendo los únicos valores legítimos
+\textit{resetear}, \textit{incrementar} o \textit{decrementar}.
+Cada actualizació requiere por supuesto un string identificatorio
+(\textit{id}). \\
+
+Ejemplo de uso:
+
+\footnotesize	% esto hace que el verbatim se vea chiquitito
+\begin{verbatim}
+        <actualizaciones>
+            <actualizacion tipo="timer" id_timer='timer.1'/>
+            <actualizacion tipo="contador" id_contador='contador.1' accion="incrementar" />
+        </actualizaciones>
 \end{verbatim}
 \normalsize	% esto termina el verbatim se vea chiquitito
 
 \subsubsection{Importante}
 
-Las etiquetas y atributos definidos anteriormente deben ser estrictamente definidos de esa forma
-en el \textit{XML} (en minúsculas). \textbf{Cualquier otra etiqueta o atributo distintos de:}
-\footnotesize	% esto hace que el verbatim se vea chiquitito
-\begin{verbatim}
-        <ejecucion></ejecucion>
-            <sensores></sensores>
-                <sensor id='?'/>
-            <cajas></cajas>
-                <caja></caja>
-                    <entradas></entradas>
-                        <entrada id='?'/>
-                    <puntos>
-                        <punto x='?' y='?'/>
-            <actuadores></actuadores>
-                <actuador></actuador>
-                    <entradas></entradas>
-                        <entrada id='?'/>
-\end{verbatim}
-\normalsize	% esto termina el verbatim se vea chiquitito
-\textbf{serán ignorados.}
-
-
-
+Las etiquetas y atributos definidos anteriormente
+deben ser estrictamente definidos de esa forma en el \textit{XML}
+(en minúsculas).
+\textbf{Cualquier otra etiqueta o atributo distinto será ignorado.}
 
 \section{GUI Implementaci\'on}
+
+\textcolor{red}{DOCUMENTAR CADA PARAMETRO, MOSTRAR TAMBIÉN LOS PNGs (SENSORES Y ROBOTS)...}
+
+Los labels m\'as relevantes son (COMENTAR CADA UNO!!):
+\begin{verbatim}
+gui/extension/config.xml:
+
+        <tipoSensores>
+                proximidad, luz, telemetro, sonar, linea, contacto
+                y establecer sus respectivas imagenes
+        <tipoActuadores>
+                rueda
+                y establecer sus respectivas imagenes
+        <herramientas>
+                inhibitoria, exitatoria, parametrica, energia
+                aceptaentradas
+                y establecer sus respectivas imagenes y configuraciones por defecto...
+
+gui/extension/robots:
+
+        <robot id="exabot" nombre="ExaBot">
+                <imagen id='esquema' href='robots/robot_exabot.png' />
+                <ral href='exabotRAL.so'/>
+        <sensores>
+                    <sensor id='telemetro.315' tipo='telemetro' default='true'>
+                                <mapaimagen imagen='esquema'>
+                                        <linea x0='0.36' y0='0.35' x1='0.41' y1='0.30' width='5' color='255,0,0'/>
+                                </mapaimagen>
+                    <sensor id='sonar.0' tipo='sonar' default='true'>
+        <actuadores>
+                <actuador id='motor.izquierda' nombre='rueda izq' tipo='rueda' default='true'>
+                        <mapaimagen imagen='esquema'>
+                                <linea x0='0.20' y0='0.40' x1='0.20' y1='0.83' width='12' color='255,0,0'/>
+                        </mapaimagen>
+                        <ubicacion id='izquierda'/>
+\end{verbatim}
+
+
+Como en el caso anterior, utilizamos
+labels que denotan las distintas caractersticas de la aplicacion. Un ejemplo sen-
+cillo de GUI setting file puede ser:
+
+Para agregar un nuevo robot para trabajar con la aplicacion, solo deberemos
+programar el nuevo RAL correspondiente de ese robot e indicarle a la GUI en
+su archivo de configuracin la existencia del nuevo robot.
+
+
+Hay un archivo xml que define cada robot, y uno con configuración general (\textit{config.xml}). Desde ahí se puede cambiar las cajas que aparecen en las herramientas, los dibujos, etc. Los dibujos están todos en la carpeta images.
+
 \subsection{Datos para la GUI}
+
+\textbf{C\'omo es el uso y configuraci\'on de las funciones???} Por ejemplo, al agregar funci\'on exitatorio o inhibitoria en realidad de fondo es una param\'etrica donde por defecto tiene los valores \verb=(0,0):(1024,100)= ó \verb=(0,0):(1024,-100)= seg\'un corresponda, estos varlores por defecto se definen en el archivo de configuraci\'on de la GUI.
+
+Para esto se toca \textit{src/gui/extension/config.xml}
+
+Lo mismo para la funci\'on constante, al agregar una de \'estas, tiene por defecto el valor 10, que es 10\%. Para esto tambi\'en se toca \textit{src/gui/extension/config.xml}. OJO: el CORE trata como si fuera una función partida más a la funci\'on constante, por eso sus valores deben ser: \verb=(0,10):(1024,10)=.
+
+
+
+\subsection{Ejemplo}
+Originalmente (no nos hab\'iamos dado cuenta) la FUNCION PARAMTETRICA, no acpetaba entradas... Entonces, en ``config.xml'' cambiamos a \verb=<esquemacaja id==\verb='parametrica' aceptaentradas==\verb='true'>=

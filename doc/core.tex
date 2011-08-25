@@ -12,20 +12,21 @@ intervals, the core receives from the RAL the normalized values of the sensors,
 executes the behaviour, and gives to the RAL the normalized values to set the
 actuators. The CORE stops when the GUI signals the user has stopped the
 execution.
-To be able to execute the behaviour, the CORE has to transform the execu-
-tion graph defined by the GUI in the behaviour-file to a corresponding ordered
-execution list, to guarantee that all the inputs for a function are ready when its
-turn to execute is up. For this, we used a topological sorting [13] of the execution graph. 
+To be able to execute the behaviour, the CORE has to transform the execution
+graph defined by the GUI in the behaviour-file to a corresponding set of ordered
+execution lists, one list for each node of the subsumption graph. The order
+is to guarantee that all the inputs for a function are ready when its
+turn to execute is up. To achieve this, we use a topological sorting [13] of the execution graph. 
 
 The CORE also performs different checkups to assure that the behaviour
 can be executed in the selected robot, for example that the graph is not cyclic
 (i.e, cannot be ordered) or that the robot has enough sensors and actuators
 to execute the behaviour. It also defines the communication frequency with the
 RAL depending on the robot, since each robot has a different working frequency.
-Finally, the CORE makes a log-file where all the values at a certain time are
-registered, including each sensor value, the output value of each function and
+Finally, the CORE keeps a log-file where all the values at each tick are
+registered, including the execution time, each sensor value, the output value of each function and
 the value of each actuator. This log file is communicated to the GUI. We plan
-to use it to implement a debug function in the future.
+to use it to implement a debug function in the future. \\
 
 El Core debería, a grandes rasgos, hacer las siguientes cosas:
 
@@ -33,25 +34,25 @@ El Core debería, a grandes rasgos, hacer las siguientes cosas:
   \item \textbf{Parsear el XML:} Levantar el archivo XML, chequear que no haya elementos repetidos por \textit{id},
 		chequear que no existan ciclos en el grafo formado por los sensores + cajas + actuadores, chequear
 		que los predecesores de cada elemento sean elementos existentes de modo que el grafo sea consistente,
+		chequear que las actualizaciones de las transiciones correspondan a elementos existentes, 
 		realizar un \textit{topological sorting}\footnote{\textit{Topological Sort, Introduction to Algorithms}, Cormen, Leiserson, Rivest, and Stein.}
-		del grafo, y por último, devolver la \textit{tabla de orden de ejecución secuencial}
-		con la cual se realizará toda la ejecución posterior.
+		del grafo, y por último, devolver un objeto de tipo \textit{Conducta}
+		con el cual se realizará toda la ejecución posterior.
   \item \textbf{Chequear que los sensores y actuadores del Core y el RAL se correpondan entre sí:}
 		Obtener la lista de sensores y actuadores del \textit{RAL} y realizar el chequeo de que el \textit{RAL} contenga
 		los sensores y actuadores que tiene el \textit{Core}.
   \item \textbf{Definir la frecuencia de trabajo:} Obtener la \textit{frecuencia de trabajo} del \textit{RAL}
 		para luego ejecutar como máximo a esta \textit{frecuencia}.
-  \item \textbf{Ejecutar:} Obtener el nuevo estado (valor) de los sensores del \textit{RAL} y actualizar sus
-		valores en la\textit{ tabla de orden de ejecución}, para cada elemento de la \textit{tabla de orden de ejecución}
-		actualizar sus valores en función de sus predecesores, y por último, enviarle al \textit{RAL} el nuevo
-		valor para los actuadores y actualizar el archivo de \textit{LOG} con el valor de todos los elementos de
-		la tabla de orden de ejecución.
+  \item \textbf{Ejecutar:} Obtener el nuevo estado (valor) de los sensores del \textit{RAL} y actualizar los
+		valores en los elementos de la \textit{Conducta} correspondientes. Para cada elemento del \textit{comportamiento actual}
+		actualizar su valor en función de sus predecesores, y por último, enviarle al \textit{RAL} el nuevo
+		valor para los actuadores y actualizar el archivo de \textit{LOG} con el valor de todos los elementos la \textit{Conducta}.
 \end{enumerate}
 
 \textbf{Observaciones:}
 \begin{itemize}
   \item En el parseo, no se chequea que una \textit{Caja} no tenga como entrada a un \textit{Actuador}.
-  \item En el \textit{LOG}, no se guarda el estado de sensores del \textit{RAL}, se desprenden de la \textit{tabla de orden de ejecución}.
+  \item En el \textit{LOG}, no se guarda el estado de sensores del \textit{RAL}, se desprenden de la \textit{Conducta}.
   \item En el chequeo entre sensores y actuadores del \textit{Core} y el \textit{RAL},
 		no se chequea que estén en el mismo orden, sólo que los sensores y actuadores del \textit{Core} sean un subconjunto de
 		los sensores y actuadores del \textit{RAL}
@@ -60,7 +61,7 @@ El Core debería, a grandes rasgos, hacer las siguientes cosas:
 
 \section{Implementaci\'on}
 
-Lo hacemos en \texttt{C++} para que sea lo más rápido y potente posible.
+Lo hacemos en \texttt{C++} para que sea lo más eficiente posible.
 
 Para la funcionalidad de parseo del XML utilizamos el \textit{Xerces XML Parser 3.0.1}\footnote{\textit{Xerces XML Parser 3.0.1}, \url{http://xerces.apache.org/xerces-c/}}
 para \texttt{C++}. Recompilamos las librerías del Xerces de forma estática para
@@ -139,13 +140,15 @@ ya que cada elemento contiene \textit{punteros} a los elementos que le son prede
 
 \textbf{Observaciones:}
 \begin{itemize}
+\item El método \texttt{Caja::ejecutar()}, debe tener en cuenta al calcular de manejar los datos en valores \texttt{float} para no perder precisi\'on ni entrar en casos en los que devuelva \textit{cero} por truncamiento a \texttt{int}.
+
 \item El método \texttt{Caja::ejecutar()}, asume que los 2 puntos están ordenados,
 	  es decir, \texttt{Caja.\_puntos[0].x} $\leqslant$ \texttt{Caja.\_puntos[1].x}.
 	  Por lo tanto, calcular el valor de la función se reduce a 3 casos:
 	  \begin{itemize}
 	  \item $entrada \leqslant x_0 \quad \Longrightarrow \quad resultado = y_0$
 	  \item $entrada \geqslant x_1 \quad \Longrightarrow \quad resultado = y_1$ 
-	  \item $x_0 < entrada < x_1 \quad \Longrightarrow \quad resultado = \displaystyle \frac{y_0-y_1}{x_0-x_1}\times(entrada - x_0) + y_0$ (ecuacion de la recta)
+	  \item $x_0 < entrada < x_1 \quad \Longrightarrow \quad resultado = \displaystyle \frac{y_0-y_1}{x_0-x_1}\times(entrada - x_0) + y_0$ (ecuaci\'on de la recta)
 	  \end{itemize}
 
 \item Por como están diseñadas las clases, y posteriormente los algoritmos, obliga a que los atributos
@@ -155,7 +158,6 @@ ya que cada elemento contiene \textit{punteros} a los elementos que le son prede
 	  los elementos haya que agregar las \texttt{\&(Elemento)} en \texttt{\_entradas} y los puntos en \texttt{\_puntos}
 	  manualmente...
 \end{itemize}
-
 
 \subsection{Pseudoc\'odigos}
 \subsubsection{\textit{Core}}
@@ -292,16 +294,26 @@ Al comenzar a ejecutar el \textit{Core}, el mismo entra en un \textit{ciclo infi
 y actualizando los valores de todos los elementos.
 
 Para terminar la ejecución del \textit{Core}, el mismo tiene definida un \textit{rutina de atención de señales},
-en particular, para la señal \texttt{SIGINT}, que al ser recibida por el \textit{Core} termina su ejecución
-de forma ordenada, cerrando correctamente el archivo de \textit{log}.
+en particular para las señales \texttt{SIGINT} y \texttt{SIGTERM}, que al ser recibida por el \textit{Core} termina su ejecución
+de forma ordenada, deteniendo los motores por seguridad enviandoles valor 0 (cero), finalizando los procesos correpondientes, destruyendo las esctructuras din\'amicas y cerrando correctamente el archivo de \textit{log}.
 
-Las señales se encuentran definidas en la librería estandar $<signal.h>$.
-Puede verse su especificación en \url{http://publications.gbdirect.co.uk/c_book/chapter9/signal_handling.html}.
-La señal \texttt{SIGINT}, es una señal de atención interactiva, generalmente generada por
+Las señales se encuentran definidas en la librería estandar \verb=<signal.h>=.
+Puede verse la especificaci\'on de se\~nales en \cite{signals}.
+
+La señal \texttt{SIGINT} (\textit{interrupt key signal}), es una señal de atención interactiva, generalmente generada por
 la teclas \texttt{Ctrl+C} en la consola de ejecución, pero que también puede ser enviada por otro programa.
 
+La señal \texttt{SIGTERM} (\textit{termination signal}), es una señal de terminaci\'on enviada por el comando \texttt{kill}, pero que también puede ser enviada por otro programa.
+
 La idea es que sea la \textit{GUI} la que inicia la ejecución del \textit{Core} y la que termine la ejecución
-del mismo enviando la señal \texttt{SIGINT}.
+del mismo enviando la señal \texttt{SIGINT} o \texttt{SIGTERM} seg\'un corresponda.
+
+
+\textbf{Nota:} Es muy importante el orden en el que se llama a las distintas funciones, por ejemplo \verb=inicializarRAL()=, \verb=signal(SIGINT,terminar)= y \verb=signal(SIGTERM,terminar)=, 
+ya que esto determinar\'a qu\'e procesos afectar\'a la atenci\'on de se\~nales. Por ejemplo, ten\'iamos un bug en la finalizaci\'on por se\~nales al utilizar RAL-ExaBot, ver en \ref{bugA05} y \ref{bugA06}.
+
+
+
 
 \subsection{Windows 32 bits}
 FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\

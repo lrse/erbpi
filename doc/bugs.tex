@@ -1,0 +1,353 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% BUGS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Estos son bugs conocidos, algunos arreglados y otro no...
+
+% \section{BUGs}
+
+\section{Sin Arreglar}
+
+\subsection{Khepera RAL}
+\label{bugSA01}
+A veces el KHEPERA-RAL no arranca, tira  \texttt{segmentation fault}... Parece ser un problema de que no puede abrir bien el puerto COM... Hay que darle hasta que deje de devolver \texttt{segmentation fault}...
+
+\subsection{Khepera RAL Torreta-Radio}
+\label{bugSA02}
+Parece haber un problema con el \textit{setMotors(motors)} en \textit{setEstadoActuadores()} en el \textit{RAL.CPP}. Si comentamos esto, la lectura de sensores a \textit{CTR\_FREC = 700000} anda b\'arbaro, si no, empieza a fallar...
+
+El error t\'ipico parece ser que se pierden lecturas y devuelve todo cero. 
+Una salida de log t\'ipica cuando est\'a activado el \textit{setMotors(motors)} de la función \textit{setEstadoActuadores()} en \textit{RAL.CPP} es:
+
+\scriptsize
+\begin{verbatim}
+timestamp, proximidad.320, proximidad.340, proximidad.350, proximidad.10, proximidad.20, proximidad.40, proximidad.170, proximidad.190, funcion.exitatoria.1, funcion.exitatoria.2, funcion.inhibitoria.1, funcion.inhibitoria.2, motor.izquierda, motor.derecha, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+701, 1023, 1023, 141, 0, 0, 0, 0, 0, 2187, 10, 0, 3, 0, 0, 2187, -10, 10, -7, 
+1402, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+2103, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+2804, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+3505, 1023, 1023, 393, 0, 0, 0, 0, 0, 2439, 10, 0, 3, 0, 0, 2439, -10, 10, -7, 
+4206, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+4907, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+5607, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+6307, 1023, 1023, 603, 0, 0, 0, 0, 0, 2649, 10, 0, 3, 0, 0, 2649, -10, 10, -7, 
+7008, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+7710, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+8410, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+9111, 1023, 1023, 244, 0, 0, 0, 0, 0, 2290, 10, 0, 3, 0, 0, 2290, -10, 10, -7, 
+\end{verbatim}
+\normalsize
+
+En cambio, si lo comentamos empieza a andar todo bien:
+
+\scriptsize
+\begin{verbatim}
+timestamp, proximidad.320, proximidad.340, proximidad.350, proximidad.10, proximidad.20, proximidad.40, proximidad.170, proximidad.190, funcion.exitatoria.1, funcion.exitatoria.2, funcion.inhibitoria.1, funcion.inhibitoria.2, motor.izquierda, motor.derecha, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 0, 0, 3, 3, 
+702, 677, 1023, 0, 0, 0, 0, 0, 0, 1700, 10, 0, 3, 0, 0, 1700, -10, 10, -7, 
+1403, 1023, 1023, 292, 0, 0, 0, 0, 0, 2338, 10, 0, 3, 0, 0, 2338, -10, 10, -7, 
+2103, 1023, 1023, 136, 0, 0, 0, 0, 0, 2182, 10, 0, 3, 0, 0, 2182, -10, 10, -7, 
+2804, 1023, 1023, 170, 0, 0, 0, 0, 0, 2216, 10, 0, 3, 0, 0, 2216, -10, 10, -7, 
+3504, 1023, 1023, 102, 0, 0, 0, 0, 0, 2148, 10, 0, 3, 0, 0, 2148, -10, 10, -7, 
+4205, 1023, 1023, 174, 0, 0, 0, 0, 0, 2220, 10, 0, 3, 0, 0, 2220, -10, 10, -7, 
+4905, 1023, 1023, 330, 0, 0, 0, 0, 0, 2376, 10, 0, 3, 0, 0, 2376, -10, 10, -7, 
+5605, 1023, 1023, 261, 0, 0, 0, 0, 0, 2307, 10, 0, 3, 0, 0, 2307, -10, 10, -7, 
+6306, 1023, 1023, 180, 0, 0, 0, 0, 0, 2226, 10, 0, 3, 0, 0, 2226, -10, 10, -7, 
+7707, 1023, 1023, 144, 0, 0, 0, 0, 0, 2190, 10, 0, 3, 0, 0, 2190, -10, 10, -7, 
+8407, 1023, 1023, 245, 0, 0, 0, 0, 0, 2291, 10, 0, 3, 0, 0, 2291, -10, 10, -7, 
+9108, 1023, 1023, 125, 0, 0, 0, 0, 0, 2171, 10, 0, 3, 0, 0, 2171, -10, 10, -7, 
+9808, 845, 1023, 0, 0, 0, 0, 0, 0, 1868, 10, 0, 3, 0, 0, 1868, -10, 10, -7, 
+10508, 1023, 1023, 0, 0, 0, 0, 0, 0, 2046, 10, 0, 3, 0, 0, 2046, -10, 10, -7, 
+11209, 1023, 1023, 0, 0, 0, 0, 0, 0, 2046, 10, 0, 3, 0, 0, 2046, -10, 10, -7, 
+11909, 1023, 1023, 33, 0, 0, 0, 0, 0, 2079, 10, 0, 3, 0, 0, 2079, -10, 10, -7, 
+\end{verbatim}
+\normalsize
+
+\subsection{GUI Reseteo Workbench}
+\label{bugSA03}
+
+\textbf{Pregunta:} ¿Se puede ejecutar el mismo comportamiento en dos robots diferentes? Por ejemplo, si sólo 
+usas telemetros en el Exabot para evitar obstaculos, podes pasar el mismo comportamiento al Khepera? ¿Dónde 
+está la normalizacion de los sensores, en el RAL? 
+\textbf{Respuestas:}
+\begin{itemize}
+\item La normalización de sensores está en RAL, entonces se podrían reutilizar los comportamientos para distintos robots porque todo pasa a ser relativo a 0-100\%.
+\item Reutilizar comportamiento en disntintos robots: Objetivamente sí se puede. Pero en realidad, como no tuve tiempo de ``tocarlo bien'' en el código de Java, cuando cambiás en el menú de la GUI de selección de robot, te resetea el ``escritorio de trabajo'' (workbench) de la GUI... Es sólo un problemita menor de programación en la GUI... Sólo habría que tocar la GUI para que no resetee el workbench y vuele los sensores y actuadores (con sus conexiones) que no corresponden en función del nuevo robot...
+\end{itemize}
+
+Si programaste un comportamiento y cambi\'as el robot desde el menu de selecci\'on de robot, se reseteo todo!!! ARREGLAR ESTO!!!
+
+Ver Bug Arreglado en \ref{bugA02}
+
+\subsection{GUI lectura componentes - sensores}
+\label{bugSA04}
+Hay 2 problemas: por c\'omo hice el código de la GUI en \textit{JRobotPanel::JSensorsChooserDialog()} los IDs de los sensores deben ser \texttt{tipo.numero}. Si lo que está después del punto no es un número, no anda. Si lo que está antes del punto no es igual a unp de los \texttt{tipo}, no anda. Entonces, el formato debe ser: 
+\scriptsize
+\begin{verbatim}
+                <sensor id='telemetro.45' tipo='telemetro'>
+\end{verbatim}
+\normalsize
+
+\subsection{RAL ExaBot}
+\label{bugSA05}
+Falta hacer una funci\'on \texttt{inicializarRAL(lista sensores)} para que prenda sólo algunos sensores, los pasados por la lista. El problema es que por defecto la RAL prende todos los sensores del robot. Cuando esto no es necesario, tener todos los sensores prendidos consume mucha energ\'ia y las bater\'ias del robot se gastan muy r\'apido.
+
+Esto es principalmente para el Exabot, pero hay que dejarla establecida en el \texttt{.H} para todas las RALs...
+
+
+\subsection{GUI}
+\label{bugSA06}
+Abrir la gui no maximizada. 
+Abrir la pantalla de seleccion de robot. 
+Maximizar la ventana. 
+La pantalla queda de tamaño chiquito!!
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Arreglados}
+
+\subsection{GUI Ejecuci\'on}
+\label{bugA01}
+Tenemos un problema, después de darle ejecutar a la GUI (por ejemplo con el YAKS) el yaks se cerraba solo a los 10 segundos... El problema era que el applet (ventanita) de la GUI que indicaba que se estaba ejecutando (el CORE) no freezaba (detenía) la ejecución de la GUI, entonces inmediatamente lo que segu\'ia a ejecutar era el \texttt{proc.destroy()} en la GUI. A esto se le sumaba que el \texttt{proc.destroy()} a veces no mataba bien el proceso y quedaba pululando el CORE por ah\'i y empezaba a andar todo mal!!! imaginate dos COREs corriendo al mismo tiempo!!!...
+
+No pudimos arreglar bien esto y por falta de tiempo lo EMPARCHAMOS horriblemente haciendo que el Java se freeze con una ventanita esperando el bot\'on STOP y cuando se presione inmediatamente busque el IDPROC del CORE y mande \texttt{killall} via sistema para matar el CORE. ESTO ES HORRIBLE!!!! OJO!!! Esto s\'olo anda en LINUX!!!! Para que termine bien el CORE con SIGINT (Ctrl+C) lo arreglamos as\'i:
+\scriptsize
+\begin{verbatim}
+                kill -2 pid
+                ps -ef
+                kill -int pid
+\end{verbatim}
+\normalsize
+el pid tiene que ser el de
+\scriptsize
+\begin{verbatim}
+                -> /lib/ld-linux.so.2 --library-path ../core ../core/core_exe /tmp/prg-4851298914852602110 core_log.txt yaks
+\end{verbatim}
+\normalsize
+y no el de
+\scriptsize
+\begin{verbatim}
+                   /bin/sh ../core/core.sh /tmp/prg-4851298914852602110 core_log.txt yaks
+\end{verbatim}
+\normalsize
+con 
+\scriptsize
+\begin{verbatim}
+                   ps -ef | grep /lib/ld
+\end{verbatim}
+\normalsize
+obtengo listada sólo la linea del proceso que me interesa:
+\scriptsize
+\begin{verbatim}
+                javier    8933  8932  0 17:52 ?        00:00:00 /lib/ld-linux.so.2 --library-path ../core ../core/core_exe /tmp/prg-3610233313880776518 core_log.txt yaks	
+\end{verbatim}
+\normalsize
+entonces la segunda ``palabra'' es el pid que me interesa...
+
+Puede verse m\'as en: \url{http://www.devdaily.com/java/edu/pj/pj010016}, \url{http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4784574}, \url{http://ubuntuforums.org/showthread.php?t=995619}, \url{http://www.experts-exchange.com/Programming/Languages/Java/Q_22052834.html}.
+
+Al final, lo solucion\'e haciendo lo diguiente:
+\scriptsize
+\begin{verbatim}
+                // obtengo el PID del "core_proc"
+                String[] params2 = new String[] { "/bin/bash", "-c",  "ps -ef | grep /lib/ld" };
+                Process core_proc_pid = Runtime.getRuntime().exec(params2);
+                BufferedReader core_proc_pid_br = new BufferedReader(new InputStreamReader(core_proc_pid.getInputStream()));
+                String core_proc_pid_br_line = core_proc_pid_br.readLine();
+                StringTokenizer core_proc_pid_br_line_st = new StringTokenizer( core_proc_pid_br_line );
+                String core_proc_PID;
+                core_proc_PID = core_proc_pid_br_line_st.nextToken();
+                core_proc_PID = core_proc_pid_br_line_st.nextToken();
+                System.out.println("-> el PID del core es: " + core_proc_PID);
+
+                // termina el core enviando el signal SIGINT // obtengo el PID del "core_proc"
+                String[] params3 = new String[] { "/bin/bash", "-c",  "kill -int " + core_proc_PID };
+                Process core_proc_SIGINT = Runtime.getRuntime().exec(params3);
+                System.out.println("-> hicimos 'kill -int " + core_proc_PID + "' y matamos el core...");
+\end{verbatim}
+\normalsize
+
+Ahora despu\'es de un tiempo, creo que el problema era que no estaba bien implementado el \texttt{SIGTERM} Y \texttt{SIGINT} en el CORE. Pero esto ya lo arreglamos. Habr\'ia que volver atr\'as esta modificaci\'on y ver que est\'e andando correctamente...
+
+Este moco se encuentra en el archivo \textit{JRoboticaFrame.java}.
+
+\subsection{GUI Menu Selecci\'on Robot}
+\label{bugA02}
+No andaba bien el menu de cambio de Robot. El problema era que trataba de buscar los XMLs de robots en \textit{extension/robots} y tenía que buscarlos en \textit{bin/extension/robots} ya que el programa ejecuta desde el directorio \textit{gui} y no desde \textit{gui/bin}...
+
+Adem\'as, para que al cambiar el robot en el menu tambi\'en cambie todo en la aplicaci\'on (se actualice) tambi\'en hubo que tocar lo siguiente:
+\begin{itemize}
+	\item \verb=JRoboticaFrame::openProgram(File f):= leemos del archivo cuál es el robot y actualizamos \textit{programPanelHolder}, \textit{robotPanel} y \textit{robotNameLabel.setText(robot.getName())}.
+	\item \verb=JRoboticaFrame::actionPerformed(e.getActionCommand().startsWith("changeRobot:")):= actualizamos \textit{robot}, \textit{robotNameLabel}, \textit{programPanelHolder} y \textit{robotPanel}. 
+\end{itemize}
+\textbf{OJO:} Es decir que, si tenés un programa armado para un robot y tocás cambiar el robot, te borra todo y empieza de nuevo, porque no tiene sentido ya que los sensores se llaman distintos!!! ESTO \'ULTIMO NO EST\'A BIEN!!! HAY QUE ARREGLARLO PARA QUE UN COMPORTAMIENTO PUEDA USARSE PARA DISTINTOS ROBOTS!!!! Ver Bug Sin Arreglar en \ref{bugSA03}...
+
+
+\subsection{GUI Configurar Par\'ametros de Funciones (Cajas)}
+\label{bugA03}
+Hubo que combinar con c\'odigo Diego para que le pase a \textit{cajaParametros} los 2 puntos para dibujarlos y que al presionar los boton aceptar devuelva a la GUI valor de los 2 puntos modificados...
+
+?`Qu\'e hicimos?
+
+en JBox.java:
+\scriptsize
+\begin{verbatim}
+                        private JPopupMenu getPopupMenu() {
+                            ...
+                            item2.setActionCommand("setup");
+                            popup.add(item);
+                            if( box instanceof FunctionBox )
+                                popup.add(item2);
+                        public void actionPerformed(ActionEvent e) {
+                            ...
+                            if( e.getActionCommand() == "setup" ) {
+                                Point A = new Point();
+                                Point B = new Point();
+                                A.x = ((FunctionBox) this.box).getX0();
+                                A.y = ((FunctionBox) this.box).getY0();
+                                B.x = ((FunctionBox) this.box).getX1();
+                                B.y = ((FunctionBox) this.box).getY1();
+                                JParametrosCaja setupBox = new JParametrosCaja( A,B, Program.getCurrentProgram(), this.box );
+                                setupBox.run();
+                            }
+\end{verbatim}
+\normalsize
+en FunctionBox.java:
+\scriptsize
+\begin{verbatim}
+                        public void setX0( int valor )...
+                        public void setY0( int valor )...
+                        public void setX1( int valor )...
+                        public void setY1( int valor )...
+\end{verbatim}
+\normalsize
+en ProgramListener.java:
+\scriptsize
+\begin{verbatim}
+                        public interface ProgramListener {
+                            public void boxSet( Box box, Point A, Point B );
+\end{verbatim}
+\normalsize
+en Program.java:
+\scriptsize
+\begin{verbatim}
+                        public void setBox( Box box, Point A, Point B ) {        
+                            for( ProgramListener listener: listeners )
+                                listener.boxSet(box,A,B);        
+\end{verbatim}
+\normalsize
+en JConnectionsPanel.java:
+\scriptsize
+\begin{verbatim}
+                        public void boxSet( Box box, Point A, Point B ){}
+\end{verbatim}
+\normalsize
+en JBoxPanel.java:
+\scriptsize
+\begin{verbatim}
+                        public void boxSet( Box box, Point A, Point B ){
+                            if( box instanceof FunctionBox ){
+                                ((FunctionBox) box).setX0(A.x);
+                                ((FunctionBox) box).setY0(A.y);
+                                ((FunctionBox) box).setX1(B.x);
+                                ((FunctionBox) box).setY1(B.y);
+                            }
+                        }
+\end{verbatim}
+\normalsize
+en JParametrosCaja.java:
+\scriptsize
+\begin{verbatim}
+                        public JParametrosCaja( Point puntoA, Point puntoB, Program programa, Box box )...
+                        public void actionBotonCerrarAceptar(){
+                            this.puntoARet.x = (int)normalizarPunto(punto2).x;
+                            this.puntoARet.y = (int)normalizarPunto(punto2).y;
+                            this.puntoBRet.x = (int)normalizarPunto(punto3).x;
+                            this.puntoBRet.y = (int)normalizarPunto(punto3).y;
+                            this.programa.setBox( this.box, puntoARet, puntoBRet );
+                            frameVentana.dispose();
+                        }
+
+\end{verbatim}
+\normalsize
+
+
+\subsection{GUI bolas de poder (funci\'on constante)}
+\label{bugA04}
+Si est\'abamos usando la GUI con Yaks-RAL y pon\'iamos al menos 3 ``bolas de energia'' a una rueda, ya no se mueve!!
+
+El problema es que el Yaks (simulador) no acepta más de \verb=valor 10= \'o \verb=valor -9= para el motor (adelante \'o atr\'as)... Es decir, si le mando \texttt{10} o \texttt{-9} anda, si le mando \texttt{11} o \texttt{-10} ya no... En valores normalizados (desde la GUI),  para adelante anda hasta valor 54 (54\%), desde 55 en adelante ya deja de andar... Para atr\'as normalizadado anda hasta valor -49 (-49\%), desde -50 en adelante ya deja de andar...
+
+Para arreglar esto, modificamos la función \verb=RAL::desNormalizarMotores()= del Yaks para que sature en los valores antes mencionados.
+
+En el RAL-Khepera no tiene este problema, entonces los valores desnormalizados van entre \texttt{-20:20}, o normalizados entre \texttt{-100\%:100\%}
+
+
+\subsection{Core Finalizaci\'on}
+\label{bugA05}
+Hab\'ia problemas con el manejo de se\~nales de finalizaci\'on (\texttt{SIGINT} y \texttt{SIGTERM}) del Core junto con la RAL. Un ejemplo de este problema es los que pasaba en \ref{bugA06}.
+
+Al prinicipio s\'olo atend\'iamos la se\~nal \texttt{SIGINT}. Luego incorpor\'amos la atenci\'on de \texttt{SIGTERM}. La señal \texttt{SIGINT} (\textit{interrupt key signal}), es una señal de atención interactiva, generalmente generada por la teclas \texttt{Ctrl+C} en la consola de ejecución, pero que también puede ser enviada por otro programa. La señal \texttt{SIGTERM} (\textit{termination signal}), es una señal de terminaci\'on enviada por el comando \texttt{kill}, pero que también puede ser enviada por otro programa.
+
+Tambi\'en hab\'ia problemas de entrelazamiento de atenci\'on de se\~nales, en particular con RALs que manejan varios threads como RAL-ExaBot, que hac\'ia que los procesos no terminaran en el orden correcto ni de forma correcta. Para solucionar esto hubo que arreglar varias cosas:
+\begin{itemize}
+	\item \textbf{Core:} 
+		\begin{itemize}
+			\item La llamada a la funci\'on \verb=inicializarRAL()= la hacemos lo m\'as arriba posible (o lo m\'as antes posible) para que, en casos como RAL-ExaBot que tiene varios threads, comparta lo menos posible de memoria con el proceso \textit{padre} Core, como ser \textit{fileDescriptors}, etc. De lo contrario aumenta la probabilidad de que sucedan cosas indeseadas.
+			\item Tambi\'en por lo anterior, pusimos la llamada a la atenci\'on de se\~nales inmediatamente despu\'es de \verb=inicializarRAL()=, para que la atenci\'on de la se\~nal del Core est\'e separada del haber levantado los procesos necesarios para la RAL. De lo contrario, suced\'ia que inmediatamente la se\~nal era atendida tambi\'en por los procesos de la RAL y en algunos casos, como RAL-ExaBot, esto resultaba en un comportamiento de finalizaci\'on no deseado.
+			\item Tambi\'en agregamos para completitud de casos adem\'as de \texttt{SIGINT}, la atenci\'on de la se\~nal \texttt{SIGTERM} para que también atienda a la señal del comando de sistema \texttt{kill}.
+		\end{itemize}
+	\item \textbf{RAL-ExaBot:} ver bugs arreglados en \ref{bugA06}.
+\end{itemize}
+
+
+\subsection{RAL ExaBot Threads-Signals }
+\label{bugA06}
+Al finalizar el RAL, cuando deten\'iamos la ejecuci\'on del comportamiento desde la GUI, los motores segu\'ian andando, es decir, no les asignaba valor 0 (cero) para detenerlos.
+
+El problema era con el manejo de los procesos \verb=core= (\textit{padre}) y \verb=udp_receive= - \verb=udp_send= (\textit{hijos}).
+Al enviar las se\~nales de finalizaci\'on para que el Core las atendiera como \verb=Ctrl+C=, \verb=kill -int Core= o \verb=kill Core= le mandaba la señal a los 3 procesos (padre y 2 hijos), 
+entonces \verb=udp_send= nunca terminaba y nunca llegaba a enviar 0 (cero) a los motores.
+
+Para solucionar esto hubo que arreglar varias cosas:
+\begin{itemize}
+	\item \textbf{Core:} ver bugs arreglados en \ref{bugA05}.
+	\item \textbf{RAL-ExaBot:} 
+		\begin{itemize}
+			\item Hicimos que los procesos \textit{hijos} (\verb=udp_receive= y \verb=udp_send=) del \textit{padre} RAL-ExaBot (\verb=core=) no dependan de la misma consola, los desatacheamos. Para esto utilizamos el comando de linux \textit{setsid} mediante la funci\'on de C \verb=setsid()=, con lo que desatacheamos el hijo del padre. Es para que el hijo no dependa de la misma consola. Es decir, no muera con el \verb=Ctrl+C=, \verb=kill -int Core= o \verb=kill Core= del padre (Core).\\El comando \textit{setsid} crea una nueva sesión para el proceso llamador, quedando como \'unico proceso en este nuevo grupo de procesos.
+			\item En \verb=udp_send()= agregamos:
+				\scriptsize
+				\begin{itemize}
+					\item \verb=signal(SIGINT,terminar_udp_send);  // configurar la rutina de atención de SIGINT=
+					\item \verb=signal(SIGTERM,terminar_udp_send); // configurar la rutina de atención de SIGTERM=\\
+						  \verb=                                   // que no hace nada, pero atiende:=
+						  \verb=                                   //     void terminar_udp_send(int sig){exit(sig);}=
+				\end{itemize}
+				\normalsize
+			\item En \verb=udp_receive()= agregamos:
+				\scriptsize
+				\begin{itemize}
+					\item \verb=signal(SIGINT,terminar_udp_receive);  // configurar la rutina de atención de SIGINT=
+					\item \verb=signal(SIGTERM,terminar_udp_receive); // configurar la rutina de atención de SIGTERM=\\
+						  \verb=                                      // que no hace nada, pero atiende:=
+						  \verb=                                      //     void terminar_udp_receive(int sig){exit(sig);}=
+				\end{itemize}
+				\normalsize
+		\end{itemize}
+\end{itemize}
+
+
+
+
+
+
+
+
+

@@ -51,17 +51,22 @@ El m\'odulo GUI cuenta con las siguientes funcionalidades:
 
 FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\FALTA PONER IMAGENES DE EUROBOT DE GUI!!!\\
 
+
+\textbf{C\'omo es el uso y configuraci\'on de las funciones???} Por ejemplo, al agregar funci\'on exitatorio o inhibitoria en realidad de fondo es una param\'etrica donde por defecto tiene los valores \verb=(0,0):(1024,100)= ó \verb=(0,0):(1024,-100)= seg\'un corresponda, estos varlores por defecto se definen en el archivo de configuraci\'on de la GUI, ver Cap\'itulo \ref{cap:xml}.
+
+
 \section{Implementaci\'on}
 The GUI is implemented in Java, since it is a good language for graphical in-
 terfaces and its portable to several operating systems, only requiring the installa-
-tion of the JVM (Java Virtul Machine). The behaviour-file is an XML(Extensible
-Markup Language) file, making it very simple to add new robots, sensor types,
+tion of the JVM (Java Virtul Machine). The behaviour-file is an XML (Extensible
+Markup Language) file \cite{xml}, making it very simple to add new robots, sensor types,
 functions and other features we might add to ERBPI.
 
-El m\'odulo GUI est\'a implementado en \texttt{Java}. Elegimos este lenguaje por la capacidad de portabilidad y la no necesidad de recompilar para distintos Sistemas Operativos. El \'unico requerimiento en la PC para ejecutar la GUI es tener instalado el JVM (Java Virtul Machine).
+El m\'odulo GUI est\'a implementado en \texttt{Java}. Elegimos este lenguaje por la capacidad de portabilidad y la no necesidad de recompilar para distintos Sistemas Operativos. El \'unico requerimiento en la PC para ejecutar la GUI es tener instalado el JVM (Java Virtual Machine).
 
 Para desarrollar la interfaz gráfica, usamos la \textit{Swing API} (JFC/Swing). Ver \url{http://java.sun.com/docs/books/tutorial/uiswing/index.html} y \url{http://en.wikipedia.org/wiki/Swing_(Java)}
 
+ARREGLAR ESTO DE C\'OMO EST\'A ORGANIZADO EL CODIGO!!!\\ARREGLAR ESTO DE C\'OMO EST\'A ORGANIZADO EL CODIGO!!!\\ARREGLAR ESTO DE C\'OMO EST\'A ORGANIZADO EL CODIGO!!!\\
 Está organizado en tres paquetes:
 \begin{itemize}
 \item model: aca esta toda la parte "funcional". Por ejemplo, la clase Program tiene el programa con sus cajas y conexiones y la clase Robot tiene la descripción de cada robot.
@@ -75,14 +80,20 @@ La conexión entre el modelo y la gui se da por el método \textit{publish-suscrib
 
 La parte de gui es la más enquilombada, pero no pude hacerlo más fácil.
 
-Hay un archivo xml que define cada robot, y uno con configuración general (\textit{config.xml}). Desde ahí se puede cambiar las cajas que aparecen en las herramientas, los dibujos, etc. Los dibujos están todos en la carpeta images.
 
-\begin{itemize}
-\item PONER LO DE LOS XMLs PARA CONFIGURAR !!!! (configGral y Robots!!)
-\item SON ESPECTACULARES!!! AGREGANDO Y TOCANDO AHÍ, SE PARAMETRIZA TODO!!! LAS CONFIGs
-\item GRALES DE LA GUI Y TOCANDO EL DE LOS ROBOTS SE CONFIGURAN LOS ROBOTS, ANDO UNA MASA!!!
-\item DOCUMENTAR CADA PARAMETRO, MOSTRAR TAMBIÉN LOS PNGs (SENSORES Y ROBOTS)...
-\end{itemize}
+\subsection{Configuraciones}
+Como ya dijimos, una de las particularidades de la aplicaci\'on es su parametrizabilidad y extensibilidad. Por esto mismo, todas las configuraciones que pueden realizarse a la GUI, se establecen, agregan y/o modifican a trav\'es de archivos de configuraci\'on sin la necesidad de modificar la aplicaci\'on. Lo que hace sencillo y r\'apido cambiar las caracter\'isticas de la aplicaci\'on y los robots y simuladores a utilizar por la misma.
+
+\subsubsection{Configuraci\'on de la GUI}
+Utilizamos XML \cite{xml} para su implementaci\'on. Esto nos da la posibilidad de modificar y extender las caractersticas de la aplicaci\'on en cualquier momento. Por ejemplo, qu\'e tipo de sensores y actuadores ser\'a capaz de manejar la aplicaci\'on, como \textit{proximidad}, \textit{luz}, \textit{telemetro}, \textit{sonar}, \textit{linea}, \textit{contacto}, \textit{rueda}, y cu\'ales son las im\'agenes que estos utilizaran para visualizarse en la GUI. Cu\'ales son las herramientas de que disponemos para realizar las conexiones entre los componentes, como las funciones \textit{inhibitoria}, \textit{exitatoria}, \textit{parametrica} y \textit{constante}, si \'estas aceptan otros componentes como entrada, sus par\'ametros por defecto y establecer las im\'agenes que estos utilizaran para visualizarse en la GUI.
+
+Para m\'as informaci\'on sobre la configuraci\'on de la GUI ver Cap\'itulo \ref{cap:xml}.
+
+\subsubsection{Configuraci\'on de los Robots}
+Utilizamos XML \cite{xml} para su implementaci\'on. Esto nos da la posibilidad de modificar y extender los robots y sus caractersticas que la aplicaci\'on podr\'a manejar a trav\'es del men\'u de selecci\'on de robot en la GUI.
+Cada robot tiene su propio archivo de configuraci\'on alojado en \textit{gui/extension/robot}, por ejemplo \textit{khepera.xml}, \textit{yaks.xml}, \textit{exabot.xml} y \textit{exabot-player.xml}. Cada archivo de configuraci\'on de robot nos permite definir cu\'al es la RAL que deber\'a utilizar para comunicarse correctamente con el robot, qu\'e sensores y de qu\'e tipo posee el robot, cu\'ales de \'estos aparecen por defecto en la aplicaci\'on y tambi\'en la definici\'on gr\'afica para la GUI del robot y sus sensores que permitir\'a poder visualizar en la aplicaci\'on a qu\'e sensores y actuadores nos referimos con tan s\'olo pasar el mouse sobre cada componentes en el escritorio de trabajo.
+
+Para m\'as informaci\'on sobre la configuraci\'on de los robots ver Cap\'itulo \ref{cap:xml}.
 
 
 \section{Ejecuci\'on}
@@ -90,6 +101,9 @@ Hay un archivo xml que define cada robot, y uno con configuración general (\text
 La GUI se ejecuta de la siguiente forma: \textit{java extension.ExtensionApp}.
 \subsubsection{Script}
 Para facilitar esta ejecuci\'on, se incluye un archivo script \textit{ERBPI/bin/gui/gui\_ejecutar.sh}.
+\subsubsection{BUGs}
+Hay un bug en la ejecuci\'on, ver \ref{bugA01}
+
 \subsection{Windows 32 bits}
 FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
 
@@ -219,7 +233,10 @@ Para la compilaci\'on y debugging de este c\'odigo, se cuenta con un  \textit{Ec
 
 \section{Instalaci\'on}
 \subsection{Linux 32 bits}
-Para la instalaci\'on se ejecuta el script \textit{ERBPI/src/gui/gui\_instalar.sh}. Es necesario que la GUI se encuentre compilada con anterioridad. Para compilaci\'on de GUI ver punto \ref{GUICompilacion}.
+Para la instalaci\'on se ejecuta el script \textit{ERBPI/src/gui/gui\_instalar.sh} que se encarga de copiar los binarios en \textit{ERBPI/bin/gui}.
+
+Nota: Es necesario que la GUI se encuentre compilada con anterioridad. Para compilaci\'on de GUI ver punto \ref{GUICompilacion}.
+
 \subsection{Windows 32 bits}
 FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\FALTA COMPLETAR ESTO!!!\\
 
