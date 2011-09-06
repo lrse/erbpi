@@ -160,16 +160,18 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 			System.out.print("-> ejecutando el Core: ");
 			for( String s : params ) System.out.print(s + " ");
 			System.out.println(" ");
+			
+			//core_proc.destroy();
 						
 			// obtengo el PID del "core_proc"
-			String[] params2 = new String[] { "/bin/bash", "-c",  "ps -ef | grep /lib/ld" };
+			/*String[] params2 = new String[] { "/bin/bash", "-c",  "ps -ef | grep /lib/ld" };
 			Process core_proc_pid = Runtime.getRuntime().exec(params2);
 			BufferedReader core_proc_pid_br = new BufferedReader(new InputStreamReader(core_proc_pid.getInputStream()));
 			String core_proc_pid_br_line = core_proc_pid_br.readLine();
 			StringTokenizer core_proc_pid_br_line_st = new StringTokenizer( core_proc_pid_br_line );
 			String core_proc_PID;
 			core_proc_PID = core_proc_pid_br_line_st.nextToken();
-			core_proc_PID = core_proc_pid_br_line_st.nextToken();
+			core_proc_PID = core_proc_pid_br_line_st.nextToken();*/
 			//System.out.println("-> el PID del core es: " + core_proc_PID);
 						
 			// abre la ventanita de ejecutando...
@@ -191,12 +193,13 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 					"Parar");
 			
 			// termina el core enviando el signal SIGINT // obtengo el PID del "core_proc"
-			String[] params3 = new String[] { "/bin/bash", "-c",  "kill -int " + core_proc_PID };
-			Process core_proc_SIGINT = Runtime.getRuntime().exec(params3);
+			/*String[] params3 = new String[] { "/bin/bash", "-c",  "kill -int " + core_proc_PID };
+			Process core_proc_SIGINT = Runtime.getRuntime().exec(params3);*/
 			//System.out.println("-> hicimos 'kill -int " + core_proc_PID + "' y matamos el core...");
 	
 			// destruyo todos los procesos...
 			// en realidad esto no anda bien, lo comentamos...
+			core_proc.destroy();
 				//core_proc.destroy(); //core_proc_pid.destroy(); //core_proc_SIGINT.destroy();
 
 			// imprime codigo de terminación del core
