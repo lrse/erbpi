@@ -33,6 +33,10 @@ install:
 	@cp $(COREDIR)/core.sh $(BINDIR)/core/
 	@mkdir $(BINDIR)/player
 	@cp -r ./ral/exabot_player/player_config/* $(BINDIR)/player
+	
+core-exa:
+	$(MAKE) -C ral ral-exa
+	$(MAKE) -C core core-exa
 
 clean:
 	@#~ $(MAKE) clean -C $(GUIDIR)

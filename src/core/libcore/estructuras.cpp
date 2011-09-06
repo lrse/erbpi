@@ -1,4 +1,4 @@
-#include "Estructuras.h"
+#include "estructuras.h"
 
 Elemento::~Elemento(){ }
 
