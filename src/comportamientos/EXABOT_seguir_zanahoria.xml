@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ejecucion>
+<sensores>
+<sensor id="telemetro.315"/>
+<sensor id="telemetro.0"/>
+<sensor id="telemetro.45"/>
+<sensor id="telemetro.90"/>
+<sensor id="telemetro.180"/>
+<sensor id="telemetro.270"/>
+<sensor id="sonar.0"/>
+<sensor id="contacto.0"/>
+<sensor id="contacto.1"/>
+<sensor id="linea.0"/>
+<sensor id="linea.1"/>
+</sensores>
+<actuadores>
+<actuador id="motor.izquierda">
+<entradas>
+<entrada id="caja.62011"/>
+<entrada id="caja.90118"/>
+<entrada id="caja.41306"/>
+<entrada id="caja.10206"/>
+<entrada id="caja.93216"/>
+</entradas>
+</actuador>
+<actuador id="motor.derecha">
+<entradas>
+<entrada id="caja.13352"/>
+<entrada id="caja.74859"/>
+<entrada id="caja.56955"/>
+<entrada id="caja.57733"/>
+<entrada id="caja.49809"/>
+</entradas>
+</actuador>
+</actuadores>
+<cajas>
+<caja id="caja.13352">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="35" y="0"/>
+<punto x="45" y="40"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.0"/>
+</entradas>
+</caja>
+<caja id="caja.62011">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="35" y="0"/>
+<punto x="45" y="40"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.0"/>
+</entradas>
+</caja>
+<caja id="caja.74859">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="35" y="0"/>
+<punto x="45" y="40"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.45"/>
+</entradas>
+</caja>
+<caja id="caja.90118">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="35" y="0"/>
+<punto x="45" y="40"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.315"/>
+</entradas>
+</caja>
+<caja id="caja.56955">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="35" y="0"/>
+<punto x="45" y="-20"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.315"/>
+</entradas>
+</caja>
+<caja id="caja.41306">
+<esquema id="parametrica"/>
+<puntos>
+<punto x="35" y="0"/>
+<punto x="45" y="-20"/>
+</puntos>
+<entradas>
+<entrada id="telemetro.45"/>
+</entradas>
+</caja>
+<caja id="caja.49809">
+<esquema id="inhibitoria"/>
+<puntos>
+<punto x="0" y="0"/>
+<punto x="100" y="-100"/>
+</puntos>
+<entradas>
+<entrada id="contacto.0"/>
+</entradas>
+</caja>
+<caja id="caja.57733">
+<esquema id="inhibitoria"/>
+<puntos>
+<punto x="0" y="0"/>
+<punto x="100" y="-100"/>
+</puntos>
+<entradas>
+<entrada id="contacto.1"/>
+</entradas>
+</caja>
+<caja id="caja.10206">
+<esquema id="inhibitoria"/>
+<puntos>
+<punto x="0" y="0"/>
+<punto x="100" y="-100"/>
+</puntos>
+<entradas>
+<entrada id="contacto.0"/>
+</entradas>
+</caja>
+<caja id="caja.93216">
+<esquema id="inhibitoria"/>
+<puntos>
+<punto x="0" y="0"/>
+<punto x="100" y="-100"/>
+</puntos>
+<entradas>
+<entrada id="contacto.1"/>
+</entradas>
+</caja>
+</cajas>
+<robot id="exabot"/>
+</ejecucion>

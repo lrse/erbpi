@@ -87,9 +87,14 @@ std::vector<Item> getEstadoSensores(void) {
   }
   
   item.id = sensorsName[6];
-  item.valor = exa_sonar_distance(&sensor_data);
-  sensors.push_back(item);
-  cout << "distancia sonar: " << item.valor << endl;
+  float sonar_distance = exa_sonar_distance(&sensor_data);
+  if (sonar_distance < SONAR_MIN_DISTANCE) item.valor = 100;
+  else if (sonar_distance > SONAR_MAX_DISTANCE) item.valor = 0;
+  else
+    item.valor = (unsigned int)((1.0 - ((sonar_distance - SONAR_MIN_DISTANCE) / (float)(SONAR_MAX_DISTANCE - SONAR_MIN_DISTANCE))) * 100);
+  sensors.push_back(item);    
+  
+  cout << "distancia sonar: " << sonar_distance << " activacion: " << item.valor << endl;
 	
   for (uint i = 0; i < 2; i++) {
     item.id = sensorsName[7 + i];
@@ -112,22 +117,22 @@ unsigned long getFrecuenciaTrabajo(void) {
 
 #define MOTOR_MAX_RANGE 30
 #define MOTOR_SATURATE_LOW 3 
-#define MOTOR_SATURATE_HIGH 6 
+#define MOTOR_SATURATE_HIGH 20 
 
 void setEstadoActuadores(std::vector<Item> actuators)
 {
   int valor_motores[2];
   cout << "input: " << actuators[1].valor << " " << actuators[0].valor << endl;
   for (uint i = 0; i < 2; i++) {
-    float normalizado = (float)actuators[i].valor / 100;
+    float normalizado = (float)actuators[i].valor / 100.0;
     valor_motores[i] = (int)floorf(normalizado * MOTOR_MAX_RANGE);
     
     if (abs(valor_motores[i]) < MOTOR_SATURATE_LOW) valor_motores[i] = 0;
-    else if (abs(valor_motores[i]) < MOTOR_SATURATE_HIGH) valor_motores[i] = MOTOR_SATURATE_HIGH;
+    else if (abs(valor_motores[i]) > MOTOR_SATURATE_HIGH)
+      valor_motores[i] = (valor_motores[i] < 0 ? -1 : 1) * MOTOR_SATURATE_HIGH;
   }
  
   cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
 	exa_set_motors(valor_motores[1], valor_motores[0]);
-  usleep(200000);
 }
 }
