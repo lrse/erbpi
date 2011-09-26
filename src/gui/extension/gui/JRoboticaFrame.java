@@ -17,9 +17,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.io.*;
-import java.util.StringTokenizer;
 import java.util.*;
 
 
@@ -151,28 +151,45 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 			FileUtils.copyFile(fileSrc, fileDst);
 			//System.out.println("-> la RAL configurada es: " + fileSrc); // muestro lo que copie...
 			
-			// prepara la ejecución del core
-			String[] params = new String[] { "../core/core.sh", file.getAbsolutePath(), "core_log.txt", robot.getId() };
-	
-			// ejecuta el core
-			Process core_proc = Runtime.getRuntime().exec(params);
-			// imprime por pantalla lo que ejecutará...
-			System.out.print("-> ejecutando el Core: ");
-			for( String s : params ) System.out.print(s + " ");
-			System.out.println(" ");
+			String exa_ip = new String("192.168.0.2");
 			
-			//core_proc.destroy();
-						
-			// obtengo el PID del "core_proc"
-			/*String[] params2 = new String[] { "/bin/bash", "-c",  "ps -ef | grep /lib/ld" };
-			Process core_proc_pid = Runtime.getRuntime().exec(params2);
-			BufferedReader core_proc_pid_br = new BufferedReader(new InputStreamReader(core_proc_pid.getInputStream()));
-			String core_proc_pid_br_line = core_proc_pid_br.readLine();
-			StringTokenizer core_proc_pid_br_line_st = new StringTokenizer( core_proc_pid_br_line );
-			String core_proc_PID;
-			core_proc_PID = core_proc_pid_br_line_st.nextToken();
-			core_proc_PID = core_proc_pid_br_line_st.nextToken();*/
-			//System.out.println("-> el PID del core es: " + core_proc_PID);
+			Process core_proc = null;
+			if (robot.getId().equals("exabot")) {
+				Socket s = new Socket(exa_ip, 7654);
+				PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+				
+				BufferedReader in = new BufferedReader(new FileReader(file));
+				String text = new String();
+				while (in.ready()) { text += in.readLine() + "\n"; }
+				out.print(text);
+				in.close();
+				out.close();
+				s.close();
+			}
+			else {	
+				// prepara la ejecución del core
+				String[] params = new String[] { "../core/core_exe", file.getAbsolutePath(), "core_log.txt" };
+		
+				// ejecuta el core
+				core_proc = Runtime.getRuntime().exec(params);
+				// imprime por pantalla lo que ejecutará...
+				System.out.print("-> ejecutando el Core: ");
+				for( String s : params ) System.out.print(s + " ");
+				System.out.println(" ");
+				
+				//core_proc.destroy();
+							
+				// obtengo el PID del "core_proc"
+				/*String[] params2 = new String[] { "/bin/bash", "-c",  "ps -ef | grep /lib/ld" };
+				Process core_proc_pid = Runtime.getRuntime().exec(params2);
+				BufferedReader core_proc_pid_br = new BufferedReader(new InputStreamReader(core_proc_pid.getInputStream()));
+				String core_proc_pid_br_line = core_proc_pid_br.readLine();
+				StringTokenizer core_proc_pid_br_line_st = new StringTokenizer( core_proc_pid_br_line );
+				String core_proc_PID;
+				core_proc_PID = core_proc_pid_br_line_st.nextToken();
+				core_proc_PID = core_proc_pid_br_line_st.nextToken();*/
+				//System.out.println("-> el PID del core es: " + core_proc_PID);
+			}
 						
 			// abre la ventanita de ejecutando...
 					// este era el codigo original de diego, pero no se quedaba esperando y seguía la
@@ -197,14 +214,23 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 			Process core_proc_SIGINT = Runtime.getRuntime().exec(params3);*/
 			//System.out.println("-> hicimos 'kill -int " + core_proc_PID + "' y matamos el core...");
 	
-			// destruyo todos los procesos...
-			// en realidad esto no anda bien, lo comentamos...
-			core_proc.destroy();
-				//core_proc.destroy(); //core_proc_pid.destroy(); //core_proc_SIGINT.destroy();
-
-			// imprime codigo de terminación del core
-			// en realidad esto no anda bien, lo comentamos...
-				//System.out.println(String.format("-> el Core terminó con 'exit error': %d", core_proc.exitValue()));
+			if (robot.getId().equals("exabot")) {
+				Socket s = new Socket(exa_ip, 7654);
+				PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+				out.println("STOP");
+				out.close();
+				s.close();
+			}
+			else {	
+				// destruyo todos los procesos...
+				// en realidad esto no anda bien, lo comentamos...
+				core_proc.destroy();
+					//core_proc.destroy(); //core_proc_pid.destroy(); //core_proc_SIGINT.destroy();
+	
+				// imprime codigo de terminación del core
+				// en realidad esto no anda bien, lo comentamos...
+					//System.out.println(String.format("-> el Core terminó con 'exit error': %d", core_proc.exitValue()));
+			}
 
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(this, "Hubo problemas al intentar ejecutar");
