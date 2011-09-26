@@ -144,12 +144,6 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 			// graba el programa en un temporal
 			file = File.createTempFile("prg-", "");
 			saveProgram(file);
-
-			// copia la ral adecuada
-			File fileSrc = new File("../core/" + robot.getRal());
-			File fileDst = new File("../core/libRAL.so");
-			FileUtils.copyFile(fileSrc, fileDst);
-			//System.out.println("-> la RAL configurada es: " + fileSrc); // muestro lo que copie...
 			
 			String exa_ip = new String("192.168.0.2");
 			
@@ -166,7 +160,13 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 				out.close();
 				s.close();
 			}
-			else {	
+			else {
+				// copia la ral adecuada
+				File fileSrc = new File("../core/" + robot.getRal());
+				File fileDst = new File("../core/libRAL.so");
+				FileUtils.copyFile(fileSrc, fileDst);
+				//System.out.println("-> la RAL configurada es: " + fileSrc); // muestro lo que copie...
+				
 				// prepara la ejecución del core
 				String[] params = new String[] { "../core/core_exe", file.getAbsolutePath(), "core_log.txt" };
 		
@@ -233,7 +233,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 			}
 
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, "Hubo problemas al intentar ejecutar");
+			JOptionPane.showMessageDialog(this, new String("Hubo problemas al intentar ejecutar:\n") + e.getMessage());
 		}
 	}
 
