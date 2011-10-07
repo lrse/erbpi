@@ -2,7 +2,7 @@ CXX=g++
 CXXFLAGS=-O2 -g -Wall -Ilibcore -I../ral
 LDFLAGS=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.' -lxerces-c  -lcore -lpthread
 
-all: core core-exa
+all: core 
 
 libcore/libcore.a:
 	$(MAKE) -C libcore
