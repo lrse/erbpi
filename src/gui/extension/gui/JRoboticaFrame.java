@@ -124,7 +124,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 		add(programPanelHolder, c);
 		newProgram();
 
-		setSize(800, 600);
+		setExtendedState(MAXIMIZED_BOTH);
 
 		JRoboticaFrame.instance = this;
 	}
