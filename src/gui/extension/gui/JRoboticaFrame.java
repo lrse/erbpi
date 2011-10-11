@@ -423,7 +423,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 		} else if (e.getActionCommand() == "exitApplication") {
 			System.exit(0);
 		} else if (e.getActionCommand() == "openProgram") {
-			JFileChooser fc = new JFileChooser();
+			JFileChooser fc = new JFileChooser(new File("../comportamientos"));
 			int returnVal = fc.showOpenDialog(this);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -431,7 +431,8 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 				openProgram(file);
 			}
 		} else if (e.getActionCommand() == "saveProgram") {
-			JFileChooser fc = new JFileChooser();
+			JFileChooser fc = new JFileChooser(new File("../comportamientos"));
+			System.out.println(fc.getCurrentDirectory().toString());
 			int returnVal = fc.showSaveDialog(this);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
