@@ -6,6 +6,12 @@
 <sensor id="telemetro.45"/>
 <sensor id="contacto.0"/>
 <sensor id="contacto.1"/>
+<sensor id="telemetro.90"/>
+<sensor id="telemetro.180"/>
+<sensor id="telemetro.270"/>
+<sensor id="sonar.0"/>
+<sensor id="linea.0"/>
+<sensor id="linea.1"/>
 </sensores>
 <actuadores>
 <actuador id="motor.izquierda">
@@ -104,7 +110,7 @@
 <caja id="caja.49458">
 <esquema id="parametrica"/>
 <puntos>
-<punto x="25" y="-20"/>
+<punto x="25" y="0"/>
 <punto x="75" y="-20"/>
 </puntos>
 <entradas>
