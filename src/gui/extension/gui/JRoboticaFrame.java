@@ -217,7 +217,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener {
 			if (robot.getId().equals("exabot")) {
 				Socket s = new Socket(exa_ip, 7654);
 				PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-				out.println("STOP");
+				out.print("STOP\n");
 				out.close();
 				s.close();
 			}
