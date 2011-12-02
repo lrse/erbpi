@@ -1,20 +1,23 @@
 CXX=g++
-CXXFLAGS=-O2 -g -Wall
-CPPFLAGS=-I../ral
-LDFLAGS=-L../ral -Wl,-rpath='$$ORIGIN/.'
-OBJ=Estructuras.o Parser.o core.o
-EXE=core
+CXXFLAGS=-O2 -g -Wall -Ilibcore -I../ral
+LDFLAGS=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.' -lxerces-c  -lcore -lpthread
 
-all: core
+all: core 
 
-core:  $(OBJ)
-	@echo "Linkeando codigos objetos del core..."
-	$(CXX) -o $(EXE) $^ $(LDFLAGS) -lxerces-c -lRAL  -lpthread
+libcore/libcore.a:
+	$(MAKE) -C libcore
+
+core:  libcore/libcore.a core.o 
+	@echo "Linkeando core..."
+	$(CXX) -o core core.o $(LDFLAGS) -lRAL
+	
+core-exa: libcore/libcore.a core-exa.o 
+	@echo "Linkeando core-exa..."
+	$(CXX) -o core-exa core-exa.o $(LDFLAGS) -lexabotRAL -lboost_system
 
 %.o: %.cpp
-	@echo "Compilando" $^
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $^ -o $@
 
 clean:
-	@echo "Elimnando codigos objetos y ejecutable del core..."
-	rm -f $(OBJ) $(EXE) *.log *.so
+	$(MAKE) -C libcore clean
+	rm -f core core-exa *.o

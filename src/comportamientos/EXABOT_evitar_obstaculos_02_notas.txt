@@ -1,0 +1,9 @@
+
+1) Los objetos para el comportamiento deben tener 15cm de alto para que los telemetros los detecten...
+
+2) Comportamiento:
+	- utiliza sólo los 3 telemetros frontales + los 2 bumpers
+	- cuando se encuentra acorralado, el escape lo hace girando hacia la derecha
+	- cuando choca con los bumpers, gira en el lugar hacia la derecha
+	- si le ponés objetos sueltos, va a empezar a dar vueltas aleatoriamente pero sin chocarse con nada
+	- si le ponés un laberinto (incluso bastante angosto que pase justo de ancho) lo va a recorrer...

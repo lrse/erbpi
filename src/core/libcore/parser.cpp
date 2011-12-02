@@ -1,4 +1,6 @@
-#include "Parser.h"
+#include "parser.h"
+
+XercesDOMParser *miParser;
 
 // ESTRUCTURA AUXILIAR PARA EL PARSER	
 struct TuplaAuxiliar {
@@ -8,7 +10,9 @@ struct TuplaAuxiliar {
   vector<Punto> puntos;
 };
 
-int inicializar_xerces(){
+bool inicializar_xerces(){
+  miParser = NULL;
+  
 	try{
 		XMLPlatformUtils::Initialize();
 	}
@@ -16,12 +20,13 @@ int inicializar_xerces(){
 		char* message = XMLString::transcode( toCatch.getMessage() );
 		cout << "Error: Al inicializar el XML Parser: " << message << endl;
 		XMLString::release( &message );
-		return 1;
+		return false;
 	}
-	return 0;
+	return true;
 }
 
 int terminar_xerces(){
+  delete miParser;
 	XMLPlatformUtils::Terminate();
 	return 0;
 }
@@ -234,40 +239,32 @@ int ordenar_topologicamente(vector<TuplaAuxiliar>& vectorAux){
 	return 0;
 }
 
-int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
+void init_parser(void) {
+	inicializar_xerces();
+	miParser = crear_y_configurar_parser();
+}
+
+void deinit_parser(void) {
+  // terminar la infraestructura del Xerces
+	terminar_xerces();  
+}
+
+int parsear(string xml_string, vector<Elemento*>& tabla_ejecucion){
 	int i, j, k;
 	vector<TuplaAuxiliar> vectorAuxiliar; // vectorAuxiliar para el parseo inicial
 	Sensor* nuevoSensor; // sensor para agregar a tabla_ejecucion
 	Caja* nuevaCaja; // caja para agregar a tabla_ejecucion
 	Actuador* nuevoActuador; // actuador para agregar a tabla_ejecucion
 	
-// 1. GENERO EL "VECTORAUXILIAR" CON LOS ELEMENTOS PARSEADOS DEL XML
-	
-	// inicio la infraestructura del Xerces
-	if ( inicializar_xerces() ){
-		cout << "Error: al inicializar las librerías del Xerces perser !!!" << endl;
-		return 1;
-	}
-
-	// creo y configuro el Parser XML...
-	XercesDOMParser *miParser;
-	miParser = crear_y_configurar_parser();
-
-	// chequeo que el archivo a parsear esté OK...
-	struct stat estadoArchivo;
-	int estado = stat(XMLArchivo.c_str(), &estadoArchivo);
-	if( estado == ENOENT ) cout << "Error: La ruta del archivo no existe o no está el archivo" << endl;
-	else if( estado == ENOTDIR ) cout << "Error: Algo en la ruta del archivo no es un directorio" << endl;
-	else if( estado == ELOOP ) cout << "Error: Demasiados `links' encontrados en la ruta del archivo" << endl;
-	else if( estado == EACCES ) cout << "Error: No tiene permisos para el archivo" << endl;
-	else if( estado == ENAMETOOLONG ) cout << "Error: No se puede leer el archivo" << endl;
-	else if( estado == -1 ) cout << "Error: No se puede leer el archivo" << endl;
-	if ((estado == -1) || (estado == ENOENT) || (estado == ENOTDIR) || (estado == ELOOP) || (estado == EACCES) || (estado == ENAMETOOLONG)) return 1;
-
+  // 1. GENERO EL "VECTORAUXILIAR" CON LOS ELEMENTOS PARSEADOS DEL XML
 	try{
-		// Inicio el parseo... // hay que meterle ".c_str()" si no no anda...
-		miParser->parse( XMLArchivo.c_str() );
+    cout << "parsing: " << xml_string << endl;
+    MemBufInputSource src((const XMLByte*)xml_string.c_str(), xml_string.length(), "dummy", false);
+    cout << "tengo buffer de " << xml_string.length() << " bytes" << endl;
+		miParser->parse(src);
 		// Obtener el "DOCUMENTO" XML // no es necesario liberar este puntero...
+    
+    cout << "parseado, get document" << endl;
 		DOMDocument* xmlDoc = miParser->getDocument();
 		// Obtener "Elemento RAIZ" del XML y chequear que sea "<ejecucion>" y que no esté vacío...
 		DOMElement* xmlEjecucion = xmlDoc->getDocumentElement();
@@ -287,6 +284,8 @@ int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
 			cout << "Error: El archivo XML está vacío !!!" << endl;
 			return 1;
 		}
+    cout << "paso tests, empiezo a leer" << endl;
+    
 		// Obtengo la "CANTIDAD de Hijos" // debería ser CANTIDAD == 3 (sensores, cajas y actuadores)
 		const  XMLSize_t xmlHijosCantidad = xmlHijos->getLength();
 
@@ -321,12 +320,9 @@ int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
 		cout << "Error: algún error parseando el archivo: " << message << endl;
 		XMLString::release( &message );
 		return 1;
-	}
+	}	
 
-	// terminar la infraestructura del Xerces
-	terminar_xerces();
-	
-
+  cout << "chequeando IDs" << endl;
 // 2. CHEQUEAR QUE NO HAYA IDs REPETIDOS
 	for (i = 0; i < vectorAuxiliar.size(); i++)
 		for (j = 0; j < vectorAuxiliar.size(); j++)
@@ -335,6 +331,7 @@ int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion){
 				return 1;
 			}
 
+  cout << "chequenando entradas vs elementos existentes" << endl;
 // 3. CHEQUEAR QUE "ENTRADAS" DE C/U SE CORRESPONDAN CON ELEMENTOS EXISTENTES
 	for (i = 0; i < vectorAuxiliar.size(); i++)
 		for (j = 0; j < ((vectorAuxiliar[i]).entradas).size(); j++){

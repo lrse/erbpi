@@ -1,0 +1,15 @@
+
+1) Sonar mediciones según ERBPI:
+
+	VALOR		DISTANCIA
+	SENSOR		DEL OBJETO
+	------		---------
+	100% = 		no anda...
+	 95% = 		20 cm
+	 90% = 		44 cm
+	 80% = 		87 cm
+
+2) Comportamiento:
+	-	en el comportamiento, lo configuramos para que actue entre 90-95 %
+			< 90 (44cm) = intenta acercarce (+ rueda derecha)
+			> 95 (20cm) = intenta alejarse  (+ rueda izquierda)

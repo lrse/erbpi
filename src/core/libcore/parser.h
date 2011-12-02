@@ -26,7 +26,7 @@
 	#include <iostream>
 	using namespace std;
 	// incluir las estructuras a usar...
-	#include "Estructuras.h"
+	#include "estructuras.h"
 
 	// incluir las cosas del la DOM API
 	#include <xercesc/dom/DOMElement.hpp>
@@ -34,10 +34,13 @@
 	#include <xercesc/parsers/XercesDOMParser.hpp>
 	// incluir las cosas del Parser XML: Xerces-C++ version 3.0.1
 	#include <xercesc/util/PlatformUtils.hpp>
+  #include <xercesc/framework/MemBufInputSource.hpp>
 
 	// usar namespace para Parser XML
 	using namespace xercesc;
 
+  void init_parser(void);
 	int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion);	
+  void deinit_parser(void);
 
 #endif // _PARSER_H_
