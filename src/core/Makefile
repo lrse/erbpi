@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-O2 -g -Wall -Ilibcore -I../ral
-LDFLAGS=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.' -lxerces-c  -lcore -lpthread
+LDFLAGS=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.'  -lcore -lpthread -lxerces-c
 
 all: core 
 
@@ -13,7 +13,7 @@ core:  libcore/libcore.a core.o
 	
 core-exa: libcore/libcore.a core-exa.o 
 	@echo "Linkeando core-exa..."
-	$(CXX) -o core-exa core-exa.o $(LDFLAGS) -lexabotRAL -lboost_system
+	$(CXX) $(LDFLAGS) -o core-exa core-exa.o  -lexabotRAL -lboost_system
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $^ -o $@

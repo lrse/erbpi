@@ -1,21 +1,5 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
-
-	// defino los nombres de las entidades y atributos que estarán en el XML...
-	#define NOMBRE_EJECUCION "ejecucion"
-	#define NOMBRE_SENSORES "sensores"
-	#define NOMBRE_SENSOR "sensor"
-	#define NOMBRE_CAJAS "cajas"
-	#define NOMBRE_CAJA "caja"
-	#define NOMBRE_ACTUADORES "actuadores"
-	#define NOMBRE_ACTUADOR "actuador"
-	#define NOMBRE_ATRIBUTO_ID "id"
-	#define NOMBRE_ENTRADAS "entradas"
-	#define NOMBRE_ENTRADA "entrada"
-	#define NOMBRE_PUNTOS "puntos"
-	#define NOMBRE_PUNTO "punto"
-	#define NOMBRE_ATRIBUTO_PUNTO_X "x"
-	#define NOMBRE_ATRIBUTO_PUNTO_Y "y"
 	
 	// incluir las cosas para el manejo de errores de archivos
 	#include <sys/stat.h>
@@ -34,13 +18,13 @@
 	#include <xercesc/parsers/XercesDOMParser.hpp>
 	// incluir las cosas del Parser XML: Xerces-C++ version 3.0.1
 	#include <xercesc/util/PlatformUtils.hpp>
-  #include <xercesc/framework/MemBufInputSource.hpp>
+  #include <xercesc/framework/MemBufInputSource.hpp> 
 
 	// usar namespace para Parser XML
 	using namespace xercesc;
 
-  void init_parser(void);
-	int parsear(string XMLArchivo, vector<Elemento*>& tabla_ejecucion);	
-  void deinit_parser(void);
+  void init_parser(void); 
+  void deinit_parser(void); 
+	int parsear(string XMLArchivo, Conducta* consucta);	
 
 #endif // _PARSER_H_
