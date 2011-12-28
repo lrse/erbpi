@@ -16,17 +16,12 @@ string log_filename;
 struct timeb tiempo_inicio, tiempo_actual; 	// variables para mediciones del TimeStamp
 int tiempo_diferencia; 						// variables para mediciones del TimeStamp
 bool primera_medicion_tiempo = true;		// variables para mediciones del TimeStamp
-vector<Elemento*> tablaEjecucion; 			// creo mi vector elementos "TablaEjecucion"...
 unsigned long frecuencia;
+Conducta* conducta;
 
 // PROTOTIPO DE FUNCIONES AUXILIARES
 void terminar(int sig); 					// rutina de atención de SIGNAL
-int chequeo_sensores_y_actuadores(vector<Elemento*>&);
-int actualizar_sensores(vector<Elemento*>&);
-int actualizar_actuadores(vector<Elemento*>&);
 int actualizar_tiempos();
-int escribir_log_encabezado(vector<Elemento*>&);
-int escribir_log_valores(vector<Elemento*>&);
 
 void core_initialize(const string& _log_filename) {
   inicializarRAL();
@@ -38,6 +33,8 @@ void core_initialize(const string& _log_filename) {
 
 bool core_start(const string& xml_filename)
 {
+  conducta = new Conducta;
+  
   // abro el archivoLOG y verifico
   cout << "abriendo log" << endl;
 	archivo_log.open(log_filename.c_str(), ios::trunc);
@@ -45,20 +42,23 @@ bool core_start(const string& xml_filename)
   
   cout << "parseando XML" << endl;
   // 1. PARSEO Y LLENO TablaEjecucion
-	if (parsear(xml_filename, tablaEjecucion)){
+	if (parsear(xml_filename, conducta)){
 		cerr << "Error: Algo no anduvo bien en el parseo del XML !!!" << endl;
 		return false;
 	}
 
   cout << "chequeando sensores y actuadores" << endl;
 	// 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
-	if (chequeo_sensores_y_actuadores(tablaEjecucion)){
-		cerr << "Error: Algo no anduvo bien en la definicion de sensores y actuadores !!!" << endl;
-		return false;
-	}	
+  // 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
+	if ( !conducta->ChequearSensores(getListaSensores()) )
+		Error("Error: Algo no anduvo bien en la definicion de sensores !!!\n");
+	if ( !conducta->ChequearActuadores(getListaActuadores()) )
+		Error("Error: Algo no anduvo bien en la definicion de actuadores !!!\n");
 
 	// escribo el encabezado del log...
-	escribir_log_encabezado(tablaEjecucion);
+  archivo_log << "timestamp, ";
+	conducta->LoguearEncabezadoDeElementos(archivo_log);
+	archivo_log << endl;
 
 	return true;
 }
@@ -67,20 +67,20 @@ void core_execute(void)
 {
   // calculo los tiempos para el TimeStamp...
 	actualizar_tiempos();
-		
-	// actualizo el nuevo valor de cada sensor en TablaEjecucion...
-	actualizar_sensores(tablaEjecucion);
-
-	// ejecuto todos en tablaEjecucion
-	for (int i = 0; i < tablaEjecucion.size(); i++)
-		tablaEjecucion[i]->ejecutar();
-
-	// genero los nuevos valores de actuadores y se los seteo al RAL
-	actualizar_actuadores(tablaEjecucion);
-
-	// escribo los nuevos valores en el log...
-	escribir_log_valores(tablaEjecucion);
-
+  
+  // lo ultimo se resume en esto
+  const EstadoDeSensores& estado_sensores = getEstadoSensores();
+  conducta->Actualizar(estado_sensores);
+  
+  // genero los nuevos valores de actuadores y se los seteo al RAL
+  // actualizar_actuadores(tablaEjecucion);
+  setEstadoActuadores(conducta->EstadoActuadores());
+  
+  // escribo los nuevos valores en el log...
+  archivo_log << tiempo_diferencia << ", ";
+  conducta->LoguearEstadoDeElementos(archivo_log);
+  archivo_log << endl;
+      
 	// sleep el tiempo necesario
   timespec sleep_ts, sleep_rem;
   sleep_ts.tv_sec = 0;
@@ -90,15 +90,13 @@ void core_execute(void)
 
 void core_stop(void)
 {
+  EstadoDeActuadores estadoActuadores;	
+	Item itemActuador;
+
+	cout  << endl << "Atendiendo solicitud para terminar el programa..." << endl;
 	archivo_log.close(); 								// cierro el archivoLOG
-  
-	for (int i = 0; i < tablaEjecucion.size(); i++) 	// destruyo toda la tabla de ejecución...
-		delete tablaEjecucion[i];
-  tablaEjecucion.clear();
 	
 	// DETENGO LOS MOTORES !!!
-  vector<Item> estadoActuadores;	
-	Item itemActuador;  
 	itemActuador.id = MOTOR_00;
 	itemActuador.valor = 0;
 	estadoActuadores.push_back(itemActuador);
@@ -106,6 +104,12 @@ void core_stop(void)
 	itemActuador.valor = 0;
 	estadoActuadores.push_back(itemActuador);
 	setEstadoActuadores(estadoActuadores); // envio al RAL CERO a los motores!!
+
+	cout << endl << "Terminando..." << endl;
+		
+	finalizarRAL(); 	// FINALIZO EL RAL...
+  
+	delete conducta;
 }
 
 void core_deinitialize(void) {
@@ -114,83 +118,6 @@ void core_deinitialize(void) {
   
   cout << "terminando RAL" << endl;
   finalizarRAL();
-}
-
-int chequeo_sensores_y_actuadores(vector<Elemento*>& tabla){
-	int i = 0;
-	int j = 0;
-	vector<string> listaSensores = getListaSensores(); // recibo del RAL la lista de sensores
-	vector<string> listaActuadores = getListaActuadores(); // recibo del RAL la lista de actuadores
-	for (i = 0; i < tabla.size(); i++){
-		if ( tabla[i]->_tipo == TIPO_SENSOR )
-			for (j = 0; j < listaSensores.size(); j++)
-				if ( listaSensores[j] == tabla[i]->getId() )
-					break;
-		if ( j == listaSensores.size() ){
-			cout << "Error: los sensores no se corresponden !!!" << endl;
-			return 1;
-		}
-	}
-	for (i = 0; i < tabla.size(); i++){
-		if ( tabla[i]->_tipo == TIPO_ACTUADOR )
-			for (j = 0; j < listaActuadores.size(); j++)
-				if ( listaActuadores[j] == tabla[i]->getId() )
-					break;
-		if ( j == listaActuadores.size() ){
-			cout << "Error: los actuadores no se corresponden !!!" << endl;
-			return 1;
-		}
-	}
-	return 0;
-}
-
-int actualizar_sensores(vector<Elemento*>& tabla){
-	// se asume que los sensores se corresponden...
-	int i = 0;
-	int j = 0;
-	vector<Item> estadoSensores = getEstadoSensores(); // recibo del RAL el nuevo estado de sensores
-	for (i = 0; i < estadoSensores.size(); i++)
-		for (j = 0; j < tabla.size(); j++)
-			if ( estadoSensores[i].id == tabla[j]->getId() ){
-				tabla[j]->setValor( estadoSensores[i].valor );
-				break;
-			}
-	return 0;
-}
-
-int actualizar_actuadores(vector<Elemento*>& tabla){
-	int i = 0;
-	vector<Item> estadoActuadores;	
-	Item itemActuador;
-	for (i = 0; i < tabla.size(); i++)
-		if ( tabla[i]->_tipo == TIPO_ACTUADOR ){
-			itemActuador.id = tabla[i]->getId();
-			itemActuador.valor = tabla[i]->getValor();
-			estadoActuadores.push_back(itemActuador);
-		}
-	setEstadoActuadores(estadoActuadores); // envio al RAL el nuevo estado de actuadores
-	return 0;
-}
-
-int escribir_log_encabezado(vector<Elemento*>& tabla){
-	int i = 0;
-	archivo_log << "timestamp, "; 	// el primer valor es el timestamp...
-	for (i = 0; i < tabla.size(); i++)
-		archivo_log << (*(tabla[i])).getId() << ", ";
-	archivo_log << endl ;
-	return 0;
-}
-
-int escribir_log_valores(vector<Elemento*>& tabla){
-	int i = 0;
-	archivo_log << tiempo_diferencia << ", "; // tiempo_diferencia está en milisegundos
-	for (i = 0; i < tabla.size(); i++){
-		if ( (*(tabla[i]))._tipo == TIPO_CAJA )
-			archivo_log << (*(tabla[i])).getEntrada() << ", " << (*(tabla[i])).getValor() << ", ";
-		else archivo_log << (*(tabla[i])).getValor() << ", ";
-	}
-	archivo_log << endl;
-	return 0;
 }
 
 int actualizar_tiempos(){
