@@ -184,15 +184,15 @@ void CargarElementosDeListaAObjeto
 
 Comparacion_t Comparacion(const char* nombre)
 {
-	if (!strcmp(nombre,"igual"))
+	if (!strcmp(nombre,"="))
 		return IGUAL;
-	else if (!strcmp(nombre,"menor"))
+	else if (!strcmp(nombre,"<"))
 		return MENOR;
-	else if (!strcmp(nombre,"menor_igual"))
+	else if (!strcmp(nombre,"<="))
 		return MENOR_IGUAL;
-	else if (!strcmp(nombre,"mayor"))
+	else if (!strcmp(nombre,">"))
 		return MAYOR;
-	else if (!strcmp(nombre,"mayor_igual"))
+	else if (!strcmp(nombre,">="))
 		return MAYOR_IGUAL;
 	else
 		cout << "OJO! comparacion desconocida '" << nombre << "'. Se devuelve IGUAL." << endl;
@@ -265,7 +265,7 @@ void CargarActualizaciones(Transicion* transicion, DOMElement* xml_actualizacion
 
 void CargarEntrada(ElementoConEntradas* elemento, DOMElement* xml_entrada)
 {
-	EntradaAuxiliar entrada(elemento,leer_atributo(xml_entrada,"id_entrada"));
+	EntradaAuxiliar entrada(elemento,leer_atributo(xml_entrada,"id"));
 	entradas_auxiliares.insert( entrada );
 }
 
