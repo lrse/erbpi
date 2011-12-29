@@ -5,4 +5,5 @@ compile:
 
 install:
 	mkdir -p ../../bin/gui
-	cp gui.jar ../../bin/gui
+	mv gui.jar ../../bin/gui
+	chmod a+x ../../bin/gui/gui.jar

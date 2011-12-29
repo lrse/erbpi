@@ -242,6 +242,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		
 		if (getRobot().getId().equals("exabot")) {
 			// Esto para iniciar la ejecucion:
+			// Hacer algo tipo new JRemoteExecutionFrame(tempProgramFile);
 			/*  
 			String exa_ip = new String("192.168.0.2");
 			Socket s = new Socket(exa_ip, 7654); 
