@@ -1,0 +1,58 @@
+<?xml version='1.0' ?>
+<config>    
+  <tipoSensores>
+    <tipoSensor id='proximidad'>
+      <imagen href='images/sen_proximidad.png'/>
+    </tipoSensor>
+    <tipoSensor id='luz'>
+      <imagen href='images/sen_luz.png'/>
+    </tipoSensor>
+    <tipoSensor id='telemetro'>
+      <imagen href='images/sen_telemetro.png'/>
+    </tipoSensor>
+    <tipoSensor id='sonar'>
+      <imagen href='images/sen_sonar.png'/>
+    </tipoSensor>
+    <tipoSensor id='linea'>
+      <imagen href='images/sen_linea.png'/>
+    </tipoSensor>
+    <tipoSensor id='contacto'>
+      <imagen href='images/sen_contacto.png'/>
+    </tipoSensor>
+  </tipoSensores>
+  <tipoActuadores>
+    <tipoActuador id='rueda'>
+      <imagen href='images/act_rueda.png'/>
+    </tipoActuador>
+  </tipoActuadores>
+  <herramientas>
+    <esquemacaja id='inhibitoria'>
+      <imagen href='images/f_inhibitoria.png'/>
+      <puntos>
+        <punto x='0' y='0'/>
+        <punto x='100' y='-100'/>
+      </puntos>
+    </esquemacaja>
+    <esquemacaja id='exitatoria'>
+      <imagen href='images/f_exitatoria.png'/>
+      <puntos>
+        <punto x='0' y='0'/>
+        <punto x='100' y='100'/>
+      </puntos>
+    </esquemacaja>
+    <esquemacaja id='parametrica' aceptaentradas='true'>
+      <imagen href='images/f_parametrica.png'/>
+      <puntos>
+        <punto x='25' y='0'/>
+        <punto x='75' y='0'/>
+      </puntos>
+    </esquemacaja>
+    <esquemacaja id='energia' aceptaentradas='false'>
+      <imagen href='images/f_energia.png'/>
+      <puntos>
+        <punto x='0' y='20'/>
+        <punto x='100' y='20'/>
+      </puntos>
+    </esquemacaja>
+  </herramientas>
+</config>

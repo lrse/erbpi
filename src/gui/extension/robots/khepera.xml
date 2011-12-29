@@ -1,0 +1,105 @@
+<?xml version='1.0' ?>
+<robot id="khepera" nombre="Khepera">
+  <imagen id='esquema' href='robots/robot_khepera.png' />
+  <ral href='libkheperaRAL.so'/>
+  <sensores>
+    <sensor id='proximidad.320' tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.18' y='0.31' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.340' tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.29' y='0.20' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.350' tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.43' y='0.14' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.10'  tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.58' y='0.14' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.20'  tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.72' y='0.20' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.40' tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.82' y='0.32' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.170' tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.65' y='0.83' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='proximidad.190' tipo='proximidad' default='true'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.35' y='0.84' radio='5' color='255,0,0'/>
+      </mapaimagen>
+    </sensor>
+    <!--  ******************** -->
+
+    <sensor id='luz.320' tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.18' y='0.31' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.340' tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.29' y='0.20' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.350' tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.43' y='0.14' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.10'  tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.58' y='0.14' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.20'  tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.72' y='0.20' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.40' tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.82' y='0.32' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.170' tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.65' y='0.83' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+    <sensor id='luz.190' tipo='luz'>
+      <mapaimagen imagen='esquema'>
+        <circulo x='0.35' y='0.84' radio='5' color='0,255,0'/>
+      </mapaimagen>
+    </sensor>
+
+  </sensores>
+
+  <actuadores>
+    <actuador id='motor.izquierda' nombre='rueda izq' tipo='rueda' default='true'>
+      <mapaimagen imagen='esquema'>
+        <linea x0='0.15' y0='0.40' x1='0.15' y1='0.64' width='3' color='255,0,0'/>
+      </mapaimagen>
+      <ubicacion id='izquierda'/>
+    </actuador>
+    <actuador id='motor.derecha' nombre='rueda der' tipo='rueda' default='true'>
+      <mapaimagen imagen='esquema'>
+        <linea x0='0.88' y0='0.40' x1='0.88' y1='0.64' width='3' color='255,0,0'/>
+      </mapaimagen>
+      <ubicacion id='derecha'/>
+    </actuador>
+  </actuadores>
+</robot>

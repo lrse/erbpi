@@ -1,0 +1,21 @@
+
+	hay un script "gui_instalar.sh" que crea el JAR desde consola y lo copia en la carpeta BIN
+
+			> http://viralpatel.net/blogs/2008/12/create-jar-file-in-java-eclipse.html
+
+	si fuese necesario hacerlo desde el Eclipe, la forma es la siguiente:
+
+			> http://chuwiki.chuidiang.org/index.php?title=Crear_un_proyecto_con_Eclipse#Generar_un_jar
+
+			1 - botón derecho sobre el proyecto:
+					> Export... > Java > JAR file
+
+			2 - Select the export destination:
+					> JAR file: bin/gui/gui.jar
+
+			3 - Next > Next
+
+			4 - Select the class of the application entry point:
+					Main class: extension.ExtensionApp
+
+			5 - Finish
