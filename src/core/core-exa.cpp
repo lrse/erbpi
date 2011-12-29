@@ -53,7 +53,7 @@ int main(int argc, char** argv)
       is.unsetf(std::ios_base::skipws);
 
       if (!started) {
-        size_t n = expect_command("</ejecucion>\n", buffer, io_service, acceptor);
+        size_t n = expect_command("</conducta>\n", buffer, io_service, acceptor);
         if (n == 0) { usleep(10000); continue; }
       
         vector<char> xml_buf(n);

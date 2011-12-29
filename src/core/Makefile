@@ -13,7 +13,7 @@ core:  libcore/libcore.a core.o
 	
 core-exa: libcore/libcore.a core-exa.o 
 	@echo "Linkeando core-exa..."
-	$(CXX) $(LDFLAGS) -o core-exa core-exa.o  -lexabotRAL -lboost_system
+	$(CXX) -o core-exa core-exa.o $(LDFLAGS) -lexabotRAL -lboost_system
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $^ -o $@

@@ -107,8 +107,6 @@ void core_stop(void)
 
 	cout << endl << "Terminando..." << endl;
 		
-	finalizarRAL(); 	// FINALIZO EL RAL...
-  
 	delete conducta;
 }
 
