@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comportamiento descripcion="avanzar" id="comportamiento.6">
+    <cajas>
+        <caja id="function.0" location="left" templateId="energia">
+            <esquema id="energia"/>
+            <punto x="0" y="20"/>
+            <punto x="100" y="20"/>
+            <entradas/>
+        </caja>
+        <caja id="function.1" location="right" templateId="energia">
+            <esquema id="energia"/>
+            <punto x="0" y="20"/>
+            <punto x="100" y="20"/>
+            <entradas/>
+        </caja>
+    </cajas>
+    <actuadores>
+        <actuador id="motor.izquierda">
+            <entradas>
+                <entrada id="function.0"/>
+            </entradas>
+        </actuador>
+        <actuador id="motor.derecha">
+            <entradas>
+                <entrada id="function.1"/>
+            </entradas>
+        </actuador>
+    </actuadores>
+    <transiciones/>
+    <conecciones>
+        <coneccion dst="motor.izquierda" src="function.0"/>
+        <coneccion dst="motor.derecha" src="function.1"/>
+    </conecciones>
+</comportamiento>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.5">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="avanzar" id="comportamiento.6"
+        pos_x="225" pos_y="199">
+        <cajas>
+            <caja id="function.0" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+                <entradas/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+                <entradas/>
+            </caja>
+        </cajas>
+        <actuadores>
+            <actuador id="motor.izquierda">
+                <entradas>
+                    <entrada id="function.0"/>
+                </entradas>
+            </actuador>
+            <actuador id="motor.derecha">
+                <entradas>
+                    <entrada id="function.1"/>
+                </entradas>
+            </actuador>
+        </actuadores>
+        <transiciones>
+            <transicion id_destino="comportamiento.7" id_origen="comportamiento.6">
+                <condiciones>
+                    <condicion comparacion=">" id_elemento="sonar.0" umbral="80"/>
+                </condiciones>
+                <actualizaciones/>
+            </transicion>
+        </transiciones>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="motor.derecha" src="function.1"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="comportamiento.5" id="comportamiento.5"
+        pos_x="100" pos_y="100">
+        <transiciones>
+            <transicion id_destino="comportamiento.6" id_origen="comportamiento.5">
+                <condiciones/>
+                <actualizaciones/>
+            </transicion>
+        </transiciones>
+    </comportamiento>
+    <comportamiento descripcion="girar" id="comportamiento.7"
+        pos_x="511" pos_y="196">
+        <cajas>
+            <caja id="function.2" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-20"/>
+                <punto x="100" y="-20"/>
+                <entradas/>
+            </caja>
+            <caja id="function.3" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+                <entradas/>
+            </caja>
+        </cajas>
+        <actuadores>
+            <actuador id="motor.izquierda">
+                <entradas>
+                    <entrada id="function.2"/>
+                </entradas>
+            </actuador>
+            <actuador id="motor.derecha">
+                <entradas>
+                    <entrada id="function.3"/>
+                </entradas>
+            </actuador>
+        </actuadores>
+        <transiciones/>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.derecha" src="function.3"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.7" id_origen="comportamiento.6">
+            <condiciones>
+                <condicion comparacion=">" id_elemento="sonar.0" umbral="80"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.6" id_origen="comportamiento.5">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
