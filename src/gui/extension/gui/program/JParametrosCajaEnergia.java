@@ -20,8 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
-import extension.model.BehaviorProgram;
-import extension.model.elements.Box;
+import extension.model.elements.FunctionBox;
 
 /*
  * Aplicación que permite configurar los parametros de las funciones
@@ -31,9 +30,7 @@ class JParametrosCajaEnergia extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
-	// instancias para modificar los valores de las funciones en el programa...	
-    private BehaviorProgram programa;
-    private Box box;
+    private FunctionBox box;
     private Point puntoARet = new Point();
     private Point puntoBRet = new Point();
 	// valores para normalización de valores...
@@ -65,12 +62,11 @@ class JParametrosCajaEnergia extends JPanel
     JFrame frameVentana = new JFrame("Modificación de Parámetros de Energia");
 
     
-	JParametrosCajaEnergia( Point puntoA, Point puntoB, BehaviorProgram programa, Box box ){
-		//	obtengo las referencias a la función y al programa...		
-		this.programa = programa;
+	JParametrosCajaEnergia( FunctionBox box )
+	{
     	this.box = box;	
 		// normalizo valores y seteo los puntos según los recibidos
-		punto2 = desnormalizarPunto(puntoA);
+		punto2 = desnormalizarPunto(new Point(box.getX0(),box.getY0()));
 		// seteo el Listener de Mouse
         this.addMouseListener(this.mouseInputAdapter);			// le seteo el Listener de Mouse
         this.addMouseMotionListener(this.mouseInputAdapter);	// le seteo el Listener de Mouse
@@ -142,13 +138,19 @@ class JParametrosCajaEnergia extends JPanel
 		frameVentana.dispose();
 	}
 
-	private void actionBotonCerrarAceptar(){
+	private void actionBotonCerrarAceptar()
+	{
 		// seteo los valores de los puntos de la funcion llamando a "setBox"...
 		this.puntoARet.x = minX;
 		this.puntoARet.y = (int)normalizarPunto(punto2).y;
 		this.puntoBRet.x = maxX;
 		this.puntoBRet.y = (int)normalizarPunto(punto2).y;
-		this.programa.setBox( this.box, puntoARet, puntoBRet );
+		
+		this.box.setX0(puntoARet.x);
+		this.box.setY0(puntoARet.y);
+		this.box.setX1(puntoBRet.x);
+		this.box.setY1(puntoBRet.y);
+		
 		frameVentana.dispose();
 	}
 

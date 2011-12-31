@@ -19,11 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import extension.model.BehaviorProgram;
 import extension.model.ConnectionMaker;
 import extension.model.ConnectionMakerListener;
-import extension.model.BehaviorProgram;
 import extension.model.ProgramListener;
-import extension.model.Robot;
 import extension.model.elements.Box;
 
 class JConnection extends JComponent implements ActionListener
@@ -183,11 +182,7 @@ public class JConnectionsPanel extends JPanel implements ProgramListener, Connec
 		repaint();
 	}
 	
-	public void boxSet( Box box, Point A, Point B ){}
-	
 	public void boxAdded( Box box ){}
-	
-	public void robotChanged( Robot robot ){}
 	
 	@Override
 	public void paint(Graphics g) {

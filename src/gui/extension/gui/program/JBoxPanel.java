@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
@@ -12,12 +11,10 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import extension.gui.layouts.BoxColumnLayout;
-import extension.model.Panel;
 import extension.model.BehaviorProgram;
+import extension.model.Panel;
 import extension.model.ProgramListener;
-import extension.model.Robot;
 import extension.model.elements.Box;
-import extension.model.elements.FunctionBox;
 
 public class JBoxPanel extends JPanel implements ProgramListener
 {
@@ -102,23 +99,11 @@ public class JBoxPanel extends JPanel implements ProgramListener
 		}
 	}
 	
-	public void boxSet( Box box, Point A, Point B ){
-		if( box instanceof FunctionBox ){
-			((FunctionBox) box).setX0(A.x);
-			((FunctionBox) box).setY0(A.y);
-			((FunctionBox) box).setX1(B.x);
-			((FunctionBox) box).setY1(B.y);
-		}
-	}
-	
 	public void connectionAdded(Box src, Box dst) {
 		doLayout();
 	}
 
 	public void connectionRemoved(Box src, Box dst) {
 		doLayout();
-	}	
-
-	public void robotChanged(Robot robot) {
 	}
 }

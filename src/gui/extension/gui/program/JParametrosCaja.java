@@ -23,8 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
-import extension.model.BehaviorProgram;
-import extension.model.elements.Box;
+import extension.model.elements.FunctionBox;
 
 /*
  * Aplicación que permite configurar los parametros de las funciones
@@ -33,9 +32,7 @@ import extension.model.elements.Box;
 class JParametrosCaja extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	// instancias para modificar los valores de las funciones en el programa...	
-    private BehaviorProgram programa;
-    private Box box;
+    private FunctionBox box;
     private Point puntoARet = new Point();
     private Point puntoBRet = new Point();
 	// valores para normalización de valores...
@@ -77,13 +74,12 @@ class JParametrosCaja extends JPanel
     private JFrame frameVentana = new JFrame("Modificación de Parámetros de Función");
 
     
-	JParametrosCaja( Point puntoA, Point puntoB, BehaviorProgram programa, Box box ){
-		//	obtengo las referencias a la función y al programa...		
-		this.programa = programa;
+	JParametrosCaja( FunctionBox box )
+	{
     	this.box = box;	
 		// normalizo valores y seteo los puntos según los recibidos
-		punto2 = desnormalizarPunto(puntoA);
-		punto3 = desnormalizarPunto(puntoB);
+		punto2 = desnormalizarPunto(new Point(box.getX0(),box.getY0()));
+		punto3 = desnormalizarPunto(new Point(box.getX1(),box.getY1()));
 		punto1.setFrame(margenVentana, punto2.y, punto1.width, punto1.height);
 		punto4.setFrame(anchoVentana-margenVentana, punto3.y, punto4.width, punto4.height);
 		// seteo el Listener de Mouse
@@ -157,13 +153,19 @@ class JParametrosCaja extends JPanel
 		frameVentana.dispose();
 	}
 
-	private void actionBotonCerrarAceptar(){
+	private void actionBotonCerrarAceptar()
+	{
 		// seteo los valores de los puntos de la funcion llamando a "setBox"...
 		this.puntoARet.x = (int)normalizarPunto(punto2).x;
 		this.puntoARet.y = (int)normalizarPunto(punto2).y;
 		this.puntoBRet.x = (int)normalizarPunto(punto3).x;
 		this.puntoBRet.y = (int)normalizarPunto(punto3).y;
-		this.programa.setBox( this.box, puntoARet, puntoBRet );
+		
+		this.box.setX0(puntoARet.x);
+		this.box.setY0(puntoARet.y);
+		this.box.setX1(puntoBRet.x);
+		this.box.setY1(puntoBRet.y);
+		
 		frameVentana.dispose();
 	}
 
@@ -417,30 +419,33 @@ class JParametrosCaja extends JPanel
                 draggingPunto3 = true;
             }
             else if(punto2.contains(p)){
-	                offset.x = p.x - punto2.x;
-	                draggingPunto2 = true;
-            	}
-            	else if(lineaMovible1.contains(p)){
-		                offset.x = p.x - lineaMovible1.x;
-		                offset.y = p.y - lineaMovible1.y;
-		                dragginglineaMovible1 = true;
-		        	}
-	            	else if(lineaMovible3.contains(p)){
-			                offset.x = p.x - lineaMovible3.x;
-			                offset.y = p.y - lineaMovible3.y;
-			                dragginglineaMovible3 = true;
-			        	}
+                offset.x = p.x - punto2.x;
+                draggingPunto2 = true;
+        	}
+        	else if(lineaMovible1.contains(p)){
+                offset.x = p.x - lineaMovible1.x;
+                offset.y = p.y - lineaMovible1.y;
+                dragginglineaMovible1 = true;
+        	}
+        	else if(lineaMovible3.contains(p)){
+                offset.x = p.x - lineaMovible3.x;
+                offset.y = p.y - lineaMovible3.y;
+                dragginglineaMovible3 = true;
+        	}
         }
  
-        public void mouseReleased(MouseEvent e){
+        public void mouseReleased(MouseEvent e)
+        {
         	draggingPunto2 = false;
         	draggingPunto3 = false;
         	dragginglineaMovible1 = false;
         	dragginglineaMovible3 = false;
         }
  
-        public void mouseDragged(MouseEvent e){
-            if(draggingPunto3){
+        public void mouseDragged(MouseEvent e)
+        {
+            if(draggingPunto3)
+            {
                 double x = e.getX() - offset.x;
                 if( (x>(punto2.x+grosorPunto)) & (x<=(punto4.x+1)) ){
 	                punto3.setFrame(x, punto3.y, punto3.width, punto3.height);
@@ -448,34 +453,37 @@ class JParametrosCaja extends JPanel
 	                repaint();
                 }
             }
-            else if(draggingPunto2){
-	                double x = e.getX() - offset.x;
-	                if( (x>punto1.x) & (x<(punto3.x-grosorPunto)) ){
-		                punto2.setFrame(x, punto2.y, punto2.width, punto2.height);
-		                conectarPuntos();
-		                repaint();
-	                }
-            	}
-	            else if(dragginglineaMovible1){
-		                double y = e.getY() - offset.y;
-		                if( (y>=margenVentana) & (y<=(altoVentana-margenVentana)) ){
-		                	punto1.setFrame(punto1.x, y, punto1.width, punto1.height);
-			                punto2.setFrame(punto2.x, y, punto2.width, punto2.height);
-			                lineaMovible1.setFrame(punto1.x+2, (punto1.y+(grosorLinea/2)), (punto2.x-punto1.x), grosorLinea); // esta es la lineaMovible1
-			                conectarPuntos();
-			                repaint();
-		                }
-		        	}
-		            else if(dragginglineaMovible3){
-			                double y = e.getY() - offset.y;
-			                if( (y>=margenVentana) & (y<=(altoVentana-margenVentana)) ){
-				                punto3.setFrame(punto3.x, y, punto3.width, punto3.height);
-				                punto4.setFrame(punto4.x, y, punto4.width, punto4.height);
-				                lineaMovible3.setFrame(punto3.x, (punto3.y+(grosorLinea/2)), (punto4.x-punto3.x)+2, grosorLinea); // esta es la lineaMovible3
-				                conectarPuntos();
-				                repaint();
-			                }
-			        	}
+            else if(draggingPunto2)
+            {
+                double x = e.getX() - offset.x;
+                if( (x>punto1.x) & (x<(punto3.x-grosorPunto)) ){
+	                punto2.setFrame(x, punto2.y, punto2.width, punto2.height);
+	                conectarPuntos();
+	                repaint();
+                }
+        	}
+            else if(dragginglineaMovible1)
+            {
+                double y = e.getY() - offset.y;
+                if( (y>=margenVentana) & (y<=(altoVentana-margenVentana)) ){
+                	punto1.setFrame(punto1.x, y, punto1.width, punto1.height);
+	                punto2.setFrame(punto2.x, y, punto2.width, punto2.height);
+	                lineaMovible1.setFrame(punto1.x+2, (punto1.y+(grosorLinea/2)), (punto2.x-punto1.x), grosorLinea); // esta es la lineaMovible1
+	                conectarPuntos();
+	                repaint();
+                }
+        	}
+            else if(dragginglineaMovible3)
+            {
+                double y = e.getY() - offset.y;
+                if( (y>=margenVentana) & (y<=(altoVentana-margenVentana)) ){
+	                punto3.setFrame(punto3.x, y, punto3.width, punto3.height);
+	                punto4.setFrame(punto4.x, y, punto4.width, punto4.height);
+	                lineaMovible3.setFrame(punto3.x, (punto3.y+(grosorLinea/2)), (punto4.x-punto3.x)+2, grosorLinea); // esta es la lineaMovible3
+	                conectarPuntos();
+	                repaint();
+                }
+        	}
         }
     };
     

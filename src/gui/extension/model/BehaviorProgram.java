@@ -111,11 +111,6 @@ public class BehaviorProgram extends Program implements Cloneable
 			listener.boxRemoved(box);		
 	}
 	
-	public void setBox( Box box, Point A, Point B ){		
-		for( ProgramListener listener: listeners )
-			listener.boxSet(box,A,B);		
-	}
-	
 	public Box getBoxById(String id) {
 		for( Box box: boxes ) {
 			if( box.getId().equals(id) )

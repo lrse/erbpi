@@ -1,7 +1,6 @@
 package extension.gui.program;
 
 import java.awt.Container;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -199,41 +198,25 @@ public class JBox extends JPanel implements ActionListener
 		// si quiero configurar (esto es solo para cajas de tipo 'FunctionBox')
 		if( e.getActionCommand() == "setup" )
 		{
+			FunctionBox functionBox = (FunctionBox) this.box;
+			
 			// obtengo el tipo de funcion (exitatoria, inhibitoria, parametrica, o energia)
-			String tipo = (((FunctionBox) this.box).getTemplate()).id;
+			String tipo = functionBox.getTemplate().id;
 			// chequeo el tipo y llamo a la apliación correcta...
 			if( tipo.equals("parametrica") )
 			{
-				// creo los puntos para pasarle a JParametrosCaja...
-				Point A = new Point();
-				Point B = new Point();
-				A.x = ((FunctionBox) this.box).getX0();
-				A.y = ((FunctionBox) this.box).getY0();
-				B.x = ((FunctionBox) this.box).getX1();
-				B.y = ((FunctionBox) this.box).getY1();
-				// llamo a JParametrosCaja...
-				JParametrosCaja setupBox = new JParametrosCaja( A, B, program, this.box );
+				JParametrosCaja setupBox = new JParametrosCaja( functionBox );
 				setupBox.run();
 			}
 			else if( tipo.equals("energia") )
 			{
-				// creo el punto para pasarle a JParametrosCajaEnergia...
-				Point A = new Point();
-				Point B = new Point();
-				A.x = ((FunctionBox) this.box).getX0();
-				A.y = ((FunctionBox) this.box).getY0();
-				B.x = ((FunctionBox) this.box).getX1();
-				B.y = ((FunctionBox) this.box).getY1();
-				// llamo a JParametrosCajaEnergia...
-				JParametrosCajaEnergia setupBox = new JParametrosCajaEnergia( A, B, program, this.box );
+				JParametrosCajaEnergia setupBox = new JParametrosCajaEnergia( functionBox );
 				setupBox.run();
 			}
 		}
 	}
 
-	public Box getBox() {
-		return box;
-	}
+	public Box getBox() { return box; }
 	
 	private JComponent createTail(boolean flipX)
 	{
