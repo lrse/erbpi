@@ -25,10 +25,10 @@ public class ActuatorBox extends Box
 	
 	public ActuatorType getActuatorType()				{ return actuatorType; }
 	
-	@Override public String getType()					{ return "actuator"; }
 	@Override public Icon getImage()					{ return actuatorType.getImage(); }
 	@Override public boolean showsHighlight()			{ return true; }
 	@Override protected boolean canConnectFrom(Box b)	{ return true; }
+	@Override public BoxType getBoxType()				{ return BoxType.ACTUATOR; };
 	
 	@Override 
 	public Element serialize(Document document)

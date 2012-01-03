@@ -305,7 +305,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		{
 			if ( rootElement.getNodeName() != "conducta" )
 			{
-				System.err.println("El archivo seleccionado no es un archivo de conducta valido");
+				JOptionPane.showMessageDialog(this, "El archivo seleccionado no es un archivo de conducta valido", "Error", JOptionPane.WARNING_MESSAGE);
 			}
 			else
 			{

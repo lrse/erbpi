@@ -1,7 +1,8 @@
 package extension.gui.program;
 
-import java.awt.Component;
 import java.awt.Point;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLayeredPane;
@@ -9,7 +10,7 @@ import javax.swing.JPanel;
 
 import extension.model.BehaviorProgram;
 import extension.model.Panel;
-import extension.model.elements.Box;
+import extension.model.elements.Box.BoxType;
 
 public class JProgramPanel extends JLayeredPane 
 {
@@ -17,6 +18,8 @@ public class JProgramPanel extends JLayeredPane
 	private BehaviorProgram program;
 	private JPanel boxesPanel;
 	private JConnectionsPanel connectionsPanel;
+	
+	List<Panel> panels = new LinkedList<Panel>();
 	
 	public JProgramPanel(BehaviorProgram program)
 	{
@@ -33,30 +36,40 @@ public class JProgramPanel extends JLayeredPane
 		add(connectionsPanel,new Integer(3));
 	}
 	
+	public void reloadProgram(BehaviorProgram program)
+	{
+		this.program = program;
+		
+		for ( Panel panel : panels )
+			panel.reload(this.program);
+		
+		this.connectionsPanel.reload(this.program);
+	}
+	
 	private void createComponentColumns()
 	{
-		Panel actuadoresIzq = new Panel("actuadores_izq",Panel.Type.OUTPUT,Panel.Location.LEFT);
-		Panel cajasIzq = new Panel("cajas_izq",Panel.Type.BOXES,Panel.Location.LEFT);
-		Panel sensores = new Panel("sensores",Panel.Type.INPUT,Panel.Location.NONE);
-		Panel cajasDer = new Panel("cajas_der",Panel.Type.BOXES,Panel.Location.RIGHT);
-		Panel actuadoresDer = new Panel("actuadores_der",Panel.Type.OUTPUT,Panel.Location.RIGHT);
+		Panel actuadoresIzq = new Panel(program,"actuadores_izq",BoxType.ACTUATOR,Panel.Location.LEFT);
+		Panel cajasIzq = new Panel(program,"cajas_izq",BoxType.FUNCTION,Panel.Location.LEFT);
+		Panel sensores = new Panel(program,"sensores",BoxType.SENSOR,Panel.Location.NONE);
+		Panel cajasDer = new Panel(program,"cajas_der",BoxType.FUNCTION,Panel.Location.RIGHT);
+		Panel actuadoresDer = new Panel(program,"actuadores_der",BoxType.ACTUATOR,Panel.Location.RIGHT);
+		
+		panels.add(actuadoresIzq);
+		panels.add(cajasIzq);
+		panels.add(sensores);
+		panels.add(cajasDer);
+		panels.add(actuadoresDer);
 		
 		cajasIzq.setHandles(Panel.Handles.LEFT);
 		cajasDer.setHandles(Panel.Handles.RIGHT);
 		
-		boxesPanel.add(new JBoxPanel(actuadoresIzq, program));
-		boxesPanel.add(new JBoxPanel(cajasIzq, program));
-		boxesPanel.add(new JBoxPanel(sensores, program));
-		boxesPanel.add(new JBoxPanel(cajasDer, program));
-		boxesPanel.add(new JBoxPanel(actuadoresDer, program));
-		
-		for( Box box: program.getBoxes() )
-		{
-			for( Component child : boxesPanel.getComponents() )
-					( (JBoxPanel)child ).boxAdded(box);
-		}
-		
+		boxesPanel.add(new JBoxPanel(actuadoresIzq));
+		boxesPanel.add(new JBoxPanel(cajasIzq));
+		boxesPanel.add(new JBoxPanel(sensores));
+		boxesPanel.add(new JBoxPanel(cajasDer));
+		boxesPanel.add(new JBoxPanel(actuadoresDer));
 	}
+	
 	public void doLayout() {
 		boxesPanel.setBounds(0, 0, getWidth(), getHeight());
 		connectionsPanel.setBounds(0, 0, getWidth()-2, getHeight()-2);

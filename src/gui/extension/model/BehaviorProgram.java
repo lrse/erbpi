@@ -1,6 +1,5 @@
 package extension.model;
 
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
@@ -133,7 +132,7 @@ public class BehaviorProgram extends Program implements Cloneable
 	}
 	
 	// devuelve las salidas de una box
-	public Iterable<Box> getConnectionsFrom(Box box) {
+	private Iterable<Box> getConnectionsFrom(Box box) {
 		Vector<Box> answer = new Vector<Box>();
 		for( Box dst: boxes ) {
 			Vector<Box> v = connections.get(dst);
@@ -146,7 +145,7 @@ public class BehaviorProgram extends Program implements Cloneable
 	public boolean addConnection(Box src, Box dst) {
 		if( !boxes.contains(src) || !boxes.contains(dst) )
 			return false;
-		System.out.println("new connection "+src.getId()+" -> "+dst.getId());
+		
 		if( !connections.containsKey(dst) )
 			connections.put(dst,new Vector<Box>());
 		connections.get(dst).add(src);

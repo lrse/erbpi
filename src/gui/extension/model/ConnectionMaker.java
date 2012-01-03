@@ -90,4 +90,9 @@ public class ConnectionMaker implements Cloneable{
 	public void addListener(ConnectionMakerListener listener) {
 		listeners.add(listener);
 	}
+	
+	public void removeListener(ConnectionMakerListener listener) {
+		listeners.remove(listener);
+	}
+	
 }

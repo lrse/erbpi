@@ -41,12 +41,12 @@ public class JBox extends JPanel implements ActionListener
 
     private JLabel boxIcon;
     
-    public JBox(Box box, Panel panel, BehaviorProgram program)
+    public JBox(Box box, Panel panel)
     {
 		super();
 		
     	this.box = box;
-    	this.program=program;
+    	this.program=panel.getProgram();
     	
     	this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     	

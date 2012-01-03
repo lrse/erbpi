@@ -280,7 +280,6 @@ public class JProgramFrame extends JDialog implements ActionListener
 		return n;
 	}
 	
-	
 	private void openBehavior()
 	{
 		Element rootElement = XmlUtils.openFileDialog(this);
@@ -289,15 +288,12 @@ public class JProgramFrame extends JDialog implements ActionListener
 		{
 			if ( rootElement.getNodeName() != "comportamiento" )
 			{
-				System.err.println("El archivo seleccionado no es un archivo de comportamiento valido");
+				JOptionPane.showMessageDialog(this, "El archivo seleccionado no es un archivo de comportamiento valido", "Error", JOptionPane.WARNING_MESSAGE);
 			}
 			else
 			{
 				this.programTemp = new BehaviorProgram(rootElement, JRoboticaFrame.getInstance().getRobot());
-				
-				this.getContentPane().remove(programPanel);
-				createProgramPanel();
-				this.getContentPane().validate();
+				this.programPanel.reloadProgram(this.programTemp);
 			}
 		}
 	}

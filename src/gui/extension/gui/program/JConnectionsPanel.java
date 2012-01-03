@@ -136,31 +136,49 @@ public class JConnectionsPanel extends JPanel implements ProgramListener, Connec
 
 	public JConnectionsPanel(JProgramPanel diagram, BehaviorProgram program)
 	{
-		this.diagram = diagram;
-		this.program = program;
-		program.addListener(this);
-		connectionMaker = program.getConnectionMaker();
-		connectionMaker.addListener(this);
 		setLayout(new GridLayout(1,1));
 		
-		// add boxes
-		for( Box box: program.getBoxes() )
-			this.boxAdded(box);
+		this.diagram = diagram;
+		
+		this.program = program;
+		this.program.addListener(this);
+		
+		this.connectionMaker = this.program.getConnectionMaker();
+		this.connectionMaker.addListener(this);
 
 		// add connections
-		for( Box dstBox: program.getBoxes() ) {
-			for( Box srcBox: program.getConnectionsTo(dstBox) ) {
+		for( Box dstBox: this.program.getBoxes() )
+			for( Box srcBox: this.program.getConnectionsTo(dstBox) )
 				connectionAdded(srcBox,dstBox);
-			}
-		}
 	}
 	
-	public void connectionAdded(Box src, Box dst) {
+	public void reload(BehaviorProgram program)
+	{
+		this.program.removeListener(this);
+		this.connectionMaker.removeListener(this);
+		
+		this.removeAll();
+		
+		this.program = program;
+		this.program.addListener(this);
+		
+		this.connectionMaker = this.program.getConnectionMaker();
+		this.connectionMaker.addListener(this);
+
+		// add connections
+		for( Box dstBox: this.program.getBoxes() )
+			for( Box srcBox: this.program.getConnectionsTo(dstBox) )
+				connectionAdded(srcBox,dstBox);
+	}
+	
+	public void connectionAdded(Box src, Box dst)
+	{
 		add(new JConnection(diagram,(JBox)(src.getUi()),(JBox)(dst.getUi()),program));
 		repaint();
 	}
 	
-	public void connectionRemoved(Box src, Box dst) {
+	public void connectionRemoved(Box src, Box dst)
+	{
 		for( Component c: getComponents() )
 			if( c instanceof JConnection ) {
 				JConnection conn = (JConnection)c;
@@ -171,16 +189,7 @@ public class JConnectionsPanel extends JPanel implements ProgramListener, Connec
 		repaint();
 	}
 	
-	public void boxRemoved(Box box) {
-		for( Component comp: getComponents() ) {
-			if( comp instanceof JConnection ) {
-				JConnection conn = (JConnection)comp;
-				if( conn.getSrc().getBox() == box || conn.getDst().getBox() == box )
-					remove(conn);
-			}
-		}
-		repaint();
-	}
+	public void boxRemoved(Box box){}
 	
 	public void boxAdded( Box box ){}
 	

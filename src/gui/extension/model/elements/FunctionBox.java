@@ -9,19 +9,18 @@ import extension.model.BehaviorProgram;
 import extension.model.FunctionTemplate;
 import extension.model.GlobalConfig;
 import extension.model.Panel.Location;
+import extension.utils.UniqueIdGenerator;
 
 public class FunctionBox extends Box
 {
-	static private int nextId = 0;
+	static private UniqueIdGenerator idPool = new UniqueIdGenerator();
 	
 	private int x0, y0, x1, y1;
 	private FunctionTemplate template;
 	
 	public FunctionBox(FunctionTemplate template, BehaviorProgram program, Location location)
 	{
-		super("function."+nextId,program,location);
-		
-		nextId++;
+		super("function."+FunctionBox.idPool.getNewId(),program,location);
 		
 		this.x0 = template.x0;
 		this.y0 = template.y0;
@@ -49,7 +48,7 @@ public class FunctionBox extends Box
 	public void setX1( int valor ){ x1 = valor; }
 	public void setY1( int valor ){ y1 = valor; }
 	
-	@Override public String getType()					{ return "function"; }
+	@Override public BoxType getBoxType()				{ return BoxType.FUNCTION; };
 	@Override public boolean showsHighlight()			{ return false; }
 	@Override public Icon getImage()					{ return getTemplate().getIcon(); }
 	@Override protected boolean canConnectFrom( Box b )	{ return getTemplate().acceptInputs(); }
@@ -101,6 +100,9 @@ public class FunctionBox extends Box
 	public void deserialize(Element domSpec)
 	{
 		super.deserialize(domSpec);
+		
+		int numericId = getNumberFromId();
+		FunctionBox.idPool.updateId(numericId);
 		
 		Element domPunto1 = ((Element)domSpec.getElementsByTagName("punto").item(0));
 		Element domPunto2 = ((Element)domSpec.getElementsByTagName("punto").item(1));

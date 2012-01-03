@@ -28,12 +28,6 @@ public abstract class VirtualElement
 	public final void setDescription(String description) { this.description = description; }
 	
 	/**
-	 * Devuelve el tipo de elemento.
-	 * Deberia ser  "timer" o "contador".
-	 * */
-	public abstract String getType();
-	
-	/**
 	 *  Deberia devolver un arreglo con las operaciones
 	 *  permitidas sobre ese elemento.
 	 *  */

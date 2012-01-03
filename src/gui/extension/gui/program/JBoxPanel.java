@@ -11,37 +11,37 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import extension.gui.layouts.BoxColumnLayout;
-import extension.model.BehaviorProgram;
 import extension.model.Panel;
-import extension.model.ProgramListener;
 import extension.model.elements.Box;
+import extension.model.elements.Box.BoxType;
+import extension.model.program.PanelListener;
 
-public class JBoxPanel extends JPanel implements ProgramListener
+public class JBoxPanel extends JPanel implements PanelListener
 {
 	private static final long serialVersionUID = 1L;
 	private Panel panel;
-	private BehaviorProgram program;
 	
-	public JBoxPanel(Panel panel, BehaviorProgram program) {
+	public JBoxPanel(Panel panel)
+	{
 		super();
 		this.panel = panel;
-		this.program = program;
 		
 		setBackground(Color.LIGHT_GRAY);
 		setBorder(new LineBorder(Color.DARK_GRAY));
 		
-		program.addListener(this);
+		setLayout(new BoxColumnLayout(panel));
 		
-    	setLayout(new BoxColumnLayout(program));
+		panel.addListener(this);
+    	for ( Box box : panel.getBoxes() )
+    		boxAdded(box);
 	}
 	
 	public Dimension getPreferredSize() {
     	return new Dimension(100,200);
     }
 	
-	
     public Dimension getMaximumSize() {
-    	if( panel.getType() == Panel.Type.BOXES )
+    	if( panel.getType() == BoxType.FUNCTION )
     		return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
     	else {
     		int x = 0;
@@ -55,55 +55,46 @@ public class JBoxPanel extends JPanel implements ProgramListener
     	return panel;
     }
     
-	private void addBox(JBox box)
+	@Override
+	public void boxRemoved(Box box)
 	{
-		box.addMouseMotionListener(new MouseMotionAdapter() {
-
-			public void mouseDragged(MouseEvent event)
-			{
-				Component comp = event.getComponent();
-				Container parent = comp.getParent();
-				
-				int zOrder = parent.getComponentZOrder(comp);
-				
-				if(
-					// si no soy el elemento de mas arriba y estoy mas al norte que el proximo elemento arriba mio 
-					(zOrder > 0 &&  comp.getY() < getComponent(zOrder-1).getY()) ||
-					// si no soy el de mas abajo y estoy mas al sur que el proximo elemento arriba mio
-					(zOrder < parent.getComponentCount()-1 &&  comp.getY() > getComponent(zOrder+1).getY())
-				)
-					doLayout();
-				
-				super.mouseDragged(event);
-			}	
-		});
-		
-		super.add(box);
+		remove(box.getUi());
 		doLayout();
-		box.updateUI();
 	}
 	
-	public void boxRemoved(Box box) {
-		if( box.getUi() != null && box.getUi().getParent() == this ) {
-			remove(box.getUi());
-			doLayout();
-		}
-	}
-	
+	@Override
 	public void boxAdded(Box box)
 	{
-		if (panel.accepts(box))
-		{
-			JBox boxUi = new JBox(box, panel, program);
-			addBox(boxUi);
-		}
+		JBox boxUi = new JBox(box, panel);
+		
+		boxUi.addMouseMotionListener(new BoxMotionAdapter());
+		
+		super.add(boxUi);
+		
+		doLayout();
+		
+		boxUi.updateUI();
 	}
 	
-	public void connectionAdded(Box src, Box dst) {
-		doLayout();
+	private class BoxMotionAdapter extends MouseMotionAdapter
+	{
+		public void mouseDragged(MouseEvent event)
+		{
+			Component comp = event.getComponent();
+			Container parent = comp.getParent();
+			
+			int zOrder = parent.getComponentZOrder(comp);
+			
+			if(
+				// si no soy el elemento de mas arriba y estoy mas al norte que el proximo elemento arriba mio 
+				(zOrder > 0 &&  comp.getY() < getComponent(zOrder-1).getY()) ||
+				// si no soy el de mas abajo y estoy mas al sur que el proximo elemento arriba mio
+				(zOrder < parent.getComponentCount()-1 &&  comp.getY() > getComponent(zOrder+1).getY())
+			)
+				doLayout();
+			
+			super.mouseDragged(event);
+		}	
 	}
-
-	public void connectionRemoved(Box src, Box dst) {
-		doLayout();
-	}
+	
 }

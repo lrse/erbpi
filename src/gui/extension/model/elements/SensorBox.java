@@ -19,9 +19,9 @@ public class SensorBox extends Box
 
 	public SensorType getSensorType()	{ return sensorType; }
 	
-	@Override public String getType()				{ return "sensor"; }
 	@Override public Icon getImage()				{ return sensorType.getImage(); }
 	@Override public boolean showsHighlight()		{ return true; }
+	@Override public BoxType getBoxType()			{ return BoxType.SENSOR; };
 	
 	public Element serialize(Document document)
 	{

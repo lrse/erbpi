@@ -3,15 +3,16 @@ package extension.model.elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import extension.utils.UniqueIdGenerator;
+
 public class Timer extends VirtualElement
 {
-	static private int nextId = 0;
+	static private UniqueIdGenerator idPool = new UniqueIdGenerator();
 	
 	private String[] operations = {"resetear"};
 	
 	public Timer() {
-		super("timer."+nextId);
-		nextId++;
+		super("timer."+idPool.getNewId());
 	}
 	
 	public Timer(Element domSpec) {
@@ -37,12 +38,8 @@ public class Timer extends VirtualElement
 	public void deserialize(Element domSpec)
 	{
 		int idNumber = getNumberFromId();
-		if ( nextId < idNumber )
-			nextId = +1;
+		
+		Timer.idPool.updateId(idNumber);
 	}
 	
-	@Override
-	public String getType() {
-		return "timer";
-	}
 }

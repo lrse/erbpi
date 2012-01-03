@@ -1,7 +1,5 @@
 package extension.model;
 
-import java.awt.Point;
-
 import extension.model.elements.Box;
 
 public interface ProgramListener

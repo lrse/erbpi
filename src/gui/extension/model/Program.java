@@ -3,9 +3,11 @@ package extension.model;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import extension.utils.UniqueIdGenerator;
+
 abstract public class Program
 {
-	static private int nextId = 0;
+	static private UniqueIdGenerator idPool = new UniqueIdGenerator();
 	
 	private int numericId;
 	
@@ -13,19 +15,17 @@ abstract public class Program
 
 	public Program()
 	{
-		this.numericId = nextId;
+		this.numericId = Program.idPool.getNewId();
 		this.description = getId();
-		nextId++;
 	}
 	
 	public Program(Element domSpec, Robot robot)
 	{
 		String[] split = domSpec.getAttribute("id").split("\\.");
-		this.numericId = Integer.parseInt(split[split.length-1]);
 		this.description = domSpec.getAttribute("descripcion");
 		
-		if ( numericId >= nextId )
-			nextId = numericId+1;
+		this.numericId = Integer.parseInt(split[split.length-1]);
+		Program.idPool.updateId(numericId);
 		
 		deserialize(domSpec, robot);
 	}

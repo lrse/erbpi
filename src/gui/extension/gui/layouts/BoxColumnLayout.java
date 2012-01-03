@@ -14,16 +14,20 @@ import java.util.Vector;
 import extension.gui.program.JBox;
 import extension.gui.program.JBoxPanel;
 import extension.model.BehaviorProgram;
+import extension.model.Panel;
 import extension.model.elements.Box;
 
-public class BoxColumnLayout implements LayoutManager {
+public class BoxColumnLayout implements LayoutManager
+{
     private int vgap;
     private int minWidth = 0, minHeight = 0;
     private int preferredWidth = 0, preferredHeight = 0;
-    private BehaviorProgram program = null;
+    
+    private Panel panel;
 
-    public BoxColumnLayout(BehaviorProgram program) {
-    	this.program=program;
+    public BoxColumnLayout(Panel panel)
+    {
+    	this.panel=panel;
         vgap = 5;
     }
 
@@ -162,9 +166,9 @@ public class BoxColumnLayout implements LayoutManager {
     	boolean changed = true;
     	while( changed ) {
     		changed = false;
-    		for( Box b: program.getBoxes() ) {
+    		for( Box b: panel.getProgram().getBoxes() ) {
     			if( map.containsKey(b.getUi()) ) {
-					for( Box src: program.getConnectionsTo(b) )    					
+					for( Box src: panel.getProgram().getConnectionsTo(b) )    					
 						if( map.containsKey(src.getUi()) && map.get(src.getUi()) >= map.get(b.getUi()) ) {
 							map.put(b.getUi(), map.get(b.getUi())+1);
 							changed = true;

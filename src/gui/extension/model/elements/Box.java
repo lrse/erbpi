@@ -16,6 +16,8 @@ import extension.model.Panel.Location;
 
 public abstract class Box extends VirtualElement implements Cloneable
 {
+	public enum BoxType {SENSOR, FUNCTION, ACTUATOR};
+	
 	private Location location;
 	protected JComponent ui = null;
 	
@@ -40,6 +42,7 @@ public abstract class Box extends VirtualElement implements Cloneable
 	
 	public abstract Icon getImage();
 	public abstract boolean showsHighlight();
+	public abstract BoxType getBoxType();
 	
 	@Override
 	public void deserialize(Element domSpec)
