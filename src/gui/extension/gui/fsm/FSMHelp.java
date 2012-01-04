@@ -15,7 +15,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-public class FSMHelp extends JFrame implements MouseListener {
+public class FSMHelp extends JFrame implements MouseListener
+{
+	private static final long serialVersionUID = 1L;
 	
 	private JPanel contenidoPanel = null;
 	private JPanel contenidoTitulo = null;

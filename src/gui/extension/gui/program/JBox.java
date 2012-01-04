@@ -37,11 +37,11 @@ public class JBox extends JPanel implements ActionListener
 	//    private Panel.Handles handles;
     private ComponentDragger dragger;
     private Box box;
-    BehaviorProgram program;
+    private BehaviorProgram program;
 
     private JLabel boxIcon;
     
-    public JBox(Box box, Panel panel)
+    JBox(Box box, Panel panel)
     {
 		super();
 		

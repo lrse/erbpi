@@ -18,7 +18,7 @@ public class JNewBoxButton extends JButton
 	private static final long serialVersionUID = 1L;
 	private FunctionTemplate functionTemplate;
 
-	public JNewBoxButton(FunctionTemplate functionTemplate)
+	JNewBoxButton(FunctionTemplate functionTemplate)
 	{
 		this.functionTemplate = functionTemplate;
 		this.setPreferredSize(new Dimension(40,40));

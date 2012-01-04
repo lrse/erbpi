@@ -14,12 +14,12 @@ import extension.model.Robot;
 /*
  * Panel que contiene el esquema del robot, el menu de sensores y el menu de eleccion de robot
  */
-public class JRobotPanel extends JPanel
+class JRobotPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	private JRobotIconPanel robotIconPanel;	// esquema de robot
 	
-	public JRobotPanel(Robot robot)
+	JRobotPanel(Robot robot)
 	{
 		setLayout(new VerticalFlowLayout());
 		setBackground(Color.LIGHT_GRAY);

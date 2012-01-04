@@ -5,11 +5,11 @@ import javax.swing.Icon;
 import extension.model.BehaviorNode;
 import extension.utils.IconBank;
 
-public class JInitialNode extends JNode
+class JInitialNode extends JNode
 {
 	private static final long serialVersionUID = 1L;
 
-	public JInitialNode(BehaviorNode behavior, JFSMPanel fsmPanel)
+	JInitialNode(BehaviorNode behavior, JFSMPanel fsmPanel)
 	{
 		super(behavior, fsmPanel);
 	}

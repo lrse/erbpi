@@ -24,7 +24,7 @@ abstract public class JNode extends JLayeredPane
 	
 	private boolean draggingTransition = false;
 	
-	public JNode(BehaviorNode behavior, JFSMPanel fsmPanel)
+	JNode(BehaviorNode behavior, JFSMPanel fsmPanel)
 	{
 		//super(new GridLayout(1, 1));
 		//this.setOpaque(false);

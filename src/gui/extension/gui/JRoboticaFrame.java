@@ -14,12 +14,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
-/* Imports para exabot */
-import java.net.Socket; 
-import java.io.PrintWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -53,7 +47,6 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 	private static final long serialVersionUID = 1L;
 
 	private JPanel programPanelHolder; 	// panel que contiene al panel con el programa
-	public JPanel toolPanelHolder; 		// panel que contiene al panel con las herramientas
 
 	private FSM fsm = null;
 	

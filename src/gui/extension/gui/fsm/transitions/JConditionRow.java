@@ -17,7 +17,7 @@ import extension.model.elements.VirtualElement;
 import extension.model.fsm.transitions.Condition;
 import extension.utils.IconBank;
 
-public class JConditionRow extends JPanel implements ActionListener
+class JConditionRow extends JPanel implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	private JComboBox triggerElementsBox = null;
@@ -26,7 +26,7 @@ public class JConditionRow extends JPanel implements ActionListener
 	private JEditTransitionFrame frame = null;
 	private Condition condition = null;
 	
-	public JConditionRow(JEditTransitionFrame frame, Condition condition)
+	JConditionRow(JEditTransitionFrame frame, Condition condition)
 	{
 		this.frame=frame;
 		this.condition=condition;

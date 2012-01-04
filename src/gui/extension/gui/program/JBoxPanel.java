@@ -21,7 +21,7 @@ public class JBoxPanel extends JPanel implements PanelListener
 	private static final long serialVersionUID = 1L;
 	private Panel panel;
 	
-	public JBoxPanel(Panel panel)
+	JBoxPanel(Panel panel)
 	{
 		super();
 		this.panel = panel;

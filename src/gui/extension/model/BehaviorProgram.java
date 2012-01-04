@@ -2,7 +2,6 @@ package extension.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Stack;
 import java.util.Vector;
 
 import org.w3c.dom.Document;
@@ -65,13 +64,6 @@ public class BehaviorProgram extends Program implements Cloneable
 		return connectionMaker;
 	}
 	
-	public void toggleBox(SensorBox box) {
-		if( !boxes.contains(box) )
-			addBox(box);
-		else
-			removeBox(box);
-	}
-	
 	public void addBox(Box box)
 	{
 		if( !boxes.contains(box) )
@@ -110,7 +102,7 @@ public class BehaviorProgram extends Program implements Cloneable
 			listener.boxRemoved(box);		
 	}
 	
-	public Box getBoxById(String id) {
+	private Box getBoxById(String id) {
 		for( Box box: boxes ) {
 			if( box.getId().equals(id) )
 				return box;
@@ -131,18 +123,7 @@ public class BehaviorProgram extends Program implements Cloneable
 			return answer;
 	}
 	
-	// devuelve las salidas de una box
-	private Iterable<Box> getConnectionsFrom(Box box) {
-		Vector<Box> answer = new Vector<Box>();
-		for( Box dst: boxes ) {
-			Vector<Box> v = connections.get(dst);
-			if( v!=null && v.contains(box) )
-				answer.add(dst);
-		}
-		return answer;
-	}
-	
-	public boolean addConnection(Box src, Box dst) {
+	boolean addConnection(Box src, Box dst) {
 		if( !boxes.contains(src) || !boxes.contains(dst) )
 			return false;
 		
@@ -165,51 +146,6 @@ public class BehaviorProgram extends Program implements Cloneable
 			listener.connectionRemoved(src, dst);	
 		
 		return true;
-	}
-	
-	public enum ConnectionDir {Up, Down, Other, None};
-
-	private class BoxDirPair {
-		public Box box;
-		public ConnectionDir dir;
-		public BoxDirPair(Box box, ConnectionDir dir) {
-			this.box = box;
-			this.dir = dir;
-		}
-	};
-	
-	public ConnectionDir getConnectionDir(Box src, Box dst) {
-		ConnectionDir answer = ConnectionDir.None;
-		Stack<BoxDirPair> stack = new Stack<BoxDirPair>();
-		stack.push(new BoxDirPair(src,ConnectionDir.None));
-		while( !stack.isEmpty() ) {
-			BoxDirPair boxDir = stack.pop();
-			for( Box box2: getConnectionsFrom(boxDir.box) ) {
-				if( box2 == dst ) {
-					if( answer == ConnectionDir.None )
-						answer = boxDir.dir;
-					else if( answer != boxDir.dir )
-						answer = ConnectionDir.Other;
-				}
-				if( box2 instanceof FunctionBox ) {
-					ConnectionDir newDir;
-					BoxDirPair newBoxDir = new BoxDirPair(box2, ConnectionDir.None);
-					FunctionBox functionBox = (FunctionBox)box2;
-					if( functionBox.getY1() > 1000 )
-						newDir = ConnectionDir.Up;
-					else 
-						newDir = ConnectionDir.Down;
-
-					if( boxDir.dir == ConnectionDir.None )
-						newBoxDir.dir = newDir;
-					else if( boxDir.dir != newDir )
-						newBoxDir.dir = ConnectionDir.Other;
-					
-					stack.push(newBoxDir);
-				}
-			}
-		}
-		return answer;
 	}
 	
 	public void addListener(ProgramListener listener) {

@@ -76,14 +76,14 @@ abstract class JVirtualElementsFrame extends JFrame implements ActionListener
 	protected abstract VirtualElement addElement();
 	protected abstract void removeElement(VirtualElement element);
 	
-	class JElementRow extends JPanel implements ActionListener
+	private class JElementRow extends JPanel implements ActionListener
 	{
 		private static final long serialVersionUID = 1L;
 		private JVirtualElementsFrame frame;
 		private VirtualElement element;
-		JFormattedTextField thresholdField;
+		private JFormattedTextField thresholdField;
 		
-		JElementRow(JVirtualElementsFrame frame, VirtualElement element)
+		private JElementRow(JVirtualElementsFrame frame, VirtualElement element)
 		{
 			this.frame=frame;
 			this.element=element;
@@ -143,6 +143,6 @@ abstract class JVirtualElementsFrame extends JFrame implements ActionListener
 			}
 		}
 		
-		VirtualElement getElement() { return element; }
+		private VirtualElement getElement() { return element; }
 	}
 }

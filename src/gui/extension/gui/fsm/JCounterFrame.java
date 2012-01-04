@@ -8,11 +8,11 @@ import extension.model.FSM;
 import extension.model.elements.Counter;
 import extension.model.elements.VirtualElement;
 
-public class JCounterFrame extends JVirtualElementsFrame
+class JCounterFrame extends JVirtualElementsFrame
 {
 	private static final long serialVersionUID = 1L;
 
-	public JCounterFrame(FSM fsm) {
+	JCounterFrame(FSM fsm) {
 		super(fsm);
 		FSM.countersFrameOpen = true;
 		this.addWindowListener( new java.awt.event.WindowAdapter() {

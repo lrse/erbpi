@@ -123,7 +123,7 @@ class JConnection extends JComponent implements ActionListener
 	}
 }
 
-public class JConnectionsPanel extends JPanel implements ProgramListener, ConnectionMakerListener 
+class JConnectionsPanel extends JPanel implements ProgramListener, ConnectionMakerListener 
 {
 	private static final long serialVersionUID = 1L;
 	private JProgramPanel diagram;
@@ -134,7 +134,7 @@ public class JConnectionsPanel extends JPanel implements ProgramListener, Connec
 	
 	private BehaviorProgram program;
 
-	public JConnectionsPanel(JProgramPanel diagram, BehaviorProgram program)
+	JConnectionsPanel(JProgramPanel diagram, BehaviorProgram program)
 	{
 		setLayout(new GridLayout(1,1));
 		
@@ -152,7 +152,7 @@ public class JConnectionsPanel extends JPanel implements ProgramListener, Connec
 				connectionAdded(srcBox,dstBox);
 	}
 	
-	public void reload(BehaviorProgram program)
+	void reload(BehaviorProgram program)
 	{
 		this.program.removeListener(this);
 		this.connectionMaker.removeListener(this);

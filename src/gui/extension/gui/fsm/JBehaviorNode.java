@@ -19,13 +19,13 @@ import extension.gui.JRoboticaFrame;
 import extension.model.BehaviorNode;
 import extension.utils.IconBank;
 
-public class JBehaviorNode extends JNode implements ActionListener
+class JBehaviorNode extends JNode implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel closeButton = null;
 	
-	public JBehaviorNode( BehaviorNode behavior, JFSMPanel fsmPanel )
+	JBehaviorNode( BehaviorNode behavior, JFSMPanel fsmPanel )
 	{
 		super(behavior, fsmPanel);
 		

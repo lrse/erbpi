@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-public class JCambiarDescripcionNodo{
+class JCambiarDescripcionNodo{
 	
 	private static JFrame ventanaEditDescription;
 	private static JTextField resultado;
@@ -31,7 +31,7 @@ public class JCambiarDescripcionNodo{
 	static private JBehaviorNode behaviorNode = null;
 	static private JFSMPanel fsmPanel;
     
-	public JCambiarDescripcionNodo( JBehaviorNode behavior , JLabel iconlabel, JFSMPanel fsmpanel ){
+	JCambiarDescripcionNodo( JBehaviorNode behavior , JLabel iconlabel, JFSMPanel fsmpanel ){
     	
 		behaviorNode = behavior;
 		iconLabel = iconlabel;
@@ -56,7 +56,7 @@ public class JCambiarDescripcionNodo{
 		ventanaEditDescription.setVisible(true);
     }
     
-    static JPanel hacerFormulario(){
+    private static JPanel hacerFormulario(){
 		formulario = new JPanel( new GridLayout( 2,2 ) );
 		
 		resultado = new JTextField();
@@ -86,7 +86,7 @@ public class JCambiarDescripcionNodo{
 		return formulario;
     }
      
-    static class EnterAction extends AbstractAction{ // class EnterAction is an AbstractAction that defines what will occur when the enter key is pressed....
+    private static class EnterAction extends AbstractAction{ // class EnterAction is an AbstractAction that defines what will occur when the enter key is pressed....
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed( ActionEvent tf ) {
 			// System.out.println( "The Enter key has been pressed." );
@@ -94,7 +94,7 @@ public class JCambiarDescripcionNodo{
 		}
     }
     
-    static class ButtonListener implements ActionListener{ // class ButtonListener defines the action to occur when the enter button is pressed...
+    private static class ButtonListener implements ActionListener{ // class ButtonListener defines the action to occur when the enter button is pressed...
     	public void actionPerformed( ActionEvent bp ){
     		// System.out.println( "The enter button was pressed." );
     		behaviorNode.getBehavior().setDescription( resultado.getText() ); // tomo el valor 2do del array, el nuevo nombre...

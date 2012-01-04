@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import extension.gui.program.JBox;
 import extension.gui.program.JBoxPanel;
-import extension.model.BehaviorProgram;
 import extension.model.Panel;
 import extension.model.elements.Box;
 
@@ -69,7 +68,7 @@ public class BoxColumnLayout implements LayoutManager
         }   
     }
 
-	public void reorderComponents(Container target) {
+	private void reorderComponents(Container target) {
 		ArrayList<Component> sortedComponents = new ArrayList<Component>();
 		for( Component c : target.getComponents() ) sortedComponents.add(c);
 		Collections.sort(sortedComponents, new Comparator<Component>(){

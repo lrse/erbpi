@@ -26,7 +26,7 @@ class JTransition extends JPanel implements ActionListener
 	private Transition transition;
 	private FSM fsm;
 	private JTransitionsPanel jTransitionPanel;
-	Icon icon = null;
+	private Icon icon = null;
 	
 	JTransition(Transition transition, FSM fsm, JTransitionsPanel parent) {
 		super(new GridLayout(1, 1));

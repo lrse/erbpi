@@ -100,7 +100,7 @@ public class JTransitionsPanel extends JPanel implements FSMListener, Transition
 		}
 	}
 	
-	public void paintTransitions(Graphics2D g2d) {
+	private void paintTransitions(Graphics2D g2d) {
 		for( Component c: getComponents() ) {
 			if( c instanceof JTransition )
 			{
@@ -181,7 +181,7 @@ public class JTransitionsPanel extends JPanel implements FSMListener, Transition
 			return new Point( (int)(P.x - feo*v.x) , (int)(P.y - feo*v.y) );
 	}
 	
-	public static Point getArcMiddle(Point src, Point dst, boolean side)
+	static Point getArcMiddle(Point src, Point dst, boolean side)
 	{
 		float radio = getCircleRadio(src, dst);
 		
@@ -196,7 +196,7 @@ public class JTransitionsPanel extends JPanel implements FSMListener, Transition
 			return new Point( (int)(P.x + feo*v.x) , (int)(P.y + feo*v.y) );
 	}
 	
-	public void paintNewTransition(Graphics2D g2d) {
+	private void paintNewTransition(Graphics2D g2d) {
 		if( transitionMaker.isEnabled() ) {
 			Point srcPoint = (Point) transitionMaker.getSrcPoint().clone();
 			Point dstPoint = (Point) transitionMaker.getDstPoint().clone();
@@ -225,7 +225,7 @@ public class JTransitionsPanel extends JPanel implements FSMListener, Transition
 		UpdateLayout();
 	}
 	
-	public JNode getView(BehaviorNode behavior) { return fsmPanel.getView(behavior); }
+	JNode getView(BehaviorNode behavior) { return fsmPanel.getView(behavior); }
 	
 	private void UpdateLayout()
 	{

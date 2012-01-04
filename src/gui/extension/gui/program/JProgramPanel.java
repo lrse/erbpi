@@ -19,9 +19,9 @@ public class JProgramPanel extends JLayeredPane
 	private JPanel boxesPanel;
 	private JConnectionsPanel connectionsPanel;
 	
-	List<Panel> panels = new LinkedList<Panel>();
+	private List<Panel> panels = new LinkedList<Panel>();
 	
-	public JProgramPanel(BehaviorProgram program)
+	JProgramPanel(BehaviorProgram program)
 	{
 		this.program = program;
 		
@@ -36,7 +36,7 @@ public class JProgramPanel extends JLayeredPane
 		add(connectionsPanel,new Integer(3));
 	}
 	
-	public void reloadProgram(BehaviorProgram program)
+	void reloadProgram(BehaviorProgram program)
 	{
 		this.program = program;
 		

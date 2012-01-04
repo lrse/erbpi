@@ -39,7 +39,7 @@ public class IconBank {
 		}
 	}
 	
-	final static double DEGREE_90 = 90.0 * Math.PI / 180.0;
+	private final static double DEGREE_90 = 90.0 * Math.PI / 180.0;
     public static ImageIcon createRotatedImage(Component c, Icon icon, double rotatedAngle) {
         // convert rotatedAngle to a value from 0 to 360
         double originalAngle = rotatedAngle % 360;

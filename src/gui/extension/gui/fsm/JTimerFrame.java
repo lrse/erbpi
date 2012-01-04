@@ -8,11 +8,11 @@ import extension.model.FSM;
 import extension.model.elements.Timer;
 import extension.model.elements.VirtualElement;
 
-public class JTimerFrame extends JVirtualElementsFrame
+class JTimerFrame extends JVirtualElementsFrame
 {
 	private static final long serialVersionUID = 1L;
 
-	public JTimerFrame(FSM fsm) {
+	JTimerFrame(FSM fsm) {
 		super(fsm);
 		FSM.timersFrameOpen = true;
 		this.addWindowListener( new java.awt.event.WindowAdapter() {

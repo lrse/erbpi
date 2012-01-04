@@ -16,11 +16,11 @@ import extension.model.Transition;
 import extension.model.fsm.transitions.Action;
 import extension.model.fsm.transitions.Condition;
 
-public class JEditTransitionFrame extends JFrame implements ActionListener
+class JEditTransitionFrame extends JFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
-	Transition transition = null;
+	private Transition transition = null;
 	private JPanel conditionsPanel = null;
 	private JPanel actionsPanel = null;
 	
@@ -94,7 +94,7 @@ public class JEditTransitionFrame extends JFrame implements ActionListener
 		this.pack();
 	}
 	
-	public void removeCondition(JConditionRow conditionRow)
+	void removeCondition(JConditionRow conditionRow)
 	{
 		conditionsPanel.remove(conditionRow);
 		transition.removeCondition(conditionRow.getCondition());
@@ -130,7 +130,7 @@ public class JEditTransitionFrame extends JFrame implements ActionListener
 		}
 	}
 	
-	public void updateLayout()
+	void updateLayout()
 	{
 		pack();
 	}
