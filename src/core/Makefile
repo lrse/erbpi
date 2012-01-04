@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-O2 -g -Wall -Ilibcore -I../ral
-LDFLAGS=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.'  -lcore -lpthread -lxerces-c
+LDFLAGS=-Llibcore -L../../../libexabot -lexabot -L../ral -Wl,-rpath='$$ORIGIN/.'  -lcore -lpthread -lxerces-c
 
 all: core 
 
