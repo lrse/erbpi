@@ -1,21 +1,24 @@
 package extension.utils;
 
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import extension.gui.layouts.VerticalFlowLayout;
 
-public class JConsole extends JFrame
+class JConsole extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	private static final String NEWLINE = "\n";
 	
 	//private TextArea console;
 	private JTextArea console;
+	private JScrollPane scrollPane;
 	private Thread monitorThread;
 	
 	public JConsole()
@@ -25,7 +28,7 @@ public class JConsole extends JFrame
 		addConsole();
 	}
 	
-	public void start(InputStream stream)
+	void start(InputStream stream)
 	{
 		monitorThread = new ReaderThread(stream);
 		monitorThread.start();
@@ -54,9 +57,13 @@ public class JConsole extends JFrame
 	private void addConsole()
 	{
 		//console = new TextArea(20,50);
-		console = new JTextArea(20,50);
+		console = new JTextArea();
 		console.setEditable(false);
-		this.add(console);
+		
+		scrollPane = new JScrollPane(console);
+		scrollPane.setPreferredSize(new Dimension(640,480));
+		
+		this.add(scrollPane);
 	}
 	
 	private class ReaderThread extends Thread

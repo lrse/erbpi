@@ -4,6 +4,7 @@
 	// incluir las cosas estandard
 	#include <set>
 	#include <map>
+	#include <ctime>
 	#include <string>
 	#include <vector>
 	#include <iostream>
@@ -139,8 +140,8 @@
 			Timer(const string& id);
 			void Resetear();
 			int Ejecutar();
-		// TODO: Estaria bueno hacer un override de SetValor()
-		// que tire error asi solo se modifica como es debido
+		private:
+			std::time_t _initial_time;
 	};
 
 	class Contador : public Elemento

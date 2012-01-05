@@ -328,7 +328,12 @@ void CargarTransicion(Comportamiento* comportamiento, DOMElement* xml_transicion
 	Transicion* transicion = new Transicion(id,id_comportamiento_destino);
 	comportamiento->AgregarTransicion(transicion);
 	
-	/* TODO: cargar y hacer andar las actualizaciones */
+	DOMNodeList* xml_lista_actualizaciones = xml_transicion->getElementsByTagName(XMLString::transcode("actualizaciones"));
+	if ( xml_lista_actualizaciones && xml_lista_actualizaciones->getLength() > 0 )
+	{
+		DOMElement* xml_actualizaciones = dynamic_cast< xercesc::DOMElement* >( xml_lista_actualizaciones->item(0) );
+		CargarElementosDeListaAObjeto<Transicion>(transicion,xml_actualizaciones,"actualizacion",&CargarActualizacion);
+	}
 	
 	DOMNodeList* xml_lista_condiciones = xml_transicion->getElementsByTagName(XMLString::transcode("condiciones"));
 	if ( xml_lista_condiciones && xml_lista_condiciones->getLength() > 0 )

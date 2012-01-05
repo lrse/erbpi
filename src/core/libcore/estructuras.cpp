@@ -119,16 +119,26 @@ int Actuador::Ejecutar()
 Timer::Timer(const string& id)
 	: Elemento(TIPO_TIMER,id,0)
 {
+	_initial_time = std::time(NULL);
 }
 
 void Timer::Resetear()
 {
+	_initial_time = std::time(NULL);
 	_valor=0;
 }
 
 int Timer::Ejecutar()
 {
-	// TODO: WTF?
+	std::time_t current_time;
+	std::time(&current_time);
+	
+	if ( current_time-_initial_time >= 1.0 )
+	{
+		_valor++;
+		_initial_time += 1.0;
+	}
+	
 	return 0;
 }
 
@@ -156,7 +166,6 @@ void Contador::Resetear()
 
 int Contador::Ejecutar()
 {
-	// TODO: WTF?
 	return 0;
 }
 
@@ -187,10 +196,28 @@ void Conducta::Actualizar(const EstadoDeSensores& estado_sensores)
 	
 	Transicion* transicion_activa = comportamiento_actual->TransicionActiva(elementos);
 	if ( transicion_activa )
+	{
+		transicion_activa->EjecutarActualizaciones();
 		CambiarAComportamiento( transicion_activa->IdComportamientoDestino() );
+	}
+	
+	forall(it,_timers)
+		(it->second)->Ejecutar();
+	
+	/*
+	 * @tfischer: lo siguiente esta por completitud,
+	 * por si en algun momento se usa,
+	 * pero esta comentado por performance
+	 * 
+	 * 
+	
+	forall(it,_contadores)
+		(it->second)->Ejecutar();
 	
 	forall(it,_sensores)
 		(it->second)->Ejecutar();
+	
+	*/
 	
 	comportamiento_actual->EjecutarElementos();
 }
@@ -442,7 +469,6 @@ bool Transicion::SeCumple(const Elementos& elementos) const
 	forall(it,_condiciones)
 		if ( !((*it)->SeCumple(elementos)) )
 			return false;
-	cout << "Transicion::SeCumple" << endl;
 	return true;
 }
 

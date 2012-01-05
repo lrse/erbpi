@@ -262,20 +262,20 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		}
 		else {
 			// copio la ral adecuada
-			File fileSrc = new File("../core/" + getRobot().getRal());
-			File fileDst = new File("../core/libRAL.so");
+			File fileSrc = new File("ral/" + getRobot().getRal());
+			File fileDst = new File("core/libRAL.so");
 			
 			try {
 				FileUtils.copyFile(fileSrc, fileDst);
 			} catch (IOException e) {
-				System.err.println("Error copiando.");
+				System.err.println("Error copiando "+fileSrc.getAbsolutePath()+" a "+fileDst.getAbsolutePath());
 				e.printStackTrace();
 				return;
 			}
 			
 			System.out.println("-> la RAL configurada es: " + fileSrc);
 			
-			String corePath = "../core/core_exe";
+			String corePath = "core/core";
 			
 			String cmdString = corePath + " " + tempProgramFile.getAbsolutePath() + " core_log.txt";
 			System.out.println("-> ejecutando el Core: "+cmdString);

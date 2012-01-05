@@ -23,7 +23,8 @@ Conducta* conducta;
 void terminar(int sig); 					// rutina de atención de SIGNAL
 int actualizar_tiempos();
 
-void core_initialize(const string& _log_filename) {
+void core_initialize(const string& _log_filename)
+{
   inicializarRAL();
 	frecuencia = getFrecuenciaTrabajo();
   log_filename = _log_filename;
@@ -33,30 +34,30 @@ void core_initialize(const string& _log_filename) {
 
 bool core_start(const string& xml_filename)
 {
-  conducta = new Conducta;
-  
-  // abro el archivoLOG y verifico
-  cout << "abriendo log" << endl;
+	conducta = new Conducta;
+	
+	// abro el archivoLOG y verifico
+	cout << "abriendo log" << endl;
 	archivo_log.open(log_filename.c_str(), ios::trunc);
 	if (archivo_log.bad()) { cerr << "Error: al abrir el archivo del LOG !!!" << endl; return false; }
-  
-  cout << "parseando XML" << endl;
-  // 1. PARSEO Y LLENO TablaEjecucion
+	
+	cout << "parseando XML" << endl;
+	// 1. PARSEO Y LLENO TablaEjecucion
 	if (parsear(xml_filename, conducta)){
 		cerr << "Error: Algo no anduvo bien en el parseo del XML !!!" << endl;
 		return false;
 	}
 
-  cout << "chequeando sensores y actuadores" << endl;
+	cout << "chequeando sensores y actuadores" << endl;
 	// 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
-  // 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
+	// 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
 	if ( !conducta->ChequearSensores(getListaSensores()) )
 		Error("Error: Algo no anduvo bien en la definicion de sensores !!!\n");
 	if ( !conducta->ChequearActuadores(getListaActuadores()) )
 		Error("Error: Algo no anduvo bien en la definicion de actuadores !!!\n");
 
 	// escribo el encabezado del log...
-  archivo_log << "timestamp, ";
+	archivo_log << "timestamp, ";
 	conducta->LoguearEncabezadoDeElementos(archivo_log);
 	archivo_log << endl;
 
@@ -110,7 +111,8 @@ void core_stop(void)
 	delete conducta;
 }
 
-void core_deinitialize(void) {
+void core_deinitialize(void)
+{
   cout << "apagando parser" << endl;
   deinit_parser();
   
@@ -118,12 +120,15 @@ void core_deinitialize(void) {
   finalizarRAL();
 }
 
-int actualizar_tiempos(){
-	if (primera_medicion_tiempo){
+int actualizar_tiempos()
+{
+	if (primera_medicion_tiempo) {
 		ftime(&tiempo_inicio);
 		primera_medicion_tiempo = false;
 	}
+	
 	ftime(&tiempo_actual);
 	tiempo_diferencia = (int) (1000.0 * (tiempo_actual.time - tiempo_inicio.time) + (tiempo_actual.millitm - tiempo_inicio.millitm));
 	return 0;
 }
+
