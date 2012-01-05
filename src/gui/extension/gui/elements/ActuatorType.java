@@ -1,13 +1,13 @@
-package extension.model;
+package extension.gui.elements;
 
 import javax.swing.Icon;
 
-public class SensorType {
+public class ActuatorType {
 	private String name;
 	private String id;
 	private Icon image;
 	
-	public SensorType(String id, String name, Icon image) {
+	public ActuatorType(String id, String name, Icon image) {
 		this.id = id;
 		this.name = name;
 		this.image = image;

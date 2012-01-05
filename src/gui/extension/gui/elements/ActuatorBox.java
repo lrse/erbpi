@@ -5,7 +5,6 @@ import javax.swing.Icon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import extension.model.ActuatorType;
 import extension.model.BehaviorProgram;
 import extension.model.Panel.Location;
 

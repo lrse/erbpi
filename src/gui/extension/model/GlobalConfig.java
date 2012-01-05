@@ -10,6 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import extension.ExtensionApp;
+import extension.gui.elements.ActuatorType;
+import extension.gui.elements.SensorType;
 import extension.model.persist.GlobalConfigXml;
 
 public class GlobalConfig {

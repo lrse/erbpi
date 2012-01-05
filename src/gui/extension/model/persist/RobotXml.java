@@ -16,13 +16,13 @@ import org.xml.sax.SAXException;
 
 import extension.ExtensionApp;
 import extension.gui.elements.ActuatorBox;
+import extension.gui.elements.ActuatorType;
 import extension.gui.elements.SensorBox;
-import extension.model.ActuatorType;
+import extension.gui.elements.SensorType;
 import extension.model.GlobalConfig;
 import extension.model.ImageMap;
 import extension.model.Panel;
 import extension.model.Robot;
-import extension.model.SensorType;
 import extension.utils.IconBank;
 import extension.utils.XmlUtils;
 

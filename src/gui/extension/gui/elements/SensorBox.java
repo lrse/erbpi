@@ -5,7 +5,6 @@ import javax.swing.Icon;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import extension.model.SensorType;
 import extension.model.Panel.Location;
 
 public class SensorBox extends Box
