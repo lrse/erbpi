@@ -15,14 +15,14 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import extension.ExtensionApp;
+import extension.gui.elements.ActuatorBox;
+import extension.gui.elements.SensorBox;
 import extension.model.ActuatorType;
 import extension.model.GlobalConfig;
 import extension.model.ImageMap;
 import extension.model.Panel;
 import extension.model.Robot;
 import extension.model.SensorType;
-import extension.model.elements.ActuatorBox;
-import extension.model.elements.SensorBox;
 import extension.utils.IconBank;
 import extension.utils.XmlUtils;
 

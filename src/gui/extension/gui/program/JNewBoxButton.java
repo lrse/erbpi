@@ -13,7 +13,7 @@ import extension.model.FunctionTemplate;
  * Al apretarlo/arrastrarlo sirve para poner poner un box de algun tipo en el programa.
  */
 
-public class JNewBoxButton extends JButton
+class JNewBoxButton extends JButton
 {
 	private static final long serialVersionUID = 1L;
 	private FunctionTemplate functionTemplate;

@@ -9,8 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import extension.model.elements.VirtualElement;
-import extension.model.fsm.transitions.Action;
+import extension.gui.elements.VirtualElement;
 import extension.utils.IconBank;
 
 class JActionRow extends JPanel implements ActionListener

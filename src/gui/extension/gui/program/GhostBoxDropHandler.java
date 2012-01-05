@@ -7,9 +7,9 @@ import javax.swing.SwingUtilities;
 
 import thirdparty.dragnghost.AbstractGhostDropManager;
 import thirdparty.dragnghost.GhostDropEvent;
+import extension.gui.elements.Box;
+import extension.gui.elements.FunctionBox;
 import extension.model.Panel;
-import extension.model.elements.Box;
-import extension.model.elements.FunctionBox;
 
 /*
  * Esta clase es un 'GhostDropListener' que se encarga de manejar el drop de una 'ghostBox'

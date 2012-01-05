@@ -11,10 +11,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
 
+import extension.gui.elements.Box;
 import extension.gui.program.JBox;
 import extension.gui.program.JBoxPanel;
 import extension.model.Panel;
-import extension.model.elements.Box;
 
 public class BoxColumnLayout implements LayoutManager
 {

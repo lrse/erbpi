@@ -10,9 +10,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import extension.ExtensionApp;
-import extension.model.elements.ActuatorBox;
-import extension.model.elements.Box;
-import extension.model.elements.SensorBox;
+import extension.gui.elements.ActuatorBox;
+import extension.gui.elements.Box;
+import extension.gui.elements.SensorBox;
 import extension.model.persist.RobotXml;
 
 public class Robot {
@@ -68,13 +68,13 @@ public class Robot {
 	public void addDefaultDiagram(Diagram diagram) {
 		defaultDiagrams.add(diagram);
 	}
-	public ActuatorBox getActuatorById(String id) {
+	private ActuatorBox getActuatorById(String id) {
 		for( ActuatorBox actuator: actuators )
 			if( actuator.getId().equals(id) )
 				return actuator;
 		return null;
 	}
-	public SensorBox getSensorById(String id) {
+	private SensorBox getSensorById(String id) {
 		for( SensorBox sensor: sensors )
 			if( sensor.getId().equals(id) )
 				return sensor;

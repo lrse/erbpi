@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 
 import extension.utils.UniqueIdGenerator;
 
-abstract public class Program
+abstract class Program
 {
 	static private UniqueIdGenerator idPool = new UniqueIdGenerator();
 	
@@ -19,7 +19,7 @@ abstract public class Program
 		this.description = getId();
 	}
 	
-	public Program(Element domSpec, Robot robot)
+	Program(Element domSpec, Robot robot)
 	{
 		String[] split = domSpec.getAttribute("id").split("\\.");
 		this.description = domSpec.getAttribute("descripcion");

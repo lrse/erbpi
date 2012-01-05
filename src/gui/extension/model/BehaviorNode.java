@@ -10,13 +10,13 @@ public class BehaviorNode
 	private Program program = null;
 	private Point position = null;
 	
-	public BehaviorNode( Program program, Point position )
+	BehaviorNode( Program program, Point position )
 	{
 		this.program=program;
 		this.position=position;
 	}
 	
-	public BehaviorNode( Element domSpec, Robot robot, Program program )
+	BehaviorNode( Element domSpec, Robot robot, Program program )
 	{
 		deserialize(domSpec,robot);
 		
@@ -31,7 +31,7 @@ public class BehaviorNode
 		);
 	}
 	
-	public Element serialize(Document document)
+	Element serialize(Document document)
 	{
 		Element behaviorElement = this.program.serialize(document);
 		serializePosition(behaviorElement);

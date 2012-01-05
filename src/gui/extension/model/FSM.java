@@ -10,10 +10,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import extension.gui.elements.Counter;
+import extension.gui.elements.SensorBox;
+import extension.gui.elements.Timer;
 import extension.gui.fsm.JNode;
-import extension.model.elements.Counter;
-import extension.model.elements.SensorBox;
-import extension.model.elements.Timer;
 import extension.utils.XmlUtils;
 
 public class FSM
@@ -60,7 +60,7 @@ public class FSM
 		this.counters = new HashSet<Counter>();
 	}
 	
-	public Iterable<Transition> getTransitionsFrom(Program program)
+	Iterable<Transition> getTransitionsFrom(Program program)
 	{
 		Collection<Transition> filteredTransitions = new LinkedList<Transition>();
 		
@@ -126,7 +126,7 @@ public class FSM
 			listener.behaviorRemoved(behavior);
 	}
 	
-	public Transition addNewTransition(BehaviorNode source, BehaviorNode destination)
+	Transition addNewTransition(BehaviorNode source, BehaviorNode destination)
 	{
 		Transition transition = new Transition(source,destination);
 		return addTransition(transition);
@@ -160,7 +160,7 @@ public class FSM
 			removeTransition(transition);
 	}
 	
-	public boolean transitionExists(JNode source, JNode destination)
+	boolean transitionExists(JNode source, JNode destination)
 	{
 		for ( Transition transition : transitions )
 			if ( transition.connects(source.getBehavior(),destination.getBehavior()) )
@@ -238,7 +238,7 @@ public class FSM
 		return behaviors;
 	}
 	
-	public BehaviorNode getBehaviorById(String id)
+	BehaviorNode getBehaviorById(String id)
 	{
 		for ( BehaviorNode behavior : behaviors )
 			if ( id.equals(behavior.getId()) )
@@ -314,7 +314,7 @@ public class FSM
 		return document;
 	}
 	
-	public void deserialize(Element domSpec)
+	private void deserialize(Element domSpec)
 	{
 		// Robot
 		String robotId = ( (Element)domSpec.getElementsByTagName("robot").item(0) ).getAttribute("id");

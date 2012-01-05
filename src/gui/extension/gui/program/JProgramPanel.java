@@ -8,11 +8,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import extension.gui.elements.Box.BoxType;
 import extension.model.BehaviorProgram;
 import extension.model.Panel;
-import extension.model.elements.Box.BoxType;
 
-public class JProgramPanel extends JLayeredPane 
+class JProgramPanel extends JLayeredPane 
 {
 	private static final long serialVersionUID = 1L;
 	private BehaviorProgram program;
@@ -75,7 +75,7 @@ public class JProgramPanel extends JLayeredPane
 		connectionsPanel.setBounds(0, 0, getWidth()-2, getHeight()-2);
 	}
 
-	public JBoxPanel getPanelAt(Point p) {
+	JBoxPanel getPanelAt(Point p) {
 		return (JBoxPanel)boxesPanel.getComponentAt(p);
 	}
 	

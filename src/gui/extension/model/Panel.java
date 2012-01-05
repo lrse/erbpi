@@ -3,8 +3,8 @@ package extension.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import extension.model.elements.Box;
-import extension.model.elements.Box.BoxType;
+import extension.gui.elements.Box;
+import extension.gui.elements.Box.BoxType;
 import extension.model.program.PanelListener;
 
 public class Panel implements ProgramListener

@@ -1,4 +1,4 @@
-package extension.model.elements;
+package extension.gui.elements;
 
 import javax.swing.Icon;
 

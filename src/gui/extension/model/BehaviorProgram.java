@@ -9,10 +9,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import extension.gui.JRoboticaFrame;
-import extension.model.elements.ActuatorBox;
-import extension.model.elements.Box;
-import extension.model.elements.FunctionBox;
-import extension.model.elements.SensorBox;
+import extension.gui.elements.ActuatorBox;
+import extension.gui.elements.Box;
+import extension.gui.elements.FunctionBox;
+import extension.gui.elements.SensorBox;
 import extension.utils.XmlUtils;
 
 public class BehaviorProgram extends Program implements Cloneable

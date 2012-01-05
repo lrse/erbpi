@@ -13,7 +13,7 @@ import extension.utils.IconBank;
 
 public class FunctionTemplate
 {
-	public Icon icon;
+	private Icon icon;
 	public String id;
 	public int x0,y0,x1,y1;
 	public boolean acceptInputs;

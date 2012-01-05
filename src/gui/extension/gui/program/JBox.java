@@ -20,14 +20,14 @@ import javax.swing.JPopupMenu;
 
 import extension.ExtensionApp;
 import extension.gui.JRoboticaFrame;
+import extension.gui.elements.ActuatorBox;
+import extension.gui.elements.Box;
+import extension.gui.elements.FunctionBox;
+import extension.gui.elements.SensorBox;
 import extension.model.BehaviorProgram;
 import extension.model.Panel;
 import extension.model.Panel.Handles;
 import extension.model.Panel.Location;
-import extension.model.elements.ActuatorBox;
-import extension.model.elements.Box;
-import extension.model.elements.FunctionBox;
-import extension.model.elements.SensorBox;
 import extension.utils.IconBank;
 
 

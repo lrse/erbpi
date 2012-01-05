@@ -20,7 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
-import extension.model.elements.FunctionBox;
+import extension.gui.elements.FunctionBox;
 
 /*
  * Aplicación que permite configurar los parametros de las funciones

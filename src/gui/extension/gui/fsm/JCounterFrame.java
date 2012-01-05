@@ -4,9 +4,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 
+import extension.gui.elements.Counter;
+import extension.gui.elements.VirtualElement;
 import extension.model.FSM;
-import extension.model.elements.Counter;
-import extension.model.elements.VirtualElement;
 
 class JCounterFrame extends JVirtualElementsFrame
 {

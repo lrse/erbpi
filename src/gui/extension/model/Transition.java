@@ -7,17 +7,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import extension.model.fsm.transitions.Action;
-import extension.model.fsm.transitions.Condition;
+import extension.gui.fsm.transitions.Action;
+import extension.gui.fsm.transitions.Condition;
 
 public class Transition
 {
-	public BehaviorNode source;
-	public BehaviorNode destination;
+	private BehaviorNode source;
+	private BehaviorNode destination;
 	public Set<Condition> conditions = new HashSet<Condition>();
 	public Set<Action> actions = new HashSet<Action>();
 	
-	public Transition(BehaviorNode source, BehaviorNode destination)
+	Transition(BehaviorNode source, BehaviorNode destination)
 	{
 		if ( source==null )
 			System.err.println("Source is null.");
@@ -29,7 +29,7 @@ public class Transition
 		this.destination = destination;
 	}
 	
-	public Transition( Element domSpec, FSM fsm )
+	Transition( Element domSpec, FSM fsm )
 	{
 		this.source = fsm.getBehaviorById(domSpec.getAttribute("id_origen"));
 		this.destination = fsm.getBehaviorById(domSpec.getAttribute("id_destino"));
@@ -72,12 +72,12 @@ public class Transition
 	public BehaviorNode getSrc() { return source; }
 	public BehaviorNode getDst() { return destination; }
 	
-	public boolean hasSrc(Program program) { return program==this.source.getProgram(); }
-	public boolean hasDst(Program program) { return program==this.destination.getProgram(); }
+	boolean hasSrc(Program program) { return program==this.source.getProgram(); }
+	boolean hasDst(Program program) { return program==this.destination.getProgram(); }
 	
-	public boolean connects(BehaviorNode src,BehaviorNode dst) { return src==this.source && dst==this.destination; }
+	boolean connects(BehaviorNode src,BehaviorNode dst) { return src==this.source && dst==this.destination; }
 	
-	public Element serialize(Document document)
+	Element serialize(Document document)
 	{
 		// serialize transition
 		

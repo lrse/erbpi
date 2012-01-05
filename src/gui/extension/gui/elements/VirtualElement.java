@@ -1,4 +1,4 @@
-package extension.model.elements;
+package extension.gui.elements;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -8,13 +8,13 @@ public abstract class VirtualElement
 	private String id;
 	private String description;
 
-	public VirtualElement(String id)
+	VirtualElement(String id)
 	{
 		this.id=id;
 		this.description=id;
 	}
 	
-	public VirtualElement(Element domSpec)
+	VirtualElement(Element domSpec)
 	{
 		this.id = domSpec.getAttribute("id");
 		this.description = domSpec.getAttribute("descripcion");
@@ -56,7 +56,7 @@ public abstract class VirtualElement
 		return Integer.parseInt(split[split.length-1]);
 	}
 	
-	public void serialize(Element element)
+	void serialize(Element element)
 	{
 		element.setAttribute("id", getId());
 		element.setAttribute("descripcion", getDescription());

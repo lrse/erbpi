@@ -4,9 +4,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 
+import extension.gui.elements.Timer;
+import extension.gui.elements.VirtualElement;
 import extension.model.FSM;
-import extension.model.elements.Timer;
-import extension.model.elements.VirtualElement;
 
 class JTimerFrame extends JVirtualElementsFrame
 {

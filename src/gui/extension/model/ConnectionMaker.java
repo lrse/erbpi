@@ -3,7 +3,7 @@ package extension.model;
 import java.awt.Point;
 import java.util.HashSet;
 
-import extension.model.elements.Box;
+import extension.gui.elements.Box;
 
 public class ConnectionMaker implements Cloneable{
 	private BehaviorProgram program;
@@ -16,7 +16,7 @@ public class ConnectionMaker implements Cloneable{
 	
 	private HashSet<ConnectionMakerListener> listeners = new HashSet<ConnectionMakerListener>();
 	
-	public ConnectionMaker(BehaviorProgram program) {
+	ConnectionMaker(BehaviorProgram program) {
 		this.program = program;
 	}
 	

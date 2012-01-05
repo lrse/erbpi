@@ -13,8 +13,6 @@ import javax.swing.JPanel;
 
 import extension.gui.layouts.VerticalFlowLayout;
 import extension.model.Transition;
-import extension.model.fsm.transitions.Action;
-import extension.model.fsm.transitions.Condition;
 
 class JEditTransitionFrame extends JFrame implements ActionListener
 {

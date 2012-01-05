@@ -1,4 +1,4 @@
-package extension.model.elements;
+package extension.gui.elements;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

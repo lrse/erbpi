@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import extension.gui.elements.VirtualElement;
 import extension.model.FSM;
-import extension.model.elements.VirtualElement;
 import extension.utils.IconBank;
 
 abstract class JVirtualElementsFrame extends JFrame implements ActionListener

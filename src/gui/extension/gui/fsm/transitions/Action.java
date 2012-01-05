@@ -1,4 +1,4 @@
-package extension.model.fsm.transitions;
+package extension.gui.fsm.transitions;
 
 import java.util.Vector;
 
@@ -6,10 +6,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import extension.gui.JRoboticaFrame;
+import extension.gui.elements.Counter;
+import extension.gui.elements.Timer;
+import extension.gui.elements.VirtualElement;
 import extension.model.FSM;
-import extension.model.elements.Counter;
-import extension.model.elements.Timer;
-import extension.model.elements.VirtualElement;
 
 public class Action
 {

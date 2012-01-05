@@ -1,6 +1,6 @@
 package extension.model.program;
 
-import extension.model.elements.Box;
+import extension.gui.elements.Box;
 
 public interface PanelListener
 {

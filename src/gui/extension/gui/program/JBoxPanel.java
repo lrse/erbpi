@@ -10,10 +10,10 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import extension.gui.elements.Box;
+import extension.gui.elements.Box.BoxType;
 import extension.gui.layouts.BoxColumnLayout;
 import extension.model.Panel;
-import extension.model.elements.Box;
-import extension.model.elements.Box.BoxType;
 import extension.model.program.PanelListener;
 
 public class JBoxPanel extends JPanel implements PanelListener

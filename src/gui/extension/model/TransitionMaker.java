@@ -16,7 +16,7 @@ public class TransitionMaker {
 	private boolean draggingInProgress = false;
 	private boolean validDestinyExists = false;
 	
-	public TransitionMaker(FSM fsm) {
+	TransitionMaker(FSM fsm) {
 		this.fsm = fsm;
 	}
 	

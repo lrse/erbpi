@@ -19,11 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
+import extension.gui.elements.Box;
 import extension.model.BehaviorProgram;
 import extension.model.ConnectionMaker;
 import extension.model.ConnectionMakerListener;
 import extension.model.ProgramListener;
-import extension.model.elements.Box;
 
 class JConnection extends JComponent implements ActionListener
 {

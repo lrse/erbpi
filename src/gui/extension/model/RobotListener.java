@@ -1,6 +1,6 @@
 package extension.model;
 
-import extension.model.elements.SensorBox;
+import extension.gui.elements.SensorBox;
 
 public interface RobotListener {
 	void sensorFocused(SensorBox sensor, boolean b);

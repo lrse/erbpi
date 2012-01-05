@@ -13,8 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import extension.model.elements.VirtualElement;
-import extension.model.fsm.transitions.Condition;
+import extension.gui.elements.VirtualElement;
 import extension.utils.IconBank;
 
 class JConditionRow extends JPanel implements ActionListener
