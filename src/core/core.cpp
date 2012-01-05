@@ -23,7 +23,10 @@ int main(int argc, char** argv)
 	
 	ifstream xml_file(argv[1]);
 	if (xml_file.bad())
-		cerr << "No se pudo leer el XML" << endl; return 1;
+	{
+		cerr << "No se pudo leer el XML" << endl;
+		return 1;
+	}
 	std::stringstream buffer;
 	buffer << xml_file.rdbuf();
   	
