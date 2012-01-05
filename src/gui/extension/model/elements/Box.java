@@ -19,19 +19,19 @@ public abstract class Box extends VirtualElement implements Cloneable
 	public enum BoxType {SENSOR, FUNCTION, ACTUATOR};
 	
 	private Location location;
-	protected JComponent ui = null;
+	private JComponent ui = null;
 	
 	// TODO esta variable se va cuando las conecciones
 	// se serializen en el programa y no como entrada de cada box
 	protected BehaviorProgram program;
 	
-	public Box( String id, BehaviorProgram program, Location location ){
+	Box( String id, BehaviorProgram program, Location location ){
 		super(id);
 		this.location = location;
 		this.program = program;
 	}
 	
-	public Box( Element domSpec, BehaviorProgram program )
+	Box( Element domSpec, BehaviorProgram program )
 	{
 		super(domSpec);
 		

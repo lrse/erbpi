@@ -1,101 +1,8 @@
 #include "parser.h"
 
-XercesDOMParser *miParser; 
-/* estructuras auxiliares */
-
-typedef pair<ElementoConEntradas*,string> EntradaAuxiliar;
-
-typedef struct
-{
-	Transicion* transicion;
-	string id_timer;
-} ActualizacionTimerAuxiliar;
-
-typedef struct
-{
-	Transicion* transicion;
-	string id_contador;
-	Accion_t accion;
-} ActualizacionContadorAuxiliar;
-
-/* variable global auxiliar */
-
-set<EntradaAuxiliar> entradas_auxiliares;
-set<ActualizacionTimerAuxiliar*> actualizaciones_timer_auxiliares;
-set<ActualizacionContadorAuxiliar*> actualizaciones_contador_auxiliares;
+XercesDOMParser *miParser;
 
 /* funciones auxiliares */
-
-/* int ordenar_topologicamente(vector<TuplaAuxiliar>& vectorAux)
- * 
- * TODO
- * 
-{
-	// el orden totoplogico lo devuelve por "vectorAux"
-	// esta función detecta ciclos y devuelve error si los hay...
-	// Ojo con abusar de esta función, creo que pertenece a O(n^3)...
-	// esta función asume que no hay elementos repetidos por IDs...
-	int flag, i, j, k, gradoEntradaCero;
-	int n = vectorAux.size(); // calculo el tamaño
-	vector<TuplaAuxiliar> vectorAux2; // será una copia "ordenada topologicamente" de vectorAux
-	int matrizAdyacenciaAux[n][n]; // creo la matrizAdyacenciaAux para el sorting
-	int incluidos[n]; // vector auxiliar para el sorting, son lo que ya fueron ordenados...
-
-	// inicializo "incluidos" todo en "false" y la matriz de adyacencia toda en "-1"
-	for (i = 0; i < n; i++){
-		incluidos[i] = false;
-		for (j = 0; j < n; j++)
-			matrizAdyacenciaAux[i][j] = -1;
-	}
-	
-	// configuro la "matrizAdyacenciaAux", si (matrizAdyacenciaAux[i][j] == 1) => (i-->j), o sea, "i" es antecesor de "j".
-	// o sea, hay que recorrerla por columnas para que ande bien...
-	for (i = 0; i < n; i++)
-		for (j = 0; j < ((vectorAux[i]).entradas).size(); j++)
-			for (k = 0; k < n; k++)
-				if ( vectorAux[i].entradas[j] == vectorAux[k].id ){
-					matrizAdyacenciaAux[k][i] = 1;
-					break;
-				}
-	
-	// ahora empiezo el sorting...
-	vectorAux2.clear(); // limpio el vectorAux2 antes de empezar el soroting...
-	flag = true;
-	while ( flag ){
-		for (i = 0; i < n; i++){ // recorro por columnas
-			if ( !incluidos[i] ){ // el "i" todavía no está incluido
-				gradoEntradaCero = true;
-				for (j = 0; j < n; j++){ // busco si "i" tiene predecesores
-					if ( matrizAdyacenciaAux[j][i] > 0 ){ // el "i" todavía tiene predecesores
-						gradoEntradaCero = false;
-						break;
-					}
-				}
-				if ( gradoEntradaCero ){ // "i" no tiene predecesores => lo agrego al resultado
-					incluidos[i] = true; // incluyo a "i"
-					vectorAux2.push_back( vectorAux[i] ); // pongo el nuevo item en el vectorAux2 al final
-					for (j = 0; j < n; j++){ // corrijo la matriz de adyacencia porque "saqué" a "i", todos los que tenían a "i" como predecesor ya no lo tienen...
-						matrizAdyacenciaAux[i][j] = -1;
-						matrizAdyacenciaAux[j][i] = -1;
-					}
-					break;
-				}
-			}
-		}
-		if ( i == n ){
-			if ( !gradoEntradaCero )
-				return 1; // OJO: EL GRAFO TIENE CICLOS !!!  => retornar ERROR !!
-			else flag = false;
-		}
-	}
-	
-	// ordeno vectorAux para devolver con el orden del sorting en vectorAux2
-	vectorAux.clear();
-	for (i = 0; i < n; i++)
-		vectorAux.push_back( vectorAux2[i] );
-	return 0;
-}
-*/
 
 bool inicializar_xerces()
 {
@@ -143,16 +50,16 @@ char* leer_atributo(DOMElement* xmlElemento, const char* atributo)
 // llama a la funcion cargar_elemento
 // para cada tag <nombre_elemento_hijo> hijo de xml_padre
 template <class T>
-void CargarElementosDeListaAObjeto
+void CargarHijosAObjeto
 (
 	T* objeto,
 	DOMElement* xml_padre,
 	const char* nombre_elemento_hijo,
-	void (*cargar_elemento)(T*,DOMElement*)
+	void (*cargar_elemento)(T*,DOMElement*,Conducta*),
+	Conducta* conducta
 )
 {
-	// obtengo la lista de hijos de actuadores
-	DOMNodeList* xml_lista_de_hijos = xml_padre->getChildNodes();
+	DOMNodeList* xml_lista_de_hijos = xml_padre->getElementsByTagName(XMLString::transcode(nombre_elemento_hijo));
 	
 	// Si tiene algun hijo
 	if ( xml_lista_de_hijos )
@@ -171,12 +78,7 @@ void CargarElementosDeListaAObjeto
 			{
 				// lo casteo
 				DOMElement* xml_hijo = dynamic_cast< xercesc::DOMElement* >( xml_nodo );
-				
-				// me fijo si el tag es nombre_elemento
-				if ( XMLString::equals(xml_hijo->getTagName(), XMLString::transcode(nombre_elemento_hijo)))
-					cargar_elemento(objeto,xml_hijo);
-				else
-					cout << "hay un tag <" << XMLString::transcode(xml_hijo->getTagName()) << "> donde solo se esperaban tags <" << nombre_elemento_hijo << ">" << endl;
+				cargar_elemento(objeto,xml_hijo,conducta);
 			}
 		}
 	}
@@ -217,7 +119,7 @@ Accion_t Accion(const char* nombre)
 // =====================================================================
 // funciones que cargan los distintos elementos
 
-void CargarCondicion(Transicion* transicion, DOMElement* xml_condicion)
+void CargarCondicion(Transicion* transicion, DOMElement* xml_condicion, Conducta* conducta)
 {
 	string id_elemento = string(leer_atributo(xml_condicion,"id_elemento"));
 	Comparacion_t comparacion = Comparacion(leer_atributo(xml_condicion,"comparacion"));
@@ -227,62 +129,84 @@ void CargarCondicion(Transicion* transicion, DOMElement* xml_condicion)
 	transicion->AgregarCondicion(condicion);
 }
 
-void CargarActualizacion(Transicion* transicion, DOMElement* xml_actualizacion)
+void CargarActualizacionDeTimer(Transicion* transicion, DOMElement* xml_actualizacion, Conducta* conducta)
+{
+	string id_timer = leer_atributo(xml_actualizacion,"id_timer");
+	Timer* timer = (Timer*) conducta->ElementoPorId(id_timer);
+	
+	if (timer)
+		transicion->AgregarActualizacion(new ActualizacionDeTimer(timer));
+	else
+		cerr << "Error: no existe un timer con id " << id_timer << " para usar en actualizacion" << endl;
+}
+
+void CargarActualizacionDeContador(Transicion* transicion, DOMElement* xml_actualizacion, Conducta* conducta)
+{
+	string id_contador = leer_atributo(xml_actualizacion,"id_contador");
+	Accion_t accion = Accion(leer_atributo(xml_actualizacion,"accion"));
+	Contador* contador = (Contador*) conducta->ElementoPorId(id_contador);
+		
+	if (contador)
+		transicion->AgregarActualizacion(new ActualizacionDeContador(contador,accion));
+	else
+		cerr << "Error: no existe un contador con id " << id_contador << " para usar en actualizador" << endl;
+}
+
+void CargarActualizacion(Transicion* transicion, DOMElement* xml_actualizacion, Conducta* conducta)
 {
 	const char* tipo = leer_atributo(xml_actualizacion,"tipo");
 	
 	if ( !strcmp(tipo,"timer") )
-	{
-		ActualizacionTimerAuxiliar* actualizacion = new ActualizacionTimerAuxiliar();
-		actualizacion->transicion = transicion;
-		actualizacion->id_timer = leer_atributo(xml_actualizacion,"id_timer");
-		
-		actualizaciones_timer_auxiliares.insert( actualizacion );
-		
-	}
+		CargarActualizacionDeTimer(transicion,xml_actualizacion,conducta);
 	else if ( !strcmp(tipo,"contador") )
-	{
-		ActualizacionContadorAuxiliar* actualizacion = new ActualizacionContadorAuxiliar();
-		actualizacion->transicion = transicion;
-		actualizacion->id_contador = leer_atributo(xml_actualizacion,"id_contador");;
-		actualizacion->accion = Accion(leer_atributo(xml_actualizacion,"accion"));
-		
-		actualizaciones_contador_auxiliares.insert( actualizacion );
-	}
+		CargarActualizacionDeContador(transicion,xml_actualizacion,conducta);
 	else
 		cout << "OJO! actualizacion con tipo desconocido '" << tipo << "'" << endl;
 }
 
-void CargarCondiciones(Transicion* transicion, DOMElement* xml_condiciones)
+void CargarCondiciones(Transicion* transicion, DOMElement* xml_condiciones, Conducta* conducta)
 {
-	CargarElementosDeListaAObjeto<Transicion>(transicion,xml_condiciones,"condicion",&CargarCondicion);
+	CargarHijosAObjeto<Transicion>(transicion,xml_condiciones,"condicion",&CargarCondicion,conducta);
 }
 
-void CargarActualizaciones(Transicion* transicion, DOMElement* xml_actualizaciones)
+void CargarActualizaciones(Transicion* transicion, DOMElement* xml_actualizaciones, Conducta* conducta)
 {
-	CargarElementosDeListaAObjeto<Transicion>(transicion,xml_actualizaciones,"actualizacion",&CargarActualizacion);
+	CargarHijosAObjeto<Transicion>(transicion,xml_actualizaciones,"actualizacion",&CargarActualizacion,conducta);
 }
 
-void CargarEntrada(ElementoConEntradas* elemento, DOMElement* xml_entrada)
+void CargarConeccion(Comportamiento* comportamiento, DOMElement* xml_coneccion, Conducta* conducta)
 {
-	EntradaAuxiliar entrada(elemento,leer_atributo(xml_entrada,"id"));
-	entradas_auxiliares.insert( entrada );
+	string id_elemento_origen = string(leer_atributo(xml_coneccion,"src"));
+	string id_elemento_destino = string(leer_atributo(xml_coneccion,"dst"));
+	
+	Elemento* elemento_origen = conducta->ElementoPorId(id_elemento_origen);
+	ElementoConEntradas* elemento_destino = (ElementoConEntradas*) conducta->ElementoPorId(id_elemento_destino);
+			
+	if (!elemento_origen)
+		cerr << "Error: no existe un elemento con id " << id_elemento_origen << " para usar como entrada" << endl;
+	if (!elemento_destino)
+		cerr << "Error: no existe un elemento con id " << id_elemento_destino << " para usar como entrada" << endl;
+	else
+		elemento_destino->AgregarEntrada(elemento_origen);
 }
 
-void CargarEntradas(ElementoConEntradas* elemento, DOMElement* xml_entradas)
+void CargarConecciones(Comportamiento* comportamiento, DOMElement* xml_conecciones, Conducta* conducta)
 {
-	CargarElementosDeListaAObjeto<ElementoConEntradas>(elemento,xml_entradas,"entrada",&CargarEntrada);
+	CargarHijosAObjeto(comportamiento,xml_conecciones,"coneccion",&CargarConeccion,conducta);
 }
 
-void CargarActuador(Comportamiento* comportamiento, DOMElement* xml_actuador)
+void CargarActuador(Comportamiento* comportamiento, DOMElement* xml_actuador, Conducta* conducta)
 {
 	Actuador* actuador = new Actuador(leer_atributo(xml_actuador,"id"));
 	comportamiento->AgregarActuador(actuador);
-	
-	CargarElementosDeListaAObjeto<ElementoConEntradas>(actuador,xml_actuador,"entradas",&CargarEntradas);
 }
 
-void CargarCaja(Comportamiento* comportamiento, DOMElement* xml_caja)
+void CargarActuadores(Comportamiento* comportamiento, DOMElement* xml_actuadores, Conducta* conducta)
+{
+	CargarHijosAObjeto(comportamiento,xml_actuadores,"actuador",&CargarActuador,conducta);
+}
+
+void CargarCaja(Comportamiento* comportamiento, DOMElement* xml_caja, Conducta* conducta)
 {
 	Punto punto_min;
 	Punto punto_max;
@@ -304,103 +228,84 @@ void CargarCaja(Comportamiento* comportamiento, DOMElement* xml_caja)
 	
 	Caja* caja = new Caja(leer_atributo(xml_caja,"id"),punto_min,punto_max);
 	comportamiento->AgregarCaja(caja);
-	
-	DOMNodeList* xml_lista_entradas = xml_caja->getElementsByTagName(XMLString::transcode("entradas"));
-	if ( xml_lista_entradas && xml_lista_entradas->getLength() > 0 )
-	{
-		DOMElement* xml_entradas = dynamic_cast< xercesc::DOMElement* >( xml_lista_entradas->item(0) );
-		CargarElementosDeListaAObjeto<ElementoConEntradas>(caja,xml_entradas,"entrada",&CargarEntrada);
-	}
 }
 
-void CargarSensor(Conducta* conducta, DOMElement* xml_sensor)
+void CargarCajas(Comportamiento* comportamiento, DOMElement* xml_cajas, Conducta* conducta)
+{
+	CargarHijosAObjeto(comportamiento,xml_cajas,"caja",&CargarCaja,conducta);
+}
+
+void CargarSensor(Conducta* conducta, DOMElement* xml_sensor, Conducta* _conducta)
 {
 	Sensor* sensor = new Sensor(leer_atributo(xml_sensor,"id"));
 	conducta->AgregarSensor(sensor);
 }
 
-void CargarTransicion(Comportamiento* comportamiento, DOMElement* xml_transicion)
+void CargarSensores(Conducta* conducta, DOMElement* xml_sensores, Conducta* _conducta)
+{
+	CargarHijosAObjeto(conducta,xml_sensores,"sensor",&CargarSensor,conducta);
+}
+
+void CargarTransicion(Conducta* conducta, DOMElement* xml_transicion, Conducta* _conducta)
 {
 	// Todo: construyendo string de char*. asegurarse que esto funcione
 	string id = string(leer_atributo(xml_transicion,"id"));
+	string id_comportamiento_origen = string(leer_atributo(xml_transicion,"id_origen"));
 	string id_comportamiento_destino = string(leer_atributo(xml_transicion,"id_destino"));
 	
 	Transicion* transicion = new Transicion(id,id_comportamiento_destino);
-	comportamiento->AgregarTransicion(transicion);
 	
-	DOMNodeList* xml_lista_actualizaciones = xml_transicion->getElementsByTagName(XMLString::transcode("actualizaciones"));
-	if ( xml_lista_actualizaciones && xml_lista_actualizaciones->getLength() > 0 )
-	{
-		DOMElement* xml_actualizaciones = dynamic_cast< xercesc::DOMElement* >( xml_lista_actualizaciones->item(0) );
-		CargarElementosDeListaAObjeto<Transicion>(transicion,xml_actualizaciones,"actualizacion",&CargarActualizacion);
-	}
+	CargarHijosAObjeto<Transicion>(transicion,xml_transicion,"actualizaciones",&CargarActualizaciones,conducta);
+	CargarHijosAObjeto<Transicion>(transicion,xml_transicion,"condiciones",&CargarCondiciones,conducta);
 	
-	DOMNodeList* xml_lista_condiciones = xml_transicion->getElementsByTagName(XMLString::transcode("condiciones"));
-	if ( xml_lista_condiciones && xml_lista_condiciones->getLength() > 0 )
-	{
-		DOMElement* xml_condiciones = dynamic_cast< xercesc::DOMElement* >( xml_lista_condiciones->item(0) );
-		CargarElementosDeListaAObjeto<Transicion>(transicion,xml_condiciones,"condicion",&CargarCondicion);
-	}
+	Comportamiento* comportamiento_origen = conducta->ComportamientoPorId(id_comportamiento_origen);
 	
+	if (comportamiento_origen)
+		comportamiento_origen->AgregarTransicion(transicion);
+	else
+		cout << "Error: Se trato de agregar una transicion a un comportamiento origen inexistente id: " << id_comportamiento_origen << endl;
 }
 
-void CargarTimer(Conducta* conducta, DOMElement* xml_timer)
+void CargarTransiciones(Conducta* conducta, DOMElement* xml_lista_transicion, Conducta* _conducta)
+{
+	CargarHijosAObjeto(conducta,xml_lista_transicion,"transicion",&CargarTransicion,conducta);
+}
+
+void CargarTimer(Conducta* conducta, DOMElement* xml_timer, Conducta* _conducta)
 {
 	Timer* timer = new Timer(leer_atributo(xml_timer,"id"));
 	conducta->AgregarTimer(timer);
 }
 
-void CargarContador(Conducta* conducta, DOMElement* xml_contador)
+void CargarTimers(Conducta* conducta, DOMElement* xml_timers, Conducta* _conducta)
+{
+	CargarHijosAObjeto(conducta,xml_timers,"timer",&CargarTimer,conducta);
+}
+
+void CargarContador(Conducta* conducta, DOMElement* xml_contador, Conducta* _conducta)
 {
 	Contador* contador = new Contador(leer_atributo(xml_contador,"id"));
 	conducta->AgregarContador(contador);
 }
 
-void CargarComportamiento(Conducta* conducta, DOMElement* xml_comportamiento)
+void CargarContadores(Conducta* conducta, DOMElement* xml_contadores, Conducta* _conducta)
+{
+	CargarHijosAObjeto(conducta,xml_contadores,"contador",&CargarContador,conducta);
+}
+
+void CargarComportamiento(Conducta* conducta, DOMElement* xml_comportamiento, Conducta* _conducta)
 {
 	Comportamiento* comportamiento = new Comportamiento(leer_atributo(xml_comportamiento,"id"));
 	conducta->AgregarComportamiento(comportamiento);
 	
-	// obtengo la lista de hijos de actuadores
-	DOMNodeList* xml_lista_hijos_comportamiento = xml_comportamiento->getChildNodes();
+	// cargar actuadores
+	CargarHijosAObjeto(comportamiento,xml_comportamiento,"actuadores",&CargarActuadores,conducta);
 	
-	// Si tiene algun hijo
-	if ( xml_lista_hijos_comportamiento )
-	{
-		// Obtengo la cantidad de hijos de <comportamiento>
-		const  XMLSize_t cantidad_xml_hijos_comportamiento = xml_lista_hijos_comportamiento->getLength();
-
-		// Itero sobre los hijos de <timers>
-		for( XMLSize_t i = 0; i < cantidad_xml_hijos_comportamiento; i++ )
-		{
-			// agarro el i-esimo nodo
-			DOMNode* xml_nodo = xml_lista_hijos_comportamiento->item(i);
-			
-			// Si el nodo es un elemento (podria ser texto, y nidea que mas...)
-			if( xml_nodo->getNodeType() && xml_nodo->getNodeType() == DOMNode::ELEMENT_NODE )
-			{
-				// lo casteo
-				DOMElement* xml_hijo_de_comportamiento = dynamic_cast< xercesc::DOMElement* >( xml_nodo );
-				
-				// me fijo si el tag es <actuadores>
-				if ( XMLString::equals(xml_hijo_de_comportamiento->getTagName(), XMLString::transcode("actuadores")))
-					CargarElementosDeListaAObjeto<Comportamiento>(comportamiento,xml_hijo_de_comportamiento,"actuador",&CargarActuador);
-				
-				// me fijo si el tag es <cajas>
-				else if ( XMLString::equals(xml_hijo_de_comportamiento->getTagName(), XMLString::transcode("cajas")))
-					CargarElementosDeListaAObjeto<Comportamiento>(comportamiento,xml_hijo_de_comportamiento,"caja",&CargarCaja);
-				
-				// me fijo si el tag es <transiciones>
-				else if ( XMLString::equals(xml_hijo_de_comportamiento->getTagName(), XMLString::transcode("transiciones")))
-					CargarElementosDeListaAObjeto<Comportamiento>(comportamiento,xml_hijo_de_comportamiento,"transicion",&CargarTransicion);
-				
-				else
-				{
-					cout << "hay un tag no esperado <" << XMLString::transcode(xml_hijo_de_comportamiento->getTagName()) << "> como hijo de un comportamiento" << endl;
-				}
-			}
-		}
-	}
+	// cargar funciones
+	CargarHijosAObjeto(comportamiento,xml_comportamiento,"cajas",&CargarCajas,conducta);
+	
+	// cargar conecciones (requiere sensores/actuadores/funciones cargadas)
+	CargarHijosAObjeto(comportamiento,xml_comportamiento,"conecciones",&CargarConecciones,conducta);
 }
 
 // =====================================================================
@@ -417,20 +322,15 @@ void deinit_parser(void) {
 
 int parsear(string xml_string, Conducta* conducta)
 {
-	// limpio los vectores auxiliares
-	
-	entradas_auxiliares.clear();
-	actualizaciones_timer_auxiliares.clear();
-	actualizaciones_contador_auxiliares.clear();
-
-	try{
+	try
+	{
 		cout << "parsing: " << xml_string << endl; 
- 	  MemBufInputSource src((const XMLByte*)xml_string.c_str(), xml_string.length(), "dummy", false); 
- 	  cout << "tengo buffer de " << xml_string.length() << " bytes" << endl; 
- 	  miParser->parse(src);
+		MemBufInputSource src((const XMLByte*)xml_string.c_str(), xml_string.length(), "dummy", false); 
+		cout << "tengo buffer de " << xml_string.length() << " bytes" << endl; 
+		miParser->parse(src);
   
 		// Obtener el "DOCUMENTO" XML // no es necesario liberar este puntero...
-    cout << "parseado, get document" << endl; 
+		cout << "parseado, get document" << endl; 
 		DOMDocument* xmlDoc = miParser->getDocument();
 		
 		// Obtener "Elemento RAIZ" del XML
@@ -450,122 +350,35 @@ int parsear(string xml_string, Conducta* conducta)
 			cout << "Error: El archivo XML está vacío !!!" << endl;
 			return 1;
 		}
-     cout << "paso tests, empiezo a leer" << endl; 
-
-		// Obtengo los "Nodos HIJOS de la Raiz"
-		DOMNodeList* xml_hijos_conducta = xml_conducta->getChildNodes();
-		// chequeo que no esté vacío
-		if( !xml_hijos_conducta )
-		{
-			cout << "Error: El archivo XML está vacío !!!" << endl;
-			return 1;
-		}
 		
-		// Obtengo la "CANTIDAD de Hijos" // debería ser CANTIDAD == 3 (sensores, cajas y actuadores)
-		const  XMLSize_t cantidad_xml_hijos_conducta = xml_hijos_conducta->getLength();
-
-		// Itero sobre los hijos de <conducta> y cargo cada uno
-		for( XMLSize_t i = 0; i < cantidad_xml_hijos_conducta; i++ )
-		{
-			// agarro el i-esimo nodo
-			DOMNode* xml_nodo = xml_hijos_conducta->item(i);
-			
-			// Si el nodo es un elemento (podria ser texto, y nidea que mas...)
-			if( xml_nodo->getNodeType() && xml_nodo->getNodeType() == DOMNode::ELEMENT_NODE )
-			{
-				// lo casteo
-				DOMElement* xml_hijo_de_conducta = dynamic_cast< xercesc::DOMElement* >( xml_nodo );
-				
-				// me fijo si el tag es <sensores>
-				if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("sensores")))
-					CargarElementosDeListaAObjeto<Conducta>(conducta,xml_hijo_de_conducta,"sensor",&CargarSensor);
-				
-				// me fijo si el tag es <timers>
-				else if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("timers")))
-					CargarElementosDeListaAObjeto<Conducta>(conducta,xml_hijo_de_conducta,"timer",&CargarTimer);
-				
-				// me fijo si el tag es <contadores>
-				else if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("contadores")))
-					CargarElementosDeListaAObjeto<Conducta>(conducta,xml_hijo_de_conducta,"contador",&CargarContador);
-				
-				// me fijo si es un <comportamiento>
-				else if ( XMLString::equals(xml_hijo_de_conducta->getTagName(), XMLString::transcode("comportamiento")))
-					CargarComportamiento(conducta,xml_hijo_de_conducta);
-				
-				else
-					cout << "hay un tag no esperado <" << XMLString::transcode(xml_hijo_de_conducta->getTagName()) << "> como hijo de una conducta" << endl;
-			}
-		}
+		cout << "paso tests, empiezo a leer" << endl; 
+		
+		// cargar sensores
+		CargarHijosAObjeto(conducta,xml_conducta,"sensores",&CargarSensores,conducta);
+		
+		// cargar timers
+		CargarHijosAObjeto(conducta,xml_conducta,"timers",&CargarTimers,conducta);
+		
+		// cargar contadores
+		CargarHijosAObjeto(conducta,xml_conducta,"contadores",&CargarContadores,conducta);
+		
+		// cargar comportamientos (requiere sensores cargados)
+		CargarHijosAObjeto(conducta,xml_conducta,"comportamiento",&CargarComportamiento,conducta);
+		
+		// cargar transiciones (requiere contadores/timers/comportamientos cargados)
+		CargarHijosAObjeto(conducta,xml_conducta,"transiciones",&CargarTransiciones,conducta);
 		
 		const char* inicial = leer_atributo(xml_conducta,"id_comportamiento_inicial");
 		conducta->SetComportamientoInicial(inicial);
-		
-		// Ya estan cargados todos los elementos
-		// asi que puedo definir las entradas
-		forall(it,entradas_auxiliares)
-		{
-			Elemento* entrada = conducta->ElementoPorId(it->second);
-			
-			// corroboro que exista una entrada con ese id
-			if (!entrada)
-			{
-				cout << "Error: no existe un elemento con id " << it->second << " para usar como entrada" << endl;
-				return 1;
-			}
-			
-			(it->first)->AgregarEntrada(entrada);
-		}
-		
-		forall(it,actualizaciones_timer_auxiliares)
-		{
-			
-			Timer* timer = (Timer*) (conducta->ElementoPorId((*it)->id_timer));
-			
-			// corroboro que exista una timer con ese id
-			if (!timer)
-			{
-				cout << "Error: no existe un timer con id " << (*it)->id_timer << " para usar en actualizador" << endl;
-				return 1;
-			}
-			
-			(*it)->transicion->AgregarActualizacion(new ActualizacionDeTimer(timer));
-		}
-		
-		forall(it,actualizaciones_contador_auxiliares)
-		{
-			
-			Contador* contador = (Contador*) (conducta->ElementoPorId((*it)->id_contador));
-			
-			// corroboro que exista un contador con ese id
-			if (!contador)
-			{
-				cout << "Error: no existe un contador con id " << (*it)->id_contador << " para usar en actualizador" << endl;
-				return 1;
-			}
-			
-			(*it)->transicion->AgregarActualizacion(new ActualizacionDeContador(contador,(*it)->accion));
-		}
-		
-	} // end try
-	
-	catch (const XMLException& toCatch){
+	}
+	catch (const XMLException& toCatch)
+	{
 		char* message = XMLString::transcode( toCatch.getMessage() );
 		cout << "Error: algún error parseando el archivo: " << message << endl;
 		XMLString::release( &message );
 		return 1;
 	}
 
-// 2. CHEQUEAR QUE NO HAYA IDs REPETIDOS
-
-// 4. TOPOLOGICAL SORTING CON CHEQUEO DE CICLOS
-/*
- * TODO
- * 
-	if ( ordenar_topologicamente(vectorAuxiliar) ){
-		cout << "Error: el grafo tiene ciclos !!!" << endl;
-		return 1;
-	}
-*/
 	return 0;
 }
 

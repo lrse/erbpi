@@ -36,17 +36,6 @@ public class ActuatorBox extends Box
 		Element actuatorElement = document.createElement("actuador");
 		actuatorElement.setAttribute("id", getId());
 		
-		Element entriesElement = document.createElement("entradas");
-		actuatorElement.appendChild( entriesElement );
-		
-		for ( Box input : program.getConnectionsTo(this) )
-		{
-			Element entryElement = document.createElement("entrada");
-			entriesElement.appendChild( entryElement );
-			
-			entryElement.setAttribute("id", input.getId());
-		}
-		
 		return actuatorElement;
 	}
 

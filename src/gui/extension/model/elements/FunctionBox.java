@@ -78,21 +78,6 @@ public class FunctionBox extends Box
 		pointElement_1.setAttribute("y", String.valueOf(this.y1));
 		functionElement.appendChild( pointElement_1 );
 		
-		// serialize entries
-		// TODO estas conecciones deberian estar definidas afuera
-		// y el core deberia meterlas despues en sus cajas si quiere optimizar
-		
-		Element entriesElement = document.createElement("entradas");
-		functionElement.appendChild( entriesElement );
-		
-		for ( Box input : program.getConnectionsTo(this) )
-		{
-			Element entryElement = document.createElement("entrada");
-			entriesElement.appendChild( entryElement );
-			
-			entryElement.setAttribute("id", input.getId());
-		}
-		
 		return functionElement;
 	}
 

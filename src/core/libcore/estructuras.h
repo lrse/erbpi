@@ -292,7 +292,7 @@
 			void AgregarCaja(Caja* caja);
 			void AgregarTransicion(Transicion* transicion);
 			
-			/* Para chequear que los sensores y actuadores
+			/* Para chequear que los actuadores
 			 * coincidan con los de la RAL */
 			bool ChequearActuadores(const ListaDeActuadores& actuadores) const;
 			
@@ -353,6 +353,12 @@
 			 * Sirve al resolver las entradas de cajas y actuadores
 			 * cuando se construyen en el parser */
 			Elemento* ElementoPorId(const string& id_elemento);
+			
+			/* devuelve el comportamiento correspondiente al id
+			 * o NULL en el caso que no exista.
+			 * Sirve al resolver las transiciones
+			 * cuando se construyen en el parser */
+			Comportamiento* ComportamientoPorId(const string& id_comportamiento);
 			
 		private:
 			

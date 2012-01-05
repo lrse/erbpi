@@ -197,16 +197,6 @@ public class BehaviorProgram extends Program implements Cloneable
 			if ( box instanceof ActuatorBox )
 				actuatorsElement.appendChild( box.serialize(document) );
 		
-		// serialize transitions
-		// TODO estas deberian estar afuera de los comportamientos.
-		// Estan asi por performance del core, asi que habria que tocarlo un poquito
-		
-		Element transitionsElement = document.createElement("transiciones");
-		behaviorElement.appendChild(transitionsElement);
-		
-		for( Transition transition : JRoboticaFrame.getInstance().getFSM().getTransitionsFrom(this) )
-			transitionsElement.appendChild( transition.serialize(document) );
-		
 		// serialize box connections
 		
 		Element connectionsElement = document.createElement("conecciones");

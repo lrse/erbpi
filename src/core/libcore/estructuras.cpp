@@ -321,16 +321,27 @@ Elemento* Conducta::ElementoPorId(const string& id_elemento)
 	return NULL;
 }
 
-void Conducta::CambiarAComportamiento( const string& id )
+Comportamiento* Conducta::ComportamientoPorId(const string& id_comportamiento)
 {
 	map<string,Comportamiento*>::iterator it;
-	it = _comportamientos.find(id);
+	it = _comportamientos.find(id_comportamiento);
+	
 	if (it==_comportamientos.end())
+		return NULL;
+	
+	return it->second;
+}
+
+void Conducta::CambiarAComportamiento( const string& id )
+{
+	Comportamiento* proximo_comportamiento = ComportamientoPorId(id);
+	
+	if (!proximo_comportamiento)
 		Error("Conducta::CambiarAComportamiento - No existe un comportamiento con este id");
 	
 	cout << "cambiando a comportamiento " << id << endl;
 	
-	comportamiento_actual = it->second;
+	comportamiento_actual = proximo_comportamiento;
 }
 
 void Conducta::ActualizarSensores(const EstadoDeSensores& estado_sensores)
@@ -436,7 +447,10 @@ bool Comportamiento::ChequearActuadores(const ListaDeActuadores& actuadores) con
 				break;
 			}
 		if (!checked)
+		{
+			cout << "Error: El actuador " << (it->second)->Id() << " no esta definido en la RAL." << endl;
 			return false;
+		}
 	}
 	return true;
 }
