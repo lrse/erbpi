@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<conducta id_comportamiento_inicial="comportamiento.0">
+<conducta id_comportamiento_inicial="comportamiento.2">
     <robot id="exabotsim"/>
     <sensores>
         <sensor id="telemetro.315"/>
@@ -11,20 +11,18 @@
     </sensores>
     <timers/>
     <contadores/>
-    <comportamiento descripcion="comportamiento.0" id="comportamiento.0"
-        pos_x="100" pos_y="100"/>
-    <comportamiento descripcion="girar" id="comportamiento.1"
-        pos_x="218" pos_y="220">
+    <comportamiento descripcion="azanzar" id="comportamiento.3"
+        pos_x="213" pos_y="232">
         <cajas>
-            <caja id="function.0" location="left" templateId="energia">
+            <caja id="function.2" location="left" templateId="energia">
                 <esquema id="energia"/>
                 <punto x="0" y="50"/>
                 <punto x="100" y="50"/>
             </caja>
-            <caja id="function.1" location="right" templateId="energia">
+            <caja id="function.3" location="right" templateId="energia">
                 <esquema id="energia"/>
-                <punto x="0" y="-52"/>
-                <punto x="100" y="-52"/>
+                <punto x="0" y="50"/>
+                <punto x="100" y="50"/>
             </caja>
         </cajas>
         <actuadores>
@@ -32,12 +30,14 @@
             <actuador id="motor.derecha"/>
         </actuadores>
         <conecciones>
-            <coneccion dst="motor.derecha" src="function.1"/>
-            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.derecha" src="function.3"/>
         </conecciones>
     </comportamiento>
+    <comportamiento descripcion="comportamiento.2" id="comportamiento.2"
+        pos_x="100" pos_y="100"/>
     <transiciones>
-        <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
+        <transicion id_destino="comportamiento.3" id_origen="comportamiento.2">
             <condiciones/>
             <actualizaciones/>
         </transicion>
