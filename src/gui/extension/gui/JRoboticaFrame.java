@@ -262,8 +262,8 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		}
 		else {
 			// copio la ral adecuada
-			File fileSrc = new File("ral/" + getRobot().getRal());
-			File fileDst = new File("core/libRAL.so");
+			File fileSrc = new File("../core/" + getRobot().getRal());
+			File fileDst = new File("../core/libRAL.so");
 			
 			try {
 				FileUtils.copyFile(fileSrc, fileDst);
