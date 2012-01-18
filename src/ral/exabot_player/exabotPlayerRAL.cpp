@@ -13,11 +13,11 @@ using namespace std;
 #define SENSOR_03                       "telemetro.315"
 #define SENSOR_04                       "telemetro.270"
 #define SENSOR_05                       "telemetro.180"
-#define SENSOR_06                       "sonar.0"
-#define SENSOR_07                       "linea.0"
-#define SENSOR_08                       "linea.1"
-#define SENSOR_09                       "contacto.0"
-#define SENSOR_10                       "contacto.1"
+//#define SENSOR_06                       "sonar.0"
+//#define SENSOR_07                       "linea.0"
+//#define SENSOR_08                       "linea.1"
+//#define SENSOR_09                       "contacto.0"
+//#define SENSOR_10                       "contacto.1"
 
 #define MAX_TELEMETER_RANGE 0.8
 #define MIN_TELEMETER_RANGE 0.06
@@ -48,18 +48,19 @@ void finalizarRAL(void) {
 }
 
 std::vector<std::string> getListaSensores(){
-  std::vector<std::string> sensors(16);
+  //std::vector<std::string> sensors(10);
+  std::vector<std::string> sensors(6);
   sensors[0] = SENSOR_00;
   sensors[1] = SENSOR_01;
   sensors[2] = SENSOR_02;
   sensors[3] = SENSOR_03;
   sensors[4] = SENSOR_04;
   sensors[5] = SENSOR_05;
-  sensors[6] = SENSOR_06;
-  sensors[7] = SENSOR_07;
-  sensors[8] = SENSOR_08;
-  sensors[9] = SENSOR_09;
-  sensors[10] = SENSOR_10;
+  //sensors[6] = SENSOR_06;
+  //sensors[7] = SENSOR_07;
+  //sensors[8] = SENSOR_08;
+  //sensors[9] = SENSOR_09;
+  //sensors[10] = SENSOR_10;
   return sensors;
 }
 
@@ -73,7 +74,8 @@ std::vector<std::string> getListaActuadores(void) {
 std::vector<Item> getEstadoSensores(void) {  
   Item item;
   std::vector<std::string> sensorsName = getListaSensores();
-  std::vector<Item> sensors(10);
+  //std::vector<Item> sensors(10);
+  std::vector<Item> sensors(6);
   
   // telemetros
   boost::mutex::scoped_lock(player_client->mMutex);
@@ -86,21 +88,21 @@ std::vector<Item> getEstadoSensores(void) {
     cout << "laser(" << i << "): " << ranger_proxy->GetRange(i) << " valor: " << sensors[i].valor << " a: " << a << endl;
   }
 
-  // sonar
-  sensors[6].id = sensorsName[6];
-  sensors[6].valor = 0; // TODO: terminar
+  //// sonar
+  //sensors[6].id = sensorsName[6];
+  //sensors[6].valor = 0; // TODO: terminar
   
-  // bumpers
-  for (size_t i = 6; i < 8; i++) {
-    sensors[i].id = sensorsName[i];
-    sensors[i].valor = 0; // TODO: terminar
-  }
+  //// bumpers
+  //for (size_t i = 6; i < 8; i++) {
+    //sensors[i].id = sensorsName[i];
+    //sensors[i].valor = 0; // TODO: terminar
+  //}
   
-  // LF
-  for (size_t i = 8; i < 10; i++) {
-    sensors[i].id = sensorsName[i];
-    sensors[i].valor = 0; // TODO: terminar
-  }
+  //// LF
+  //for (size_t i = 8; i < 10; i++) {
+    //sensors[i].id = sensorsName[i];
+    //sensors[i].valor = 0; // TODO: terminar
+  //}
   
   return sensors;
 }
