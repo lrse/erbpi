@@ -1,6 +1,6 @@
 <?xml version='1.0' ?>
-<robot id="exabot-player" nombre="ExaBotPlayer">
-  <imagen id='esquema' href='robots/robot_exabot.png' />
+<robot id="exabotsim" nombre="ExaBotSim">
+  <imagen id='esquema' href='robots/robot_exabotsim.png' />
   <ral href='libexabotPlayerRAL.so'/>
   <sensores>
     <!--  ******* TELEMETROS ******* -->
@@ -34,35 +34,8 @@
 	<linea x0='0.34' y0='0.48' x1='0.34' y1='0.55' width='5' color='255,0,0'/>
       </mapaimagen>
     </sensor>
-    <!--  ******* SONAR ******* -->
-    <sensor id='sonar.0' tipo='sonar' default='true'>
-      <mapaimagen imagen='esquema'>
-	<linea x0='0.49' y0='0.36' x1='0.55' y1='0.36' width='5' color='255,0,0'/>
-      </mapaimagen>
-    </sensor>
-    <!--  ******* CONTACTO ******* -->
-    <sensor id='contacto.0' tipo='contacto' default='true'>
-      <mapaimagen imagen='esquema'>
-	<linea x0='0.33' y0='0.11' x1='0.36' y1='0.11' width='3' color='255,0,0'/>
-      </mapaimagen>
-    </sensor>
-    <sensor id='contacto.1' tipo='contacto' default='true'>
-      <mapaimagen imagen='esquema'>
-	<linea x0='0.68' y0='0.11' x1='0.70' y1='0.11' width='3' color='255,0,0'/>
-      </mapaimagen>
-    </sensor>
-    <!--  ******* LINEA ******* -->
-    <sensor id='linea.0' tipo='linea' default='true'>
-      <mapaimagen imagen='esquema'>
-        <circulo x='0.45' y='0.15' radio='1' color='255,0,0'/>
-      </mapaimagen>
-    </sensor>
-    <sensor id='linea.1' tipo='linea' default='true'>
-      <mapaimagen imagen='esquema'>
-        <circulo x='0.55' y='0.15' radio='1' color='255,0,0'/>
-      </mapaimagen>
-    </sensor>
   </sensores>
+  <!--  ******* ACTUADORES ******* -->
   <actuadores>
     <actuador id='motor.izquierda' nombre='rueda izq' tipo='rueda' default='true'>
       <mapaimagen imagen='esquema'>

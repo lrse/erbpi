@@ -198,7 +198,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 	private void newProgram()
 	{
 		JFrame frame = new JFrame();
-		String list[] = {"exabot","khepera","yaks"};
+		String list[] = {"exabot","exabotsim","khepera","yaks"};
 		String robotId = (String)JOptionPane.showInputDialog(frame,"Elija el Robot con el que trabajará...","Seleccionar Robot",JOptionPane.QUESTION_MESSAGE,null,list,null);
 		
 		if ( robotId != null )
