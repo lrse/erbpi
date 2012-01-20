@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.22">
+    <robot id="exabotsim"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+    </sensores>
+    <timers>
+        <timer descripcion="timer.4" id="timer.4"/>
+    </timers>
+    <contadores/>
+    <comportamiento descripcion="comportamiento.24"
+        id="comportamiento.24" pos_x="443" pos_y="207">
+        <cajas>
+            <caja id="function.28" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-50"/>
+                <punto x="100" y="-50"/>
+            </caja>
+            <caja id="function.29" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="50"/>
+                <punto x="100" y="50"/>
+            </caja>
+        </cajas>
+        <actuadores>
+            <actuador id="motor.izquierda"/>
+            <actuador id="motor.derecha"/>
+        </actuadores>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.28"/>
+            <coneccion dst="motor.derecha" src="function.29"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="comportamiento.23"
+        id="comportamiento.23" pos_x="178" pos_y="216">
+        <cajas>
+            <caja id="function.26" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="50"/>
+                <punto x="100" y="50"/>
+            </caja>
+            <caja id="function.27" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-50"/>
+                <punto x="100" y="-50"/>
+            </caja>
+        </cajas>
+        <actuadores>
+            <actuador id="motor.izquierda"/>
+            <actuador id="motor.derecha"/>
+        </actuadores>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.26"/>
+            <coneccion dst="motor.derecha" src="function.27"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="comportamiento.22"
+        id="comportamiento.22" pos_x="100" pos_y="100"/>
+    <transiciones>
+        <transicion id_destino="comportamiento.23" id_origen="comportamiento.22">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.24" id_origen="comportamiento.23">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.4" umbral="1"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.4" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+        <transicion id_destino="comportamiento.23" id_origen="comportamiento.24">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.4" umbral="1"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.4" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+    </transiciones>
+</conducta>
