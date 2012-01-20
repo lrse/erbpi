@@ -109,7 +109,7 @@ std::vector<Item> getEstadoSensores(void) {
 
 unsigned long getFrecuenciaTrabajo(){
  // return 10000; // TODO
- return 1000; // TODO
+ return 100000; // TODO
 }
 
 void setEstadoActuadores(std::vector<Item> actuators){
