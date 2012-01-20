@@ -50,7 +50,6 @@ bool core_start(const string& xml_filename)
 
 	cout << "chequeando sensores y actuadores" << endl;
 	// 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
-	// 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
 	if ( !conducta->ChequearSensores(getListaSensores()) )
 		Error("Error: Algo no anduvo bien en la definicion de sensores !!!\n");
 	if ( !conducta->ChequearActuadores(getListaActuadores()) )

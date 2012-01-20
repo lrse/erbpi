@@ -270,7 +270,7 @@ bool Conducta::ChequearSensores(const ListaDeSensores& sensores) const
 	{
 		bool checked = false;
 		forall(it_ral,sensores){
-cout << (it->second)->Id() << " = " << (*it_ral) << " ?" << endl;
+			//cout << (it->second)->Id() << " = " << (*it_ral) << " ?" << endl;
 			if ( (it->second)->Id() == (*it_ral) )
 			{
 				checked = true;
@@ -330,7 +330,7 @@ Comportamiento* Conducta::ComportamientoPorId(const string& id_comportamiento)
 	
 	if (it==_comportamientos.end())
 		return NULL;
-	
+
 	return it->second;
 }
 
@@ -442,12 +442,14 @@ bool Comportamiento::ChequearActuadores(const ListaDeActuadores& actuadores) con
 	forall(it,_actuadores)
 	{
 		bool checked = false;
-		forall(it_ral,actuadores)
+		forall(it_ral,actuadores){
+			//cout << (it->second)->Id() << " = " << (*it_ral) << " ?" << endl;
 			if ( (it->second)->Id() == (*it_ral) )
 			{
 				checked=true;
 				break;
 			}
+		}
 		if (!checked)
 		{
 			cout << "Error: El actuador " << (it->second)->Id() << " no esta definido en la RAL." << endl;
