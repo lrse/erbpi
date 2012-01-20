@@ -269,13 +269,14 @@ bool Conducta::ChequearSensores(const ListaDeSensores& sensores) const
 	forall(it,_sensores)
 	{
 		bool checked = false;
-		forall(it_ral,sensores)
+		forall(it_ral,sensores){
 cout << (it->second)->Id() << " = " << (*it_ral) << " ?" << endl;
 			if ( (it->second)->Id() == (*it_ral) )
 			{
 				checked = true;
 				break;
 			}
+		}
 		
 		if (!checked)
 			return false;
