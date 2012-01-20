@@ -85,7 +85,7 @@ std::vector<Item> getEstadoSensores(void) {
     double a = ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE;
     sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 255);
     sensors[i].valor = 255 - min(sensors[i].valor, 255);
-    cout << "laser(" << i << "): " << ranger_proxy->GetRange(i) << " valor: " << sensors[i].valor << " a: " << a << endl;
+    //cout << "laser(" << i << "): " << ranger_proxy->GetRange(i) << " valor: " << sensors[i].valor << " a: " << a << endl;
   }
 
   //// sonar
@@ -108,7 +108,8 @@ std::vector<Item> getEstadoSensores(void) {
 }
 
 unsigned long getFrecuenciaTrabajo(){
-  return 10000; // TODO
+ // return 10000; // TODO
+ return 1000; // TODO
 }
 
 void setEstadoActuadores(std::vector<Item> actuators){
@@ -120,7 +121,7 @@ void setEstadoActuadores(std::vector<Item> actuators){
   double xspeed = (ML + MR) * 0.5;
   double aspeed = (ML - MR) / wheelbase;
 
-  cout << "act0/1: " << actuators[0].valor << "/" << actuators[1].valor << " ML/MR: " << ML << "/" << MR << " xspeed/aspeed: " << xspeed << "/" << aspeed << endl;
+  //cout << "act0/1: " << actuators[0].valor << "/" << actuators[1].valor << " ML/MR: " << ML << "/" << MR << " xspeed/aspeed: " << xspeed << "/" << aspeed << endl;
   position_proxy->SetSpeed(xspeed, aspeed);
 }
 }
