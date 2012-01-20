@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<comportamiento descripcion="atras" id="comportamiento.4">
+<comportamiento descripcion="atras" id="comportamiento.2">
     <cajas>
-        <caja id="function.3" location="left" templateId="energia">
+        <caja id="function.2" location="left" templateId="energia">
             <esquema id="energia"/>
-            <punto x="0" y="-34"/>
-            <punto x="100" y="-34"/>
-            <entradas/>
+            <punto x="0" y="-20"/>
+            <punto x="100" y="-20"/>
         </caja>
-        <caja id="function.4" location="right" templateId="energia">
+        <caja id="function.3" location="right" templateId="energia">
             <esquema id="energia"/>
-            <punto x="0" y="-26"/>
-            <punto x="100" y="-26"/>
-            <entradas/>
+            <punto x="0" y="-20"/>
+            <punto x="100" y="-20"/>
         </caja>
     </cajas>
     <actuadores>
-        <actuador id="motor.izquierda">
-            <entradas>
-                <entrada id="function.3"/>
-            </entradas>
-        </actuador>
-        <actuador id="motor.derecha">
-            <entradas>
-                <entrada id="function.4"/>
-            </entradas>
-        </actuador>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
     </actuadores>
-    <transiciones/>
     <conecciones>
-        <coneccion dst="motor.izquierda" src="function.3"/>
-        <coneccion dst="motor.derecha" src="function.4"/>
+        <coneccion dst="motor.derecha" src="function.3"/>
+        <coneccion dst="motor.izquierda" src="function.2"/>
     </conecciones>
 </comportamiento>

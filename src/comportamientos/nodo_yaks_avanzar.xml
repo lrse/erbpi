@@ -3,30 +3,19 @@
     <cajas>
         <caja id="function.0" location="left" templateId="energia">
             <esquema id="energia"/>
-            <punto x="0" y="40"/>
-            <punto x="100" y="40"/>
-            <entradas/>
+            <punto x="0" y="20"/>
+            <punto x="100" y="20"/>
         </caja>
         <caja id="function.1" location="right" templateId="energia">
             <esquema id="energia"/>
-            <punto x="0" y="50"/>
-            <punto x="100" y="50"/>
-            <entradas/>
+            <punto x="0" y="20"/>
+            <punto x="100" y="20"/>
         </caja>
     </cajas>
     <actuadores>
-        <actuador id="motor.izquierda">
-            <entradas>
-                <entrada id="function.0"/>
-            </entradas>
-        </actuador>
-        <actuador id="motor.derecha">
-            <entradas>
-                <entrada id="function.1"/>
-            </entradas>
-        </actuador>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
     </actuadores>
-    <transiciones/>
     <conecciones>
         <coneccion dst="motor.izquierda" src="function.0"/>
         <coneccion dst="motor.derecha" src="function.1"/>

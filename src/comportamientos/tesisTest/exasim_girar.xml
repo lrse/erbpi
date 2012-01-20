@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabotsim"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+    </sensores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="girar" id="comportamiento.1"
+        pos_x="275" pos_y="210">
+        <cajas>
+            <caja id="function.0" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="50"/>
+                <punto x="100" y="50"/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-50"/>
+                <punto x="100" y="-50"/>
+            </caja>
+        </cajas>
+        <actuadores>
+            <actuador id="motor.izquierda"/>
+            <actuador id="motor.derecha"/>
+        </actuadores>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="motor.derecha" src="function.1"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="comportamiento.0" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
