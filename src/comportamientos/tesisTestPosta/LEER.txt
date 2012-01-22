@@ -9,7 +9,7 @@ YAKS - TEST COMPORTAMIENTOS:
 		$ ~/Documents/svn/tpsh/sources/erbpi/trunk/linux/ExtensionRobotica/bin/yaks$ ./yaks_ejecutar.sh
 		$ ./core_exe ../comportamientos/tesisTestPosta/yaks-01_avanzar.xml log.txt
 		
-	comportamientos:
+	comportamientos: 
 
 		- yaks-01_avanzar
 			- nodo-yaks-01_avanzar
