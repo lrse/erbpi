@@ -1,0 +1,70 @@
+
+YAKS - TEST COMPORTAMIENTOS:
+----------------------------
+
+	>> los hago con GUI y los testeo de consola (porque no está andando bien la VentanaEjecucionGUI)
+
+	>> se pueden ejecutar, por ejemplo, como:
+		$ bin/core$ cp libyaksRAL.so libRAL.so
+		$ ~/Documents/svn/tpsh/sources/erbpi/trunk/linux/ExtensionRobotica/bin/yaks$ ./yaks_ejecutar.sh
+		$ ./core_exe ../comportamientos/tesisTestPosta/yaks-01_avanzar.xml log.txt
+		
+	comportamientos:
+
+		- yaks-01_avanzar
+			- nodo-yaks-01_avanzar
+
+			>> OK!
+
+		- yaks-02_retroceder
+			- nodo-yaks-02_retroceder
+
+			>> OK!
+
+		- yaks-02_retroceder2
+			- nodo-yaks-02_retroceder2
+
+			>> OK!
+
+		- yaks-03_girar_izquierda
+			- nodo-yaks-03_girar_izquierda
+
+			>> OK!
+
+		- yaks-03_girar_derecha.xml
+			- nodo-yaks-03_girar_derecha
+
+		- yaks-04_avanzar_evitando_obstaculos-01-02-03_a.xml y yaks-04_avanzar_evitando_obstaculos-01-02-03_a-2.xml
+
+			>> OK!
+			>> pero sólo salta a "retroceder" cuando veo con los 2 sensores de adelante, porque son un "AND" entre ambos...
+			>> pruebo agregar además a esa condición los 2 sensores de ambos constados (40 y 320: yaks-04_avanzar_evitando_obstaculos-01-02-03_b)
+
+		- yaks-04_avanzar_evitando_obstaculos-01-02-03_b
+
+			>> OK!
+			>> le agrego a esa condición los 2 sensores de ambos constados de ambos constados (40 y 320)
+			>> anda, pero como las condiciones están unidas con "AND", sólo salta cuando se cumplen las 4 al mismo tiempo, y eso no sucede casi nunca!
+			>> solución, tengo que hacer condicones "OR-simuladas" replicando comportamientos y condiciones! (yaks-05_avanzar_evitando_obstaculos-01-02-03-04-05)
+
+		- yaks-05_avanzar_evitando_obstaculos-01-02-03-04-05.xml
+
+			>> ERROR !!!!!
+			>> con el "OR-simulado" parece una solución...
+			>> pero no andan los comportamientos 4-5! Por ejemplo, cuando pasa a retroceder2 y girar-der en el Yaks no se mueve! Parece ser algo del Core o el Parseo? El Core cambia los comportamientos (lo muestra en consola...) pero el Yaks se queda quietito! La consola muestra:
+					cambiando a comportamiento comportamiento.0
+					chequeando sensores y actuadores
+					cambiando a comportamiento comportamiento.1
+					cambiando a comportamiento comportamiento.4 	(> pero no retrocede!)
+					cambiando a comportamiento comportamiento.5 	(> pero no gira!)
+					cambiando a comportamiento comportamiento.1
+			>> tiene que ver con el número de comportamientos/funciones, o con "Or-simulado"? Si les saco los nodos 2-3 y sólo dejo los 1-4-5 empieza a andar! (yaks-06_avanzar_evitando_obstaculos-01-04-05)
+
+		- yaks-06_avanzar_evitando_obstaculos-01-04-05.xml
+
+			>> OK!
+			>> así anda! el error del yaks-05_avanzar_evitando_obstaculos-01-02-03-04-05 tiene que ver con el número de comportamientos/funciones o con "Or-simulado"...
+
+
+
+
