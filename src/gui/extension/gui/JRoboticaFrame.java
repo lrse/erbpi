@@ -262,7 +262,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		}
 		else {
 			// copio la ral adecuada
-			File fileSrc = new File("../core/" + getRobot().getRal());
+			File fileSrc = new File("../ral/" + getRobot().getRal());
 			File fileDst = new File("../core/libRAL.so");
 			
 			try {
@@ -522,56 +522,3 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 
 	public static JRoboticaFrame getInstance() { return instance; }
 }
-
-/*
-class JExecutionDialog extends JInlineDialog {
-
-	public JExecutionDialog() {
-		rootPane.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-
-		JLabel label = new JLabel("Ejecutando...");
-		label.setForeground(Color.WHITE);
-		Font curFont = label.getFont();
-		label.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 16));
-
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 3;
-		c.ipady = 10;
-		rootPane.add(label, c);
-
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		rootPane.add(createButton("play", "ejecutar"), c);
-		c.gridx = 1;
-		rootPane.add(createButton("pause", "pausa"), c);
-		c.gridx = 2;
-		rootPane.add(createButton("exit", "salir"), c);
-
-		rootPane.setBounds(30, 100, 200, 100);
-		glassPane.removeMouseListener(glassPane.getMouseListeners()[0]);
-	}
-
-	private JButton createButton(String command, String iconName) {
-		JButton button = new JButton();
-		button.setBorder(null);
-		button.setActionCommand(command);
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-			}
-		});
-		button.setBackground(Color.GRAY);
-		button.setForeground(Color.WHITE);
-		button.setVerticalAlignment(JButton.CENTER);
-
-		String s = String.format("images/menu_%s.png", iconName);
-		URL url = ExtensionApp.class.getResource(s);
-		ImageIcon icon = IconBank.getByUrl(url, 40, 40);
-		button.setIcon(icon);
-		return button;
-	}
-}
-*/

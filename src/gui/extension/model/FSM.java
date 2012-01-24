@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import extension.gui.elements.ActuatorBox;
 import extension.gui.elements.Counter;
 import extension.gui.elements.SensorBox;
 import extension.gui.elements.Timer;
@@ -281,6 +282,15 @@ public class FSM
 		
 		for ( SensorBox sensor : robot.getSensors() )
 			sensorsElement.appendChild( sensor.serialize(document) );
+		
+		// serialize actuators
+		// TODO: porque hace falta? esta info no deberia ser parte del robot?
+		
+		Element actuatorsElement = document.createElement("actuadores");
+		fsmElement.appendChild( actuatorsElement );
+		
+		for ( ActuatorBox actuator : robot.getActuators() )
+			actuatorsElement.appendChild( actuator.serialize(document) );
 		
 		// serialize timers
 		

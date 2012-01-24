@@ -185,18 +185,6 @@ public class BehaviorProgram extends Program implements Cloneable
 			if ( box instanceof FunctionBox )
 				boxesElement.appendChild( box.serialize(document) );
 		
-		// serialize actuator boxes
-		// TODO dejar que los exporte la FSM, son del robot.
-		// Hay que cambiar como lo espera el core porque los pone aca por performance
-		// TODO mover a la clase hija porque el codigo esta copiado
-		
-		Element actuatorsElement = document.createElement("actuadores");
-		behaviorElement.appendChild(actuatorsElement);
-		
-		for ( Box box : boxes )
-			if ( box instanceof ActuatorBox )
-				actuatorsElement.appendChild( box.serialize(document) );
-		
 		// serialize box connections
 		
 		Element connectionsElement = document.createElement("conecciones");

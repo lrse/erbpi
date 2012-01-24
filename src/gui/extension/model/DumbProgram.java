@@ -8,11 +8,15 @@ class DumbProgram extends Program
 	public DumbProgram()
 	{
 		super();
+		
+		setDescription("nodo inicial");
 	}
 	
 	DumbProgram( Element domSpec, Robot robot )
 	{
 		super(domSpec,robot);
+		
+		setDescription("nodo inicial");
 	}
 
 	@Override
