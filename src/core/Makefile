@@ -21,4 +21,4 @@ core-exa: libcore/libcore.a core-exa.o
 
 clean:
 	$(MAKE) -C libcore clean
-	rm -f core core-exa *.o
+	rm -f core core_exe core-exa *.o *.so
