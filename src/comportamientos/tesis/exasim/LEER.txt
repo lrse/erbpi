@@ -1,0 +1,15 @@
+
+TIMERS
+------
+
+	> ejecutando Core desde consola anda bárbaro...
+
+	> ejecutando de GUI, los timers andan como por 10 veces, lo que es 1 segundo tarda como diez, y a veces no anda (no salta por la condición). Se puede probar con: exasim-01_bailar-03-04.xml
+
+COMPORTAMIENTOS
+---------------
+
+	> no me están andando bien, no logro...
+
+	> probar cosas más complejos en los nodos!
+

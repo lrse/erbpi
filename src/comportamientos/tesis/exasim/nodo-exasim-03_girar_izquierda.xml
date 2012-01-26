@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<comportamiento descripcion="girar-izq" id="comportamiento.8">
+    <cajas>
+        <caja id="function.10" location="left" templateId="energia">
+            <esquema id="energia"/>
+            <punto x="0" y="-50"/>
+            <punto x="100" y="-50"/>
+        </caja>
+        <caja id="function.11" location="right" templateId="energia">
+            <esquema id="energia"/>
+            <punto x="0" y="50"/>
+            <punto x="100" y="50"/>
+        </caja>
+    </cajas>
+    <conecciones>
+        <coneccion dst="motor.izquierda" src="function.10"/>
+        <coneccion dst="motor.derecha" src="function.11"/>
+    </conecciones>
+</comportamiento>
