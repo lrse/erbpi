@@ -27,5 +27,11 @@ define exabot_telemeters ranger
   sensor (pose [0 0 0 -45])
   sensor (pose [0 0 0 -90])
   sensor (pose [0 0 0 180])
+  # sensor (pose [0 0 0 -90])
+  # sensor (pose [0 0 0 -45])
+  # sensor (pose [0 0 0 0])
+  # sensor (pose [0 0 0 45])
+  # sensor (pose [0 0 0 90])
+  # sensor (pose [0 0 0 180])
 )
 
