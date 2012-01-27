@@ -6,6 +6,9 @@ TIMERS
 
 	> ejecutando de GUI, los timers andan como por 10 veces, lo que es 1 segundo tarda como diez, y a veces no anda (no salta por la condición). Se puede probar con: exasim-01_bailar-03-04.xml
 
+	> lo mismo pasa con los saltos con condiciones por sensores, se puede probar con: exasim-02c_atras-adelante-02-01.xml
+
+
 COMPORTAMIENTOS
 ---------------
 
