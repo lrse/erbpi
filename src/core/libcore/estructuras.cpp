@@ -103,10 +103,18 @@ int Caja::Ejecutar()
     acumulador = 0;
     forall(it,_entradas)
         acumulador += (*it)->GetValor();
-    
-    // acá calculo la función formada por los puntos
-    // la ecuación de la recta es Y = a*(X - x0) + y0
-    // donde a = (y1 - y0)/(x1 - x0)
+
+		// ESTO ESTÁ MAL!!!
+		// están al revés los indices 0 y 1
+		// además cuando hace la cuenta de "a" termina haciendo un "-" en lugar de un "/"!!!
+				// acá calculo la función formada por los puntos
+				// la ecuación de la recta es Y = a*(X - x0) + y0
+				// donde a = (y1 - y0)/(x1 - x0)
+
+	// ESTO ESTÁ BIEN...
+	// acá calculo la función formada por los puntos
+	// la ecuación de la recta es Y = a*(X - x0) + y0
+	// donde a = (y0 - y1)/(x0 - x1)
     
     if ( acumulador <= _punto_min.x )
         resultado = _punto_min.y;
@@ -116,13 +124,16 @@ int Caja::Ejecutar()
     
     else
     {
-        float a = ( (float)_punto_max.y - (float)_punto_min.y ) - ( (float)_punto_max.x - (float)_punto_min.x );
-        resultado = (int)( a*( (float)acumulador - (float)_punto_min.x ) + (float)_punto_min.y );
+        //float a = ( (float)_punto_max.y - (float)_punto_min.y ) - ( (float)_punto_max.x - (float)_punto_min.x );
+        //resultado = (int)( a*( (float)acumulador - (float)_punto_min.x ) + (float)_punto_min.y );
+		float a = ( (float)_punto_min.y - (float)_punto_max.y ) / ( (float)_punto_min.x - (float)_punto_max.x );
+		resultado = (int)( a*( (float)acumulador - (float)_punto_min.x ) + (float)_punto_min.y );
+        
     }
     
     _valor = resultado;
     
-//    cout << "nuevo valor de " << GetDescripcion() << ": " << GetValor() << endl;
+	// cout << "nuevo valor de " << GetDescripcion() << ": " << GetValor() << endl;
     
     return _valor;
 }
