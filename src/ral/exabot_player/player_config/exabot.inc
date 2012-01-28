@@ -27,11 +27,11 @@ define exabot_telemeters ranger
   sensor (pose [0 0 0 -45])
   sensor (pose [0 0 0 -90])
   sensor (pose [0 0 0 180])
-  # sensor (pose [0 0 0 -90])
-  # sensor (pose [0 0 0 -45])
-  # sensor (pose [0 0 0 0])
-  # sensor (pose [0 0 0 45])
-  # sensor (pose [0 0 0 90])
-  # sensor (pose [0 0 0 180])
+		# acá el  90 es en RAL SENSOR_00 - "telemetro.270"
+		# acá el  45 es en RAL SENSOR_01 - "telemetro.315"
+		# acá el   0 es en RAL SENSOR_02 - "telemetro.0"
+		# acá el -45 es en RAL SENSOR_03 - "telemetro.45"
+		# acá el -90 es en RAL SENSOR_04 - "telemetro.90"
+		# acá el 180 es en RAL SENSOR_05 - "telemetro.180"
 )
 
