@@ -1,0 +1,11 @@
+hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
+
+	- evitar obstáculos (yaks, exaSim, exaBot) todos con telemetros
+
+	- seguir línea (exaBot) con lineFollowings
+
+	- seguir pared (exaBot) con sonar
+
+hacer cosas más complejas:
+
+	- ver mail!
