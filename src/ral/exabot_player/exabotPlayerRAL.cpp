@@ -19,8 +19,10 @@ using namespace std;
 //#define SENSOR_09                       "contacto.0"
 //#define SENSOR_10                       "contacto.1"
 
-#define MAX_TELEMETER_RANGE 0.8
-#define MIN_TELEMETER_RANGE 0.06
+//#define MAX_TELEMETER_RANGE 0.8		// esto es que ve hasta 80cm   (0%), más de eso no ve nada...
+//#define MIN_TELEMETER_RANGE 0.06	// esto es que ve desde  6cm (100%), menos distancia que esto sigue siendo 100%...
+#define MAX_TELEMETER_RANGE 0.50	// esto es que ve hasta 50cm   (0%), es 35 cm desde del chasis, porque es 35 + 16, más de eso no ve nada...
+#define MIN_TELEMETER_RANGE 0.16	// esto es que ve desde 16cm (100%) es CERO cm desde del chasis, porque es CERO + 16, es más o menos lo que está en el Exabot... menos distancia que esto sigue siendo 100%...
 
 /* variables */
 PlayerCc::PlayerClient* player_client;
@@ -80,17 +82,25 @@ std::vector<Item> getEstadoSensores(void) {
   // telemetros
   boost::mutex::scoped_lock(player_client->mMutex);
   
-  cout << "sensores = [ ";
+  //cout << "sensores = [ ";
   for (size_t i = 0; i < 6; i++) {
     sensors[i].id = sensorsName[i];
-    //double a = ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE;
-    //sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 255);
-    sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 100)-10;
-    //sensors[i].valor = 255 - min(sensors[i].valor, 255);
-    sensors[i].valor = 100 - min(sensors[i].valor, 100);
-    cout << ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE << "-" << sensors[i].valor << " : " ;
+			//double a = ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE;
+			//sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 255);
+			//sensors[i].valor = 255 - min(sensors[i].valor, 255);
+			//sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 100);
+			//sensors[i].valor = 100 - min(sensors[i].valor, 100);
+	if( ranger_proxy->GetRange(i) > MAX_TELEMETER_RANGE )
+		sensors[i].valor = 0; // ve > MAX_TELEMETER_RANGE cm => 0%
+	else if( ranger_proxy->GetRange(i) < MIN_TELEMETER_RANGE )
+			sensors[i].valor = 100; // ve < MIN_TELEMETER_RANGE cm => 100%
+		 else{
+			    sensors[i].valor = (int)round((max(0.0, ranger_proxy->GetRange(i) - MIN_TELEMETER_RANGE) / (MAX_TELEMETER_RANGE - MIN_TELEMETER_RANGE)) * 100);
+				sensors[i].valor = 100 - min(sensors[i].valor, 100);
+	 }
+	//cout << ranger_proxy->GetRange(i) << "-" << sensors[i].valor << " : " ;
   }
-  cout << " ]" << endl;
+  //cout << " ]" << endl;
 
   //// sonar
   //sensors[6].id = sensorsName[6];
@@ -120,8 +130,8 @@ void setEstadoActuadores(std::vector<Item> actuators){
   double ML = ((double)actuators[0].valor / 200.0) * 0.5;
   double MR = ((double)actuators[1].valor / 200.0) * 0.5;
 
-  cout << "ERBPI [L:R] = [" << actuators[0].valor << ":" << actuators[1].valor << "]" << endl;  
-  cout << "P/S   [L:R] = [" << ML << ":" << MR << "]" << endl;  
+  //cout << "ERBPI [L:R] = [" << actuators[0].valor << ":" << actuators[1].valor << "]" << endl;  
+  //cout << "P/S   [L:R] = [" << ML << ":" << MR << "]" << endl;  
 
   const double wheelbase = 0.183;
   

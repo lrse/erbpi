@@ -15,7 +15,8 @@ define exabot_telemeter sensor
   color_rgba [ 0 0 0 0.2 ]
   samples 1
   fov 5
-  range [0.06 0.8]
+  # range [0.06 0.8]
+  range [0 0.8]
 )
 
 define exabot_telemeters ranger
