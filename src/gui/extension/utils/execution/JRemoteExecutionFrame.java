@@ -34,11 +34,12 @@ public class JRemoteExecutionFrame extends JConsole
 		}
 		catch (ConnectException e)
 		{
-			JOptionPane.showMessageDialog(this, "Connection to "+ip+":"+port+" refused.","establishing remote connection",JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "No se pudo establecer una coneccion con "+ip+":"+port,"establishing remote connection",JOptionPane.WARNING_MESSAGE);
 		}
 		catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, "No se pudo establecer una coneccion con "+ip+":"+port,"establishing remote connection",JOptionPane.WARNING_MESSAGE);
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
