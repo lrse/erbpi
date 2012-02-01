@@ -237,7 +237,7 @@ Conducta::~Conducta()
 void Conducta::Actualizar(const EstadoDeSensores& estado_sensores)
 {
     if (!comportamiento_actual)
-        Error("Conducta::Actualizar - No existe un comportamiento actual");
+        Error("Conducta - Actualizar - Error: No existe un comportamiento actual!!!");
     
     ActualizarSensores(estado_sensores);
     
@@ -466,7 +466,7 @@ void Conducta::ActualizarSensores(const EstadoDeSensores& estado_sensores)
             }
         
         if (!found)
-            Error("Conducta::ActualizarSensores - Se intento actualizar un sensor con id inexistente.");
+            Error("Conducta - ActualizarSensores - Error: se intento actualizar un sensor con id inexistente!!");
     }
 }
 

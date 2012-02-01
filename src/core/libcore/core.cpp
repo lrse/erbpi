@@ -37,23 +37,24 @@ bool core_start(const string& xml_filename)
 	conducta = new Conducta;
 	
 	// abro el archivoLOG y verifico
-	cout << "abriendo log" << endl;
+	//cout << "abriendo log" << endl;
 	archivo_log.open(log_filename.c_str(), ios::trunc);
-	if (archivo_log.bad()) { cerr << "Error: al abrir el archivo del LOG !!!" << endl; return false; }
+	if (archivo_log.bad()) { cerr << "Core - Error: al abrir el archivo de LOG !!!" << endl; return false; }
 	
-	cout << "parseando XML" << endl;
+	//cout << "Core - parseando XML" << endl;
 	// 1. PARSEO Y LLENO TablaEjecucion
 	if (parsear(xml_filename, conducta)){
 		cerr << "Error: Algo no anduvo bien en el parseo del XML !!!" << endl;
 		return false;
 	}
+	cout << "Core - Parseando... >> OK!" << endl;  
 
-	cout << "chequeando sensores y actuadores" << endl;
+	//cout << "Core - chequeando sensores y actuadores" << endl;
 	// 2. CHEQUEO QUE LOS SENSORES Y ACTUADORES COINCIDAN CON EL RAL
 	if ( !conducta->ChequearSensores(getListaSensores()) )
-		Error("Error: Algo no anduvo bien en la definicion de sensores !!!\n");
+		Error("Core - Error: Algo no anduvo bien en la definicion de sensores !!!\n");
 	if ( !conducta->ChequearActuadores(getListaActuadores()) )
-		Error("Error: Algo no anduvo bien en la definicion de actuadores !!!\n");
+		Error("Core - Error: Algo no anduvo bien en la definicion de actuadores !!!\n");
 
 	// escribo el encabezado del log...
 	archivo_log << "timestamp, ";

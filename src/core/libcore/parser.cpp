@@ -328,11 +328,11 @@ int parsear(string xml_string, Conducta* conducta)
     {
         //cout << "parsing: " << xml_string << endl; 
         MemBufInputSource src((const XMLByte*)xml_string.c_str(), xml_string.length(), "dummy", false); 
-        cout << "tengo buffer de " << xml_string.length() << " bytes" << endl; 
+        //cout << "Parser - Comportamiento: buffer de " << xml_string.length() << " bytes > OK" << endl; 
         miParser->parse(src);
   
         // Obtener el "DOCUMENTO" XML // no es necesario liberar este puntero...
-        cout << "parseado, get document" << endl; 
+        //cout << "Parser - Parseando..." << endl; 
         DOMDocument* xmlDoc = miParser->getDocument();
         
         // Obtener "Elemento RAIZ" del XML
@@ -341,7 +341,7 @@ int parsear(string xml_string, Conducta* conducta)
         // chequear que sea <conducta>
         if( !(XMLString::equals(xml_conducta->getTagName(), XMLString::transcode("conducta"))) )
         {
-            cout << "Error: La especificación del XML no corresponde !!!" << endl;
+            cout << "Parser - Error: La especificación del XML no se corresponde !!!" << endl;
             return 1;
             // NOTA: el XML puede contener otras cosas, pero debe comenzar con "<conducta></conducta>"  
         }
@@ -349,11 +349,11 @@ int parsear(string xml_string, Conducta* conducta)
         // chequear que <conducta> no esté vacío...
         if( !xml_conducta )
         {
-            cout << "Error: El archivo XML está vacío !!!" << endl;
+            cout << "Parser - Error: El archivo XML está vacío !!!" << endl;
             return 1;
         }
         
-        cout << "paso tests, empiezo a leer" << endl; 
+        /*cout << "Parser - XML paso tests, empiezo a leer" << endl;*/
         
         // cargar sensores
         CargarHijosAObjeto(conducta,xml_conducta,"sensores",&CargarSensores,conducta);
@@ -379,7 +379,7 @@ int parsear(string xml_string, Conducta* conducta)
     catch (const XMLException& toCatch)
     {
         char* message = XMLString::transcode( toCatch.getMessage() );
-        cout << "Error: algún error parseando el archivo: " << message << endl;
+        cout << "Parser - Error: algún error parseando el archivo: " << message << endl;
         XMLString::release( &message );
         return 1;
     }
