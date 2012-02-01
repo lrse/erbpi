@@ -1,12 +1,8 @@
-package extension.utils;
+package extension.utils.execution;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-
-import javax.swing.JButton;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -15,11 +11,9 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 
-public class JExecutionFrame extends JConsole implements ActionListener
+public class JExecutionFrame extends JConsole
 {
 	private static final long serialVersionUID = 1L;
-
-	private JButton stopButton;
 	
 	// Executor for the program
 	private DefaultExecutor executor;
@@ -30,10 +24,6 @@ public class JExecutionFrame extends JConsole implements ActionListener
 	public JExecutionFrame(String command)
 	{
 		super();
-		
-		addStopButton();
-		
-		this.pack();
 		
 		startExecution(command);
 	}
@@ -81,32 +71,12 @@ public class JExecutionFrame extends JConsole implements ActionListener
 	}
 	
 	@Override
-	public void close()
+	protected void stop()
 	{
-		super.close();
+		super.stop();
 		
 		processWatchdog.destroyProcess();
-		 
-		stopButton.setEnabled(false);
-	}
-	
-	private void addStopButton()
-	{
-		stopButton = new JButton("Parar");
-		stopButton.setToolTipText("Terminar la ejecucion actual");
-		stopButton.setActionCommand("stop");
-		stopButton.addActionListener(this);
-		this.add(stopButton);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if ( e.getActionCommand() == "stop" ) {
-			close();
-		}
-		else {
-			System.err.println("JExecutionFrame::actionPerformed - unhandled action "+e.getActionCommand());
-		}
+		
+		DisableStopButton();
 	}
 }

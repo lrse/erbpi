@@ -36,8 +36,9 @@ import extension.model.FSM;
 import extension.model.Robot;
 import extension.utils.FileUtils;
 import extension.utils.IconBank;
-import extension.utils.JExecutionFrame;
 import extension.utils.XmlUtils;
+import extension.utils.execution.JExecutionFrame;
+import extension.utils.execution.JRemoteExecutionFrame;
 
 /*
  * Frame principal de la GUI
@@ -233,32 +234,9 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 			return;
 		}
 		
-		if (getRobot().getId().equals("exabot")) {
-			// Esto para iniciar la ejecucion:
-			// Hacer algo tipo new JRemoteExecutionFrame(tempProgramFile);
-			/*  
-			String exa_ip = new String("192.168.0.2");
-			Socket s = new Socket(exa_ip, 7654); 
-		 	PrintWriter out = new PrintWriter(s.getOutputStream(), true); 
-              
-		 	BufferedReader in = new BufferedReader(new FileReader(tempProgramFile)); 
-		 	String text = new String(); 
-		 	while (in.ready()) { text += in.readLine() + "\n"; } 
-		 	out.print(text); 
-		 	in.close(); 
-		 	out.close(); 
-		 	s.close();
-		 	*/
-		 	
-			// Esto para frenarla
-			/*
-		 	Socket s = new Socket(exa_ip, 7654); 
-		  	PrintWriter out = new PrintWriter(s.getOutputStream(), true); 
-		  	out.print("STOP\n"); 
-		  	out.close(); 
-		  	s.close();
-		  	*/
-		  	 
+		if (getRobot().getId().equals("exabot"))
+		{
+			new JRemoteExecutionFrame(tempProgramFile, "192.168.0.2", 7654);
 		}
 		else {
 			// copio la ral adecuada
@@ -280,7 +258,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 			String cmdString = corePath + " " + tempProgramFile.getAbsolutePath() + " core_log.txt";
 			System.out.println("-> ejecutando el Core: "+cmdString);
 			
-			new  JExecutionFrame(cmdString);
+			new JExecutionFrame(cmdString);
 		}
 	}
 
