@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -37,6 +38,9 @@ public class JRemoteExecutionFrame extends JConsole
 			JOptionPane.showMessageDialog(this, "No se pudo establecer una coneccion con "+ip+":"+port,"establishing remote connection",JOptionPane.WARNING_MESSAGE);
 		}
 		catch (UnknownHostException e) {
+			JOptionPane.showMessageDialog(this, "No se pudo establecer una coneccion con "+ip+":"+port,"establishing remote connection",JOptionPane.WARNING_MESSAGE);
+		}
+		catch (NoRouteToHostException e) {
 			JOptionPane.showMessageDialog(this, "No se pudo establecer una coneccion con "+ip+":"+port,"establishing remote connection",JOptionPane.WARNING_MESSAGE);
 		}
 		catch (IOException e) {
