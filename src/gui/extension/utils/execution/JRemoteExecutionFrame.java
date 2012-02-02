@@ -12,6 +12,11 @@ import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
+
 import javax.swing.JOptionPane;
 
 public class JRemoteExecutionFrame extends JConsole
@@ -19,19 +24,33 @@ public class JRemoteExecutionFrame extends JConsole
 	private static final long serialVersionUID = 1L;
 	
 	Socket socket;
+	String ip;
+	int port;
 	
 	public JRemoteExecutionFrame(File programFile, String ip, int port)
 	{
 		super();
-		
-		try
-		{
+
+		this.ip = ip;
+		this.port = port;
+
+		try{
 			socket = new Socket(ip, port);
-			
+		
 			sendProgram(socket, programFile);
 			
-			InputStream program_output = socket.getInputStream();
-			start(program_output);
+			//InputStream program_output = socket.getInputStream();
+			// no anda bien, lo cambio por un cartelito!
+	        String texto = "\n >> Ejecutando el CORE localmente en el Robot EXABOT...\n";
+	        try{
+	        	InputStream program_output = new ByteArrayInputStream(texto.getBytes("UTF-8"));
+	        	start(program_output);
+	        }
+	        catch( UnsupportedEncodingException e ){
+	        	e.printStackTrace();
+	        }
+
+			//start(program_output);
 		}
 		catch (ConnectException e)
 		{
@@ -65,6 +84,7 @@ public class JRemoteExecutionFrame extends JConsole
 		 	
 		 	in.close(); 
 		 	out.close();
+		 	this.socket.close();
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -81,14 +101,16 @@ public class JRemoteExecutionFrame extends JConsole
 	{
 		super.stop();
 		
-		try
-		{
+		try{
+			socket = new Socket(ip, port);
+			
 			PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true); 
 		  	out.print("STOP\n"); 
 		  	out.close();
 		  	
 			this.socket.close();
 		}
+
 		catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -11,8 +11,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
+
+import java.net.Socket;
 
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -237,6 +239,28 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		if (getRobot().getId().equals("exabot"))
 		{
 			new JRemoteExecutionFrame(tempProgramFile, "192.168.0.2", 7654);
+
+///*-----------------------------------------------------*/
+//	System.out.println("EJEC MANUAL - INICIO");
+//			try{
+//				String exa_ip = new String("192.168.0.2");
+//				Socket s = new Socket(exa_ip, 7654); 
+//			 	PrintWriter out = new PrintWriter(s.getOutputStream(), true); 
+//	              
+//			 	BufferedReader in = new BufferedReader(new FileReader(tempProgramFile)); 
+//			 	String text = new String(); 
+//			 	while (in.ready()) { text += in.readLine() + "\n"; } 
+//			 	out.print(text); 
+//			 	in.close(); 
+//			 	out.close(); 
+//			 	s.close();
+//	System.out.println("EJEC MANUAL - FIN SIN INTERRUPCION");
+//			}
+//			catch( IOException e ){
+//				JOptionPane.showMessageDialog(this, new String("Hubo problemas al intentar ejecutar:\n") + e.getMessage());
+//			}
+///*-----------------------------------------------------*/
+			
 		}
 		else {
 			// copio la ral adecuada
