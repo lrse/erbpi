@@ -1,6 +1,18 @@
 hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 
-	- evitar obstáculos (yaks, exaSim, exaBot) todos con telemetros
+	- evitarObstaculosSencillo (todos sólo con telemetros):
+
+		- (OK!) yaks
+			- solo exitatoria e inhibitorias > OK!
+			- idem pero tuneado con parametricas para que recorra todo el laberinto, modifiqué los Yaks-Params y el World (ver evitarObstaculosSencillo/confYaks/*)
+				- yaks_03_tuning.xml / lab4.world
+					- recorre el 90% despueś de 3 minutos (salvo el pedacito de adentro...)
+				- yaks_02_tuning.xml / lab3.world
+					- recorre el 95% despueś de 10 minutos!
+
+		- exaSim
+
+		- exaBot
 
 	- seguir línea (exaBot) con lineFollowings
 

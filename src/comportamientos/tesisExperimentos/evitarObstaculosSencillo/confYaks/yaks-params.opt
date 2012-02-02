@@ -1,0 +1,38 @@
+###########################################################################
+# This files includes the parameters that are adjustable in the simulator,#
+# use # in the beginnig of lines to comment them out.                     #
+# The file is not case sensitive.                                         #
+###########################################################################
+
+# Number of robots
+A_#ROBOTS 1
+
+# define path and file for the world definition file
+WORLD_PATH ./worlds
+WORLD_FILE lab4.world
+CAMERA_PATH ./cam
+
+# This option makes the robot start always at the same position
+TEST_SAME_START_POSITION 1
+# milliseconds to wait between updates
+UPDATE_DELAY 100
+VERBOSE_LEVEL 0
+
+# Graphical options
+#SCALE 0.5
+SCALE 0.35
+
+
+# Server TCP/IP port for controller communication
+SERVER_PORT 1033
+
+
+SENSOR_NOISE 0     # If you want noise added to your input, 1 - yes, 0 - no
+NOISE_PERCENTAGE 5 # Amount of noise to add 0 - 100
+MOVE_OBSTACLES 0
+
+
+########################################################
+# This file was created by the author of the simulator #
+# Johan Carlsson, johanc@ida.his.se, 1999              #
+######################################################## 
