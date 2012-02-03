@@ -2,12 +2,12 @@
 <conducta id_comportamiento_inicial="comportamiento.0">
     <robot id="exabotsim"/>
     <sensores>
+        <sensor id="telemetro.270"/>
         <sensor id="telemetro.315"/>
         <sensor id="telemetro.0"/>
         <sensor id="telemetro.45"/>
         <sensor id="telemetro.90"/>
         <sensor id="telemetro.180"/>
-        <sensor id="telemetro.270"/>
     </sensores>
     <actuadores>
         <actuador id="motor.izquierda"/>
@@ -15,6 +15,8 @@
     </actuadores>
     <timers/>
     <contadores/>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
     <comportamiento descripcion="evitarObstaculos" id="comportamiento.1"
         pos_x="313" pos_y="99">
         <cajas>
@@ -50,21 +52,19 @@
             </caja>
         </cajas>
         <conecciones>
-            <coneccion dst="function.2" src="telemetro.315"/>
-            <coneccion dst="function.5" src="telemetro.315"/>
-            <coneccion dst="function.5" src="telemetro.0"/>
-            <coneccion dst="function.1" src="telemetro.45"/>
             <coneccion dst="motor.izquierda" src="function.5"/>
             <coneccion dst="motor.izquierda" src="function.4"/>
             <coneccion dst="motor.izquierda" src="function.3"/>
+            <coneccion dst="function.1" src="telemetro.45"/>
+            <coneccion dst="function.1" src="telemetro.0"/>
+            <coneccion dst="function.2" src="telemetro.315"/>
             <coneccion dst="function.4" src="telemetro.45"/>
+            <coneccion dst="function.5" src="telemetro.315"/>
             <coneccion dst="motor.derecha" src="function.2"/>
             <coneccion dst="motor.derecha" src="function.1"/>
             <coneccion dst="motor.derecha" src="function.0"/>
         </conecciones>
     </comportamiento>
-    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
-        pos_x="100" pos_y="100"/>
     <transiciones>
         <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
             <condiciones/>

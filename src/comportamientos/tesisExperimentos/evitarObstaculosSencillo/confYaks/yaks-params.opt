@@ -9,6 +9,7 @@ A_#ROBOTS 1
 
 # define path and file for the world definition file
 WORLD_PATH ./worlds
+#WORLD_FILE lab.world
 WORLD_FILE lab4.world
 CAMERA_PATH ./cam
 

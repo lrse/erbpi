@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.13">
+    <robot id="yaks"/>
+    <sensores>
+        <sensor id="proximidad.320"/>
+        <sensor id="proximidad.340"/>
+        <sensor id="proximidad.350"/>
+        <sensor id="proximidad.10"/>
+        <sensor id="proximidad.20"/>
+        <sensor id="proximidad.40"/>
+        <sensor id="proximidad.170"/>
+        <sensor id="proximidad.190"/>
+        <sensor id="luz.320"/>
+        <sensor id="luz.340"/>
+        <sensor id="luz.350"/>
+        <sensor id="luz.10"/>
+        <sensor id="luz.20"/>
+        <sensor id="luz.40"/>
+        <sensor id="luz.170"/>
+        <sensor id="luz.190"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers>
+        <timer descripcion="timer.2" id="timer.2"/>
+    </timers>
+    <contadores/>
+    <comportamiento descripcion="der" id="comportamiento.15" pos_x="462" pos_y="94">
+        <cajas>
+            <caja id="function.20" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="30"/>
+                <punto x="100" y="30"/>
+            </caja>
+            <caja id="function.21" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-30"/>
+                <punto x="100" y="-30"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.derecha" src="function.21"/>
+            <coneccion dst="motor.izquierda" src="function.20"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.13"
+        pos_x="100" pos_y="100"/>
+    <comportamiento descripcion="izq" id="comportamiento.14" pos_x="254" pos_y="100">
+        <cajas>
+            <caja id="function.18" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-30"/>
+                <punto x="100" y="-30"/>
+            </caja>
+            <caja id="function.19" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="30"/>
+                <punto x="100" y="30"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.18"/>
+            <coneccion dst="motor.derecha" src="function.19"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.15" id_origen="comportamiento.14">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.2" umbral="1"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.2" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+        <transicion id_destino="comportamiento.14" id_origen="comportamiento.15">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.2" umbral="1"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.2" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+        <transicion id_destino="comportamiento.14" id_origen="comportamiento.13">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
