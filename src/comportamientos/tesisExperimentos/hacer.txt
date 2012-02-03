@@ -8,18 +8,18 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 					- OK! pero no recorre todo el laberinto...
 			- idem pero tuneado con parametricas para que recorra todo el laberinto, modifiqué los Yaks-Params y el World (ver evitarObstaculosSencillo/confYaks/*)
 				- yaks_03_tuning.xml / lab4.world
-					- recorre el 90% despueś de 3 minutos (salvo el pedacito de adentro...)
+					- EXCELENTE! recorre el 90% despueś de 3 minutos (salvo el pedacito de adentro...)
 				- yaks_02_tuning.xml / lab3.world
-					- recorre el 95% despueś de 10 minutos!
+					- OK! recorre el 95% despueś de 10 minutos!
 
 		- (OK!) exaSim
 			- solo exitatoria e inhibitorias
 				- exasim_01.xml / lab4.world.png
 					- OK! pero sólo da la vuelta perimetral...
 				- exasim_02_tuning.xml / lab4.world
-					- se traba en 4to cuadrante a los 1.20 minutos! llega a un balance entre sensores => ruedas = 0
+					- MAL! se traba en 4to cuadrante a los 1.20 minutos! llega a un balance entre sensores => ruedas = 0
 				- exasim_03_tuning.xml / lab5.world.png
-					- OK! y casi recorre el todo laberinto en 2 minutos (menos el 3er cuadrante)...
+					- EXCELENTE! y casi recorre el todo laberinto en 2 minutos (menos el 3er cuadrante)...
 	
 		- exaBot
 			- PASÉ LOS TESTING, PERO HAY PROBLEMA DE LINEALIZACIÓN DE SENSORES!!!!
@@ -27,9 +27,28 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 			- HAY QUE PROBAR TELEMETROS!!!
 
 
-	*) seguir línea (exaBot) con lineFollowings
+	*) seguirLineaSencillo (exaBot-lineFollowings)
 
-	*) seguir pared (exaSim y exaBot) con sonar
+		- exaBot-SONAR
+			- HAY QUE PROBAR LINES-FOLLOWING!!!
+				- exabot_01.xml > FALTA PROBARLO Y TUNERALO!!!
+
+	*) seguirParedIzquierdaSencillo (exaSim-teles y exaBot-sonar)
+
+		- (OK!) exaSim-TELE
+			- exasim_01.xml / lab5.world.png
+				- OK! pero se la pone contra la pared al girar al final...
+			- exasim_02_tuning.xml / lab5.world.png
+				- EXCELENTE! casi que recorre todo!!
+			- exasim_03_tuning.xml / lab5.world.png
+				- idem pero avanza un poco más rápido!
+
+		- exaBot-SONAR
+			- PASÉ LOS TESTING, PERO HAY PROBLEMA DE LINEALIZACIÓN DE SENSORES!!!!
+				AL MENOS, ESTO PASÓ CON EL SONAR
+			- HAY QUE PROBAR TELEMETROS!!!
+				- exabot_01.xml > FALTA PROBARLO Y TUNERALO!!!
+
 
 hacer cosas más complejas:
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabotsim"/>
+    <sensores>
+        <sensor id="telemetro.270"/>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="seguirPared" id="comportamiento.1"
+        pos_x="306" pos_y="101">
+        <cajas>
+            <caja id="function.0" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="5" y="0"/>
+                <punto x="78" y="15"/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="30"/>
+                <punto x="100" y="30"/>
+            </caja>
+            <caja id="function.2" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="30"/>
+                <punto x="100" y="30"/>
+            </caja>
+            <caja id="function.4" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="22" y="20"/>
+                <punto x="94" y="0"/>
+            </caja>
+            <caja id="function.6" location="right" templateId="inhibitoria">
+                <esquema id="energia"/>
+                <punto x="0" y="0"/>
+                <punto x="100" y="-100"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="function.6" src="telemetro.315"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="motor.derecha" src="function.1"/>
+            <coneccion dst="motor.derecha" src="function.4"/>
+            <coneccion dst="motor.derecha" src="function.6"/>
+            <coneccion dst="function.0" src="telemetro.270"/>
+            <coneccion dst="function.4" src="telemetro.270"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
