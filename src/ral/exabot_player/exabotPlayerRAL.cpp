@@ -135,8 +135,8 @@ void setEstadoActuadores(std::vector<Item> actuators){
 
   const double wheelbase = 0.183;
   
-  double xspeed = (ML + MR) * 0.5;
-  double aspeed = (ML - MR) / wheelbase;
+  double xspeed = (ML + MR) * 0.5;			// xspeed = VELOCIDAD LINEAL
+  double aspeed = (ML - MR) / wheelbase;	// aspeed = VELOCIDAD ANGULAR
 
   //cout << "act0/1: " << actuators[0].valor << "/" << actuators[1].valor << " ML/MR: " << ML << "/" << MR << " xspeed/aspeed: " << xspeed << "/" << aspeed << endl;
   position_proxy->SetSpeed(xspeed, aspeed);
