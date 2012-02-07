@@ -55,8 +55,10 @@ std::vector<std::string> getListaSensores(void) {
 
 std::vector<std::string> getListaActuadores(void) {
 	std::vector<std::string> motors(2);
-	motors[0] = MOTOR_00;
-	motors[1] = MOTOR_01;
+	//motors[0] = MOTOR_00;
+	//motors[1] = MOTOR_01;
+	motors[0] = MOTOR_01;
+	motors[1] = MOTOR_00;
 	return motors;
 }
 
@@ -65,10 +67,10 @@ std::vector<Item> getEstadoSensores(void) {
   cout << "recibiendo" << endl;
   float distances[8];
   
-  
+  // ESTOY DEBUGEANDO!!!
   cout << "sensor_data[8] = [ " ;
   for (int i = 0; i < 8; i++) {
-    cout << sensor_data.telemeters[i] << " ; " ;
+    cout << (unsigned int)sensor_data.telemeters[i] << " ; " ;
   }
   cout << " ]" << endl;
   
@@ -143,7 +145,7 @@ void setEstadoActuadores(std::vector<Item> actuators)
   }
  
   //cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
-  //exa_set_motors(valor_motores[1], valor_motores[0]);
-  exa_set_motors(valor_motores[0], valor_motores[1]);
+  exa_set_motors(valor_motores[1], valor_motores[0]);
+  //exa_set_motors(valor_motores[0], valor_motores[1]);
 }
 }
