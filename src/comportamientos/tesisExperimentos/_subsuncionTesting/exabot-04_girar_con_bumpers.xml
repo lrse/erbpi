@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <comportamiento descripcion="der" id="comportamiento.4" pos_x="309" pos_y="335">
+        <cajas>
+            <caja id="function.4" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="0"/>
+                <punto x="100" y="0"/>
+            </caja>
+            <caja id="function.5" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.4"/>
+            <coneccion dst="motor.derecha" src="function.5"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="izq" id="comportamiento.1" pos_x="301" pos_y="104">
+        <cajas>
+            <caja id="function.0" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="0"/>
+                <punto x="100" y="0"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.derecha" src="function.1"/>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="quieto" id="comportamiento.2"
+        pos_x="202" pos_y="229">
+        <cajas>
+            <caja id="function.2" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="0"/>
+                <punto x="100" y="0"/>
+            </caja>
+            <caja id="function.3" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="0"/>
+                <punto x="100" y="0"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.derecha" src="function.3"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.2" id_origen="comportamiento.4">
+            <condiciones>
+                <condicion comparacion="&lt;" id_elemento="contacto.1" umbral="90"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.2" id_origen="comportamiento.1">
+            <condiciones>
+                <condicion comparacion="&lt;" id_elemento="contacto.0" umbral="90"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.2">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="contacto.0" umbral="90"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.4" id_origen="comportamiento.2">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="contacto.1" umbral="90"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.2" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>

@@ -64,6 +64,15 @@ std::vector<Item> getEstadoSensores(void) {
   exa_receive(&sensor_data);
   cout << "recibiendo" << endl;
   float distances[8];
+  
+  
+  cout << "sensor_data[8] = [ " ;
+  for (int i = 0; i < 8; i++) {
+    cout << sensors->telemeters[i] << " ; " ;
+  }
+  cout << " ]" << endl;
+  
+    
   exa_telemeter_distances(&sensor_data, distances);
   
   Item item;
@@ -98,7 +107,8 @@ std::vector<Item> getEstadoSensores(void) {
 	
   for (uint i = 0; i < 2; i++) {
     item.id = sensorsName[7 + i];
-    item.valor = (sensor_data.linefollowing[i] == 255 ? 100 : 0);
+    //item.valor = (sensor_data.linefollowing[i] == 255 ? 100 : 0);
+    item.valor = (sensor_data.linefollowing[i] == 255 ? 0 : 100);
     sensors.push_back(item);
   }
   
@@ -132,7 +142,8 @@ void setEstadoActuadores(std::vector<Item> actuators)
       valor_motores[i] = (valor_motores[i] < 0 ? -1 : 1) * MOTOR_SATURATE_HIGH;
   }
  
-  cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
-	exa_set_motors(valor_motores[1], valor_motores[0]);
+  //cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
+  //exa_set_motors(valor_motores[1], valor_motores[0]);
+  exa_set_motors(valor_motores[0], valor_motores[1]);
 }
 }
