@@ -55,10 +55,8 @@ std::vector<std::string> getListaSensores(void) {
 
 std::vector<std::string> getListaActuadores(void) {
 	std::vector<std::string> motors(2);
-	//motors[0] = MOTOR_00;
-	//motors[1] = MOTOR_01;
-	motors[0] = MOTOR_01;
-	motors[1] = MOTOR_00;
+	motors[0] = MOTOR_00;
+	motors[1] = MOTOR_01;
 	return motors;
 }
 
@@ -73,9 +71,16 @@ std::vector<Item> getEstadoSensores(void) {
     cout << (unsigned int)sensor_data.telemeters[i] << " ; " ;
   }
   cout << " ]" << endl;
-  
     
   exa_telemeter_distances(&sensor_data, distances);
+
+  // ESTOY DEBUGEANDO!!!
+  cout << "distances[8] = [ " ;
+  for (int i = 0; i < 8; i++) {
+    cout << (unsigned int)distances[i] << " ; " ;
+  }
+  cout << " ]" << endl;
+
   
   Item item;
 	std::vector<std::string> sensorsName = getListaSensores();
@@ -93,7 +98,7 @@ std::vector<Item> getEstadoSensores(void) {
       float normalized = (d - TELEMETER_MIN_DISTANCE) / (TELEMETER_MAX_DISTANCE - TELEMETER_MIN_DISTANCE);
       item.valor = (unsigned int)floorf((1 - normalized) * 100);
     }
-    cout << "tele " << item.id << " " << item.valor << endl;
+    cout << "tele " << item.id << " - activacion: " << item.valor << endl;
     sensors.push_back(item);
   }
   
@@ -105,7 +110,7 @@ std::vector<Item> getEstadoSensores(void) {
     item.valor = (unsigned int)((1.0 - ((sonar_distance - SONAR_MIN_DISTANCE) / (float)(SONAR_MAX_DISTANCE - SONAR_MIN_DISTANCE))) * 100);
   sensors.push_back(item);    
   
-  cout << "distancia sonar: " << sonar_distance << " activacion: " << item.valor << endl;
+  cout << "distancia sonar: " << sonar_distance << " - activacion: " << item.valor << endl;
 	
   for (uint i = 0; i < 2; i++) {
     item.id = sensorsName[7 + i];
