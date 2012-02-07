@@ -68,7 +68,7 @@ std::vector<Item> getEstadoSensores(void) {
   
   cout << "sensor_data[8] = [ " ;
   for (int i = 0; i < 8; i++) {
-    cout << sensors->telemeters[i] << " ; " ;
+    cout << sensor_data->telemeters[i] << " ; " ;
   }
   cout << " ]" << endl;
   
