@@ -153,9 +153,19 @@ void setEstadoActuadores(std::vector<Item> actuators)
     else if (abs(valor_motores[i]) > MOTOR_SATURATE_HIGH)
       valor_motores[i] = (valor_motores[i] < 0 ? -1 : 1) * MOTOR_SATURATE_HIGH;
   }
+
+	// elijo bien para mandar o invierto izq-der de motores si es necesario
+	if( actuators[0].id == MOTOR_00 ){ //motor izquierdo
+		cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
+		exa_set_motors(valor_motores[1], valor_motores[0]);
+	}
+	else{
+		cout << "seteando: " << (int)valor_motores[0] << " " << (int)valor_motores[1] << endl;
+		exa_set_motors(valor_motores[0], valor_motores[1]);
+	}
  
   //cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
-  exa_set_motors(valor_motores[1], valor_motores[0]);
-  //exa_set_motors(valor_motores[0], valor_motores[1]);
+  //exa_set_motors(valor_motores[1], valor_motores[0]);
 }
+
 }
