@@ -17,9 +17,12 @@ void inicializarRAL(void) {
   exa_initialize();
   exa_zero_data(&sensor_data);
   
-  exa_set_sensor(true, SENSOR_012);    usleep(600000);
-  exa_set_sensor(true, SENSOR_345);    usleep(600000);
-  exa_set_sensor(true, SENSOR_67);     usleep(600000);
+  //exa_set_sensor(true, SENSOR_012);    usleep(600000);
+  //exa_set_sensor(true, SENSOR_345);    usleep(600000);
+  //exa_set_sensor(true, SENSOR_67);     usleep(600000);
+  exa_set_sensor(true, SENSOR_012);    usleep(800000);
+  exa_set_sensor(true, SENSOR_345);    usleep(800000);
+  exa_set_sensor(true, SENSOR_67);     usleep(800000);
   exa_set_sensor(true, SENSOR_SONAR);  usleep(300000);
   exa_set_sensor(true, SENSOR_LF);     usleep(300000);
   exa_set_sensor(true, SENSOR_BUMPER); usleep(300000);
@@ -55,10 +58,10 @@ std::vector<std::string> getListaSensores(void) {
 
 std::vector<std::string> getListaActuadores(void) {
 	std::vector<std::string> motors(2);
-	//motors[0] = MOTOR_00;
-	//motors[1] = MOTOR_01;
-	motors[0] = MOTOR_01;
-	motors[1] = MOTOR_00;
+	motors[0] = MOTOR_00;
+	motors[1] = MOTOR_01;
+	//motors[0] = MOTOR_01;
+	//motors[1] = MOTOR_00;
 	return motors;
 }
 
