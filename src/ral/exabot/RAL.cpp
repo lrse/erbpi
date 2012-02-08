@@ -17,7 +17,7 @@ void inicializarRAL(void) {
   exa_initialize();
   exa_zero_data(&sensor_data);
   
-  //exa_set_sensor(true, SENSOR_012);    usleep(600000);
+  //exa_set_sensor(true, SENSOR_012);    usleep(600000); // a veces con 600000 no se llegaban a prender y tiraba todo cero! fijarse si con 800000 no queda demadiado lento...
   //exa_set_sensor(true, SENSOR_345);    usleep(600000);
   //exa_set_sensor(true, SENSOR_67);     usleep(600000);
   exa_set_sensor(true, SENSOR_012);    usleep(800000);
@@ -60,8 +60,6 @@ std::vector<std::string> getListaActuadores(void) {
 	std::vector<std::string> motors(2);
 	motors[0] = MOTOR_00;
 	motors[1] = MOTOR_01;
-	//motors[0] = MOTOR_01;
-	//motors[1] = MOTOR_00;
 	return motors;
 }
 
@@ -159,11 +157,13 @@ void setEstadoActuadores(std::vector<Item> actuators)
 
 	// elijo bien para mandar o invierto izq-der de motores si es necesario
 	if( actuators[0].id == MOTOR_00 ){ //motor izquierdo
-		cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
+		//cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
+		cout << "M = [ " << (int)valor_motores[1] << " ; " << (int)valor_motores[0] << "  ]" << endl;
 		exa_set_motors(valor_motores[1], valor_motores[0]);
 	}
 	else{
-		cout << "seteando: " << (int)valor_motores[0] << " " << (int)valor_motores[1] << endl;
+		//cout << "seteando: " << (int)valor_motores[0] << " " << (int)valor_motores[1] << endl;
+		cout << "M = [ " << (int)valor_motores[0] << " ; " << (int)valor_motores[1] << "  ]" << endl;
 		exa_set_motors(valor_motores[0], valor_motores[1]);
 	}
  
