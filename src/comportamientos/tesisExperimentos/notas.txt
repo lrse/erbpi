@@ -7,13 +7,17 @@
 
 
 ###################################
-	exaBot
+	exaBot testeado y OK!
 
-		- ver orden y definiciones de los sensores del RAL para el EXABOT
-		- me parece que están cambiados...
+		(x) como que está viendo siempre con el tele de adelante, marca un 70% constante...
+				> puede ser que sea la rotula de la camara?
 
-		- ver sensores normalizacion y linealización de valores, está bien y hacen lo que había hecho sol en su momento par linealizar?
-		- y ver saturaciones, antes saturabamos en [7cm;35cm] me parece que mati cambió esto...
+		(X) poner resistencias a los conectores que están vacios!!!
+
+		(X) OJO que SONAR ve hasta 4 metros!! eso es 100%
+	
+
+
 
 
 

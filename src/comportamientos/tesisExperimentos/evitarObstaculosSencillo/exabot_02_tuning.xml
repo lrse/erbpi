@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <comportamiento descripcion="evitarObstaculos" id="comportamiento.1"
+        pos_x="313" pos_y="99">
+        <cajas>
+            <caja id="function.0" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.3" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.9" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="40" y="0"/>
+                <punto x="99" y="-100"/>
+            </caja>
+            <caja id="function.10" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="40" y="0"/>
+                <punto x="100" y="99"/>
+            </caja>
+            <caja id="function.11" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="71" y="0"/>
+                <punto x="76" y="100"/>
+            </caja>
+            <caja id="function.12" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="40" y="0"/>
+                <punto x="99" y="-100"/>
+            </caja>
+            <caja id="function.13" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="40" y="0"/>
+                <punto x="99" y="100"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="function.13" src="telemetro.90"/>
+            <coneccion dst="function.13" src="telemetro.45"/>
+            <coneccion dst="motor.izquierda" src="function.3"/>
+            <coneccion dst="motor.izquierda" src="function.9"/>
+            <coneccion dst="motor.izquierda" src="function.10"/>
+            <coneccion dst="function.11" src="telemetro.0"/>
+            <coneccion dst="motor.derecha" src="function.0"/>
+            <coneccion dst="motor.derecha" src="function.13"/>
+            <coneccion dst="motor.derecha" src="function.12"/>
+            <coneccion dst="motor.derecha" src="function.11"/>
+            <coneccion dst="function.12" src="telemetro.315"/>
+            <coneccion dst="function.9" src="telemetro.45"/>
+            <coneccion dst="function.10" src="telemetro.270"/>
+            <coneccion dst="function.10" src="telemetro.315"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>

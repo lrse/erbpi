@@ -21,17 +21,18 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- exasim_03_tuning.xml / lab5.world.png
 					- EXCELENTE! y casi recorre el todo laberinto en 2 minutos (menos el 3er cuadrante)...
 	
-		- exaBot
-			- PASÉ LOS TESTING, PERO HAY PROBLEMA DE LINEALIZACIÓN DE SENSORES!!!!
-				AL MENOS, ESTO PASÓ CON EL SONAR
-			- HAY QUE PROBAR TELEMETROS!!!
+		- (X) exaBot
+			- solo exitatoria e inhibitorias
+				- exabot_01.xml
+					- OK! pero medio bruto...
+				- exabot_02_tuning.xml
+					- anda muy mal, hay que hacer un laberinto y probar bien...
+					- buscar el evitar obstaculos de INNOVAR !!!
 
 
 	*) seguirLineaSencillo (exaBot-lineFollowings)
 
 		- exaBot-SONAR
-			- HAY QUE PROBAR LINES-FOLLOWING!!!
-				- exabot_01.xml > FALTA PROBARLO Y TUNERALO!!!
 
 	*) seguirParedIzquierdaSencillo (exaSim-teles y exaBot-sonar)
 
@@ -44,10 +45,6 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- idem pero avanza un poco más rápido!
 
 		- exaBot-SONAR
-			- PASÉ LOS TESTING, PERO HAY PROBLEMA DE LINEALIZACIÓN DE SENSORES!!!!
-				AL MENOS, ESTO PASÓ CON EL SONAR
-			- HAY QUE PROBAR TELEMETROS!!!
-				- exabot_01.xml > FALTA PROBARLO Y TUNERALO!!!
 
 
 hacer cosas más complejas:
