@@ -101,7 +101,7 @@ std::vector<Item> getEstadoSensores(void) {
     item.valor = (unsigned int)((1.0 - ((sonar_distance - SONAR_MIN_DISTANCE) / (float)(SONAR_MAX_DISTANCE - SONAR_MIN_DISTANCE))) * 100);
   sensors.push_back(item);    
   
-  cout << "activacion-sonar = [ " << item.valor << "  /  " << (unsigned int)sonar_distance << "cm ]" << endl;
+  cout << "activacion-sonar = [ " << item.valor << " / " << (unsigned int)sonar_distance << "cm ]" << endl;
 
   cout << "activacion-lines[2] = [ " ;
   for (uint i = 0; i < 2; i++) {
