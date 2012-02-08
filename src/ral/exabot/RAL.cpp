@@ -20,7 +20,7 @@ void inicializarRAL(void) {
   //exa_set_sensor(true, SENSOR_012);    usleep(600000); // a veces con 600000 no se llegaban a prender y tiraba todo cero! fijarse si con 800000 no queda demadiado lento...
   //exa_set_sensor(true, SENSOR_345);    usleep(600000);
   //exa_set_sensor(true, SENSOR_67);     usleep(600000);
-  exa_set_sensor(true, SENSOR_012);    usleep(800000);
+  usleep(800000); exa_set_sensor(true, SENSOR_012);    usleep(1000000);
   exa_set_sensor(true, SENSOR_345);    usleep(800000);
   exa_set_sensor(true, SENSOR_67);     usleep(800000);
   exa_set_sensor(true, SENSOR_SONAR);  usleep(300000);
@@ -68,23 +68,8 @@ std::vector<Item> getEstadoSensores(void) {
   cout << "recibiendo" << endl;
   float distances[8];
   
-  // ESTOY DEBUGEANDO!!!
-  cout << "sensor_data[8] = [ " ;
-  for (int i = 0; i < 8; i++) {
-    cout << (unsigned int)sensor_data.telemeters[i] << " ; " ;
-  }
-  cout << " ]" << endl;
-    
   exa_telemeter_distances(&sensor_data, distances);
 
-  // ESTOY DEBUGEANDO!!!
-  cout << "distances[8] = [ " ;
-  for (int i = 0; i < 8; i++) {
-    cout << (unsigned int)distances[i] << " ; " ;
-  }
-  cout << " ]" << endl;
-
-  
   Item item;
 	std::vector<std::string> sensorsName = getListaSensores();
 	std::vector<Item> sensors;
@@ -116,20 +101,26 @@ std::vector<Item> getEstadoSensores(void) {
     item.valor = (unsigned int)((1.0 - ((sonar_distance - SONAR_MIN_DISTANCE) / (float)(SONAR_MAX_DISTANCE - SONAR_MIN_DISTANCE))) * 100);
   sensors.push_back(item);    
   
-  cout << "distancia sonar: " << sonar_distance << " - activacion: " << item.valor << endl;
-	
+  cout << "activacion-sonar = [ " << item.valor << "  /  " << (unsigned int)sonar_distance << "cm ]" << endl;
+
+  cout << "activacion-lines[2] = [ " ;
   for (uint i = 0; i < 2; i++) {
     item.id = sensorsName[7 + i];
     //item.valor = (sensor_data.linefollowing[i] == 255 ? 100 : 0);
     item.valor = (sensor_data.linefollowing[i] == 255 ? 0 : 100);
     sensors.push_back(item);
+    cout << item.valor << " ; ";
   }
+  cout << " ]" << endl;
   
+  cout << "activacion-bumpers[2] = [ " ;
   for (uint i = 0; i < 2; i++) {
     item.id = sensorsName[9 + i];
     item.valor = (sensor_data.bumpers[i] == 255 ? 100 : 0);
     sensors.push_back(item);
+    cout << item.valor << " ; ";
   }
+  cout << " ]" << endl;
 
 	return sensors;
 }
@@ -145,7 +136,7 @@ unsigned long getFrecuenciaTrabajo(void) {
 void setEstadoActuadores(std::vector<Item> actuators)
 {
   int valor_motores[2];
-  cout << "input: " << actuators[1].valor << " " << actuators[0].valor << endl;
+  //cout << "input: " << actuators[1].valor << " " << actuators[0].valor << endl;
   for (uint i = 0; i < 2; i++) {
     float normalizado = (float)actuators[i].valor / 100.0;
     valor_motores[i] = (int)floorf(normalizado * MOTOR_MAX_RANGE);
