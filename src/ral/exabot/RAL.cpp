@@ -149,12 +149,12 @@ void setEstadoActuadores(std::vector<Item> actuators)
 	// elijo bien para mandar o invierto izq-der de motores si es necesario
 	if( actuators[0].id == MOTOR_00 ){ //motor izquierdo
 		//cout << "seteando: " << (int)valor_motores[1] << " " << (int)valor_motores[0] << endl;
-		cout << "M = [ " << (int)valor_motores[1] << " ; " << (int)valor_motores[0] << "  ]" << endl;
+		cout << "M = [ " << (int)valor_motores[0] << " ; " << (int)valor_motores[1] << "  ]" << endl;
 		exa_set_motors(valor_motores[1], valor_motores[0]);
 	}
 	else{
 		//cout << "seteando: " << (int)valor_motores[0] << " " << (int)valor_motores[1] << endl;
-		cout << "M = [ " << (int)valor_motores[0] << " ; " << (int)valor_motores[1] << "  ]" << endl;
+		cout << "M = [ " << (int)valor_motores[1] << " ; " << (int)valor_motores[0] << "  ]" << endl;
 		exa_set_motors(valor_motores[0], valor_motores[1]);
 	}
  
