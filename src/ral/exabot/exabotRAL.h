@@ -24,7 +24,7 @@
 #define SENSOR_09			"contacto.0"
 #define SENSOR_10			"contacto.1"
 
-#define TELEMETER_MIN_DISTANCE 8 				//#define TELEMETER_MIN_DISTANCE 7
+#define TELEMETER_MIN_DISTANCE 7 				//#define TELEMETER_MIN_DISTANCE 7
 #define TELEMETER_MAX_DISTANCE 35 // (43=35+8) 	//#define TELEMETER_MAX_DISTANCE 35
 
 //#define SONAR_MIN_DISTANCE 1
