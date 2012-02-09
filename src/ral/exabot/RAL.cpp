@@ -20,7 +20,7 @@ void inicializarRAL(void) {
   //exa_set_sensor(true, SENSOR_012);    usleep(600000); // a veces con 600000 no se llegaban a prender y tiraba todo cero! fijarse si con 800000 no queda demadiado lento...
   //exa_set_sensor(true, SENSOR_345);    usleep(600000);
   //exa_set_sensor(true, SENSOR_67);     usleep(600000);
-  usleep(800000); exa_set_sensor(true, SENSOR_012);    usleep(1000000);
+  usleep(800000); exa_set_sensor(true, SENSOR_012);    usleep(1000000); // ahora así están prendiendo simepre todos, y no se nota que tarde para arrancar...
   exa_set_sensor(true, SENSOR_345);    usleep(800000);
   exa_set_sensor(true, SENSOR_67);     usleep(800000);
   exa_set_sensor(true, SENSOR_SONAR);  usleep(300000);
