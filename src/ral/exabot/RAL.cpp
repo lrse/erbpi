@@ -74,6 +74,13 @@ std::vector<Item> getEstadoSensores(void) {
 	std::vector<std::string> sensorsName = getListaSensores();
 	std::vector<Item> sensors;
 
+	// DUBUGEANDO!
+  cout << "distances-telemetros[6](cm) = [ " ;
+  for (uint i = 0; i < 6; i++) {
+    cout << (unsigned int)distances[i] << " ; ";
+  }
+  cout << " ]" << endl;
+
   cout << "activacion-telemetros[6] = [ " ;
   for (uint i = 0; i < 6; i++) {
     item.id = sensorsName[i];
