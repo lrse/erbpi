@@ -9,10 +9,7 @@
 ###################################
 	exaBot testeado y OK!
 
-		(x) como que está viendo siempre con el tele de adelante, marca un 70% constante...
-				> puede ser que sea la rotula de la camara?
-
-		(X) poner resistencias a los conectores que están vacios!!!
+		(X)  TELEMETROS: no les encuentro la vuelta... en apariencia andan bien, siempre que vean algo dentro del umbral definido. El problema surge cuando no ven nada (miran al infinito) por alguna razón tiran un valor constante que oscila entre 60-80, eso se traduce a 18-20cm lo que finalmente resulta en el ERBPI en un valor de activación de los telemetros del 40-65%. Eso hace que cuando no debería ver nada todos los sensores están viendo objetos a 18 cm de cercanía, 65% de activación en cada sensor, entonces el Exa se vuelve medio loco porque empieza a ejecutar el comportamiento... Los telemetros (hardware) no parecen ser, probé cambiar un par y dan lo mismo, además no tiene demasiado sentido que el hardware de los 5 sensores conectados hagan exactamente lo mismo... Incluso probé de ponerles pulldowns (siempre cero) para los conectores que estaban al aire (sin conectar) para descartar el tema del ruido, esos quedaron bien, pero el resto de los conectados siguió siempre en el valor constante de antes...
 
 		(X) OJO que SONAR ve hasta 4 metros!! eso es 100%
 	
