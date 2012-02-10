@@ -21,19 +21,28 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- exasim_03_tuning.xml / lab5.world.png
 					- EXCELENTE! y casi recorre el todo laberinto en 2 minutos (menos el 3er cuadrante)...
 	
-		- (X) exaBot
+		- (XXX) exaBot
 			- solo exitatoria e inhibitorias
 				- exabot_01.xml
 					- OK! pero medio bruto...
 				- exabot_02_tuning.xml
 					- anda muy mal, hay que hacer un laberinto y probar bien... buscar el evitar obstaculos de INNOVAR !!!
-				- exabot_03_tuning.xml 
+(ACA ESTOY!!!)	- exabot_03_tuning.xml 
 					- ESTÁ COPIADO DEL DE INNOVAR, HAY QUE PROBARLO!! VER VIDEITO PARA REPLICAR EL LABERINTO DE INNOVAR!!
+						parece que anda, de todas formas sigue el problema de tener mal los telemetros! hay que arreglarlo!!!
 
 
 	*) seguirLineaSencillo (exaBot-lineFollowings)
 
-		- exaBot-SONAR
+		- (XXX) exaBot-lineFollowings
+				- exabot_01.xml / pizarrón con lineas en hojas circuito incompleto
+					- no termina de dar la vuelta, hace falta tunning para que también que cada sensor afecte las 2 ruedas cuando se activa...
+(ACA ESTOY!!!)	-exabot_02_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+					- EXCELENTE! arranca por la parte recta y pega toda la vuelta, al final está muy justito y a veces se va. Es porque quedó más inteligente para girar a derecha que a izquierda...
+					DEBO PROBAR GRABARLO!!!
+
+
+
 
 	*) seguirParedIzquierdaSencillo (exaSim-teles y exaBot-sonar)
 
@@ -45,7 +54,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 			- exasim_03_tuning.xml / lab5.world.png
 				- idem pero avanza un poco más rápido!
 
-		- exaBot-SONAR
+		- (XXX) exaBot-SONAR
 
 
 hacer cosas más complejas:
