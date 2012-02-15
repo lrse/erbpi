@@ -27,9 +27,11 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 					- OK! pero medio bruto...
 				- exabot_02_tuning.xml
 					- anda muy mal, hay que hacer un laberinto y probar bien... buscar el evitar obstaculos de INNOVAR !!!
-(ACA ESTOY!!!)	- exabot_03_tuning.xml 
-					- ESTÁ COPIADO DEL DE INNOVAR, HAY QUE PROBARLO!! VER VIDEITO PARA REPLICAR EL LABERINTO DE INNOVAR!!
-						parece que anda, de todas formas sigue el problema de tener mal los telemetros! hay que arreglarlo!!!
+				- exabot_03_tuning.xml 
+					- a veces tocaba un poquito las paredes...
+				- exabot_04_tuning.xml 
+(ESTOY ACA !!)		- EXCELENTE!
+						FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
 	*) seguirLineaSencillo (exaBot-lineFollowings)
@@ -54,8 +56,12 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- idem pero avanza un poco más rápido!
 
 		- (XXX) exaBot-SONAR
+(ESTOY ACA !!)	- copiar de exasim_03_tuning.xml y probar!!!
+
 
 
 hacer cosas más complejas:
 
 	*) ver mail!
+
+
