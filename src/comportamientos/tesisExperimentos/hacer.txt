@@ -34,13 +34,15 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 
 	*) seguirLineaSencillo (exaBot-lineFollowings)
 
-		- (XXX) exaBot-lineFollowings
+		- (OK) exaBot-lineFollowings
 				- exabot_01.xml / pizarrón con lineas en hojas circuito incompleto
 					- no termina de dar la vuelta, hace falta tunning para que también que cada sensor afecte las 2 ruedas cuando se activa...
-(ACA ESTOY!!!)	-exabot_02_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+				- exabot_02_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 					- EXCELENTE! arranca por la parte recta y pega toda la vuelta, al final está muy justito y a veces se va. Es porque quedó más inteligente para girar a derecha que a izquierda...
-					DEBO PROBAR GRABARLO!!!
-
+				- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+					- EXCELENTE!
+				
+(ACA ESTOY!!!) >> PRUEBO GRABARLO CON CAMARA!
 
 
 

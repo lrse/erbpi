@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="seguirLinea" id="comportamiento.1"
+        pos_x="289" pos_y="102">
+        <cajas>
+            <caja id="function.0" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="11"/>
+                <punto x="100" y="11"/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="11"/>
+                <punto x="100" y="11"/>
+            </caja>
+            <caja id="function.2" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="75"/>
+            </caja>
+            <caja id="function.3" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="75"/>
+            </caja>
+            <caja id="function.9" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="-6"/>
+            </caja>
+            <caja id="function.10" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="-28"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.izquierda" src="function.10"/>
+            <coneccion dst="function.3" src="linea.0"/>
+            <coneccion dst="motor.derecha" src="function.1"/>
+            <coneccion dst="motor.derecha" src="function.3"/>
+            <coneccion dst="motor.derecha" src="function.9"/>
+            <coneccion dst="function.2" src="linea.1"/>
+            <coneccion dst="function.10" src="linea.0"/>
+            <coneccion dst="function.9" src="linea.1"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
