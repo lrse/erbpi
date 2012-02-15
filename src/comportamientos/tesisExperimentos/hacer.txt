@@ -42,9 +42,6 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 					- EXCELENTE!
 				
-(ACA ESTOY!!!) >> PRUEBO GRABARLO CON CAMARA!
-
-
 
 	*) seguirParedIzquierdaSencillo (exaSim-teles y exaBot-sonar)
 
