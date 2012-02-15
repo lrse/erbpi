@@ -2,7 +2,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 
 	*) evitarObstaculosSencillo (todos sólo con telemetros):
 
-		- (OK!) yaks
+		- yaks
 			- solo exitatoria e inhibitorias
 				- yaks_01.xml / lab.world
 					- OK! pero no recorre todo el laberinto...
@@ -12,7 +12,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- yaks_02_tuning.xml / lab3.world
 					- OK! recorre el 95% despueś de 10 minutos!
 
-		- (OK!) exaSim
+		- exaSim
 			- solo exitatoria e inhibitorias
 				- exasim_01.xml / lab4.world.png
 					- OK! pero sólo da la vuelta perimetral...
@@ -21,7 +21,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- exasim_03_tuning.xml / lab5.world.png
 					- EXCELENTE! y casi recorre el todo laberinto en 2 minutos (menos el 3er cuadrante)...
 	
-		- (XXX) exaBot
+		- exaBot
 			- solo exitatoria e inhibitorias
 				- exabot_01.xml
 					- OK! pero medio bruto...
@@ -30,38 +30,45 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- exabot_03_tuning.xml 
 					- a veces tocaba un poquito las paredes...
 				- exabot_04_tuning.xml 
-(ESTOY ACA !!)		- EXCELENTE!
-						FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
+					- EXCELENTE!
+(ESTOY ACA !!)			FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
 	*) seguirLineaSencillo (exaBot-lineFollowings)
 
-		- (OK) exaBot-lineFollowings
-				- exabot_01.xml / pizarrón con lineas en hojas circuito incompleto
-					- no termina de dar la vuelta, hace falta tunning para que también que cada sensor afecte las 2 ruedas cuando se activa...
-				- exabot_02_tuning.xml / pizarrón con lineas en hojas circuito incompleto
-					- EXCELENTE! arranca por la parte recta y pega toda la vuelta, al final está muy justito y a veces se va. Es porque quedó más inteligente para girar a derecha que a izquierda...
-				- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
-					- EXCELENTE!
+		- exaBot-lineFollowings
+			- exabot_01.xml / pizarrón con lineas en hojas circuito incompleto
+				- no termina de dar la vuelta, hace falta tunning para que también que cada sensor afecte las 2 ruedas cuando se activa...
+			- exabot_02_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+				- EXCELENTE! arranca por la parte recta y pega toda la vuelta, al final está muy justito y a veces se va. Es porque quedó más inteligente para girar a derecha que a izquierda...
+			- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+				- EXCELENTE!
 				
 
 	*) seguirParedIzquierdaSencillo (exaSim-teles y exaBot-sonar)
 
-		- (OK!) exaSim-TELE
+		- exaSim-TELE
 			- exasim_01.xml / lab5.world.png
 				- OK! pero se la pone contra la pared al girar al final...
 			- exasim_02_tuning.xml / lab5.world.png
-				- EXCELENTE! casi que recorre todo!!
+				- casi que recorre todo!!
 			- exasim_03_tuning.xml / lab5.world.png
-				- idem pero avanza un poco más rápido!
-
-		- (XXX) exaBot-SONAR
-(ESTOY ACA !!)	- copiar de exasim_03_tuning.xml y probar!!!
+				- EXCELENTE! idem anterior pero avanza un poco más rápido!
+		- exaBot
+			- exabot_01.xml / SONAR
+				- no llegué a probarlo, pruebo primero con telemetros...
+			- exabot_02_tuning.xml / TELE
+				- EXCELENTE!
+(ESTOY ACA !!)		FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
 
 hacer cosas más complejas:
 
 	*) ver mail!
+
+	*) buscarLinea+seguirLinea (exaBot-lineFollowings)
+
+
 
 
