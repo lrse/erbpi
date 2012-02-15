@@ -34,7 +34,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 (ESTOY ACA !!)			FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
-	*) seguirLineaSencillo (exaBot-lineFollowings)
+	*) seguirLineaSencillo
 
 		- exaBot-lineFollowings
 			- exabot_01.xml / pizarrón con lineas en hojas circuito incompleto
@@ -45,7 +45,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- EXCELENTE!
 				
 
-	*) seguirParedIzquierdaSencillo (exaSim-teles y exaBot-sonar)
+	*) seguirParedIzquierdaSencillo
 
 		- exaSim-TELE
 			- exasim_01.xml / lab5.world.png
