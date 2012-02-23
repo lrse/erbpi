@@ -1,4 +1,7 @@
+
+##########################################################################
 hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
+##########################################################################
 
 	*) evitarObstaculosSencillo (todos sólo con telemetros):
 
@@ -62,12 +65,49 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 (ESTOY ACA !!)		FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
-
+##########################
 hacer cosas más complejas:
+##########################
 
-	*) ver mail!
+	*) seguirLineaComplejo: buscarLinea + seguirLinea
 
-	*) buscarLinea+seguirLinea (exaBot-lineFollowings)
+		- exaBot-lineFollowings
+			- exabot_01.xml / pizarrón con lineas en hojas circuito incompleto
+				- anda +/-, busca linea y sale de ese comportamiento por 3 condiciones distintas con un 3-OR simulado...
+					· l0 y -l1 > seguir
+					· l1 y -l0 > seguir
+					· l0 y l1 > girar un cahito, está ortogonal a la linea  > seguir
+			- (exabot_02.xml)
+				- sólo es a modo de ejemplo, se ajustó bien el tema del 3-OR, el resto (02a, 02b y 02c) son sólo variaciones de éste, sólo en el nodo "buscarLinea", que es cómo va a buscar la línea (para dónde gira), el resto de los nodos/tunings se conserva...
+					a) buscarLinea > si (l0 y -l1) > acomodar  2seg > seguirLinea
+					b) buscarLinea > si (l1 y -l0) > acomodar2 2seg > seguirLinea
+					c) buscarLinea > si (l0 y l1)  > acomodar3 3seg > seguirLinea (girar un cahito más porque está ortogonal a la linea)
+			- exabot_02a_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+				- busca línea girando hacia la izquierda, poner el robot +/- a 15º de la linea con ruedatrasera-izq pisando linea...
+				- EXCELENTE!
+			- exabot_02b_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+				- busca línea girando hacia la derecha, poner el robot +/- a 15º de la linea con rueda-trasera-der pisando linea...
+				- además le espejamos el nodo "seguirLinea" para que recorra bien el ciruito al revés...
+				- EXCELENTE!
+			- exabot_03b_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+				- busca línea avanzando derecho, poner el ortogonal a la linea...
+				- EXCELENTE!
+
+				> !!! lo bueno de estos comportamientos es que se usan sensores y timers en las condiciones...
+
+
+	*) ver MAS!
+
+
+
+
+
+
+
+
+
+
+
 
 
 

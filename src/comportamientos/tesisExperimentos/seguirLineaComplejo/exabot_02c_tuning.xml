@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers>
+        <timer descripcion="timer.0" id="timer.0"/>
+    </timers>
+    <contadores/>
+    <comportamiento descripcion="acomodar3" id="comportamiento.7"
+        pos_x="451" pos_y="394">
+        <cajas>
+            <caja id="function.15" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.16" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="-20"/>
+                <punto x="100" y="-20"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.15"/>
+            <coneccion dst="motor.derecha" src="function.16"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="buscarLinea" id="comportamiento.2"
+        pos_x="205" pos_y="245">
+        <cajas>
+            <caja id="function.11" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.12" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.11"/>
+            <coneccion dst="motor.derecha" src="function.12"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <comportamiento descripcion="acomodar" id="comportamiento.9"
+        pos_x="524" pos_y="292">
+        <cajas>
+            <caja id="function.17" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="11"/>
+                <punto x="100" y="11"/>
+            </caja>
+            <caja id="function.18" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="6"/>
+                <punto x="100" y="6"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.derecha" src="function.18"/>
+            <coneccion dst="motor.izquierda" src="function.17"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="acomodar2" id="comportamiento.10"
+        pos_x="524" pos_y="392">
+        <cajas>
+            <caja id="function.19" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="6"/>
+                <punto x="100" y="6"/>
+            </caja>
+            <caja id="function.20" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="11"/>
+                <punto x="100" y="11"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.19"/>
+            <coneccion dst="motor.derecha" src="function.20"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="seguirLinea" id="comportamiento.1"
+        pos_x="289" pos_y="102">
+        <cajas>
+            <caja id="function.0" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="11"/>
+                <punto x="100" y="11"/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="11"/>
+                <punto x="100" y="11"/>
+            </caja>
+            <caja id="function.2" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="75"/>
+            </caja>
+            <caja id="function.3" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="75"/>
+            </caja>
+            <caja id="function.9" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="-6"/>
+            </caja>
+            <caja id="function.10" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="25" y="0"/>
+                <punto x="75" y="-28"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="function.3" src="linea.0"/>
+            <coneccion dst="function.9" src="linea.1"/>
+            <coneccion dst="function.10" src="linea.0"/>
+            <coneccion dst="motor.derecha" src="function.1"/>
+            <coneccion dst="motor.derecha" src="function.3"/>
+            <coneccion dst="motor.derecha" src="function.9"/>
+            <coneccion dst="function.2" src="linea.1"/>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.izquierda" src="function.10"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.7">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.0" umbral="3.0"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.9" id_origen="comportamiento.2">
+            <condiciones>
+                <condicion comparacion="&lt;" id_elemento="linea.1" umbral="100.0"/>
+                <condicion comparacion=">" id_elemento="linea.0" umbral="0.0"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.0" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.9">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.0" umbral="2.0"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.2" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.10">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="timer.0" umbral="2.0"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.7" id_origen="comportamiento.2">
+            <condiciones>
+                <condicion comparacion=">" id_elemento="linea.1" umbral="0.0"/>
+                <condicion comparacion=">" id_elemento="linea.0" umbral="0.0"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.0" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+        <transicion id_destino="comportamiento.10" id_origen="comportamiento.2">
+            <condiciones>
+                <condicion comparacion="&lt;" id_elemento="linea.0" umbral="100.0"/>
+                <condicion comparacion=">" id_elemento="linea.1" umbral="0.0"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion id_timer="timer.0" tipo="timer"/>
+            </actualizaciones>
+        </transicion>
+    </transiciones>
+</conducta>
