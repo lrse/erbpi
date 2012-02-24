@@ -109,7 +109,12 @@ hacer cosas más complejas:
 				>> para comentar en informe: ya describimos este comportamiento, pero qué pasaría si un día el borracho se encuentra con un mueble que han puesto contra la pared del pasillo?? => complejo/subsuncion!
 
 
-	*) ver MAS!
+	*) luchadorDeSumo - ExaBot
+			hacer esto sobre la base de varios simples:
+				- buscar girando con sonar
+				- avanzar derecho
+				- mocho con bumpers
+				- retroceder con lineas
 
 
 
