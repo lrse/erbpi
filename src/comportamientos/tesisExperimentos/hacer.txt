@@ -46,6 +46,8 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				- EXCELENTE! arranca por la parte recta y pega toda la vuelta, al final está muy justito y a veces se va. Es porque quedó más inteligente para girar a derecha que a izquierda...
 			- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- EXCELENTE!
+
+		>> para comentar en informe: el linefollowing es medio porqueria porque es 0/1, entonces hace que sea muy dificil manejarlo suavemente, los movimientos de correcion son muy bruscos, si se corre 1mm entonces 100% al motor, por lo que fue necesario ir bajando la velocidad de las costantes para que se ajuste. Particularidades de cada robot y sensor...
 				
 
 	*) seguirParedIzquierdaSencillo
@@ -58,11 +60,14 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 			- exasim_03_tuning.xml / lab5.world.png
 				- EXCELENTE! idem anterior pero avanza un poco más rápido!
 		- exaBot
-			- exabot_01.xml / SONAR
-				- no llegué a probarlo, pruebo primero con telemetros...
+			- exabot_01.xml / SONAR (no llegué a probarlo, pruebo primero con telemetros)
 			- exabot_02_tuning.xml / TELE
 				- EXCELENTE!
-(ESTOY ACA !!)		FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
+			- exabot_03.xml / TELE
+				- es sólo seguir pared, debería meterse en el hueco, como comportamiento del borracho...
+				- EXCELENTE!
+				>> filmado, sin nada  y con un obstaculo que se lo lleva puesto... (ver seguirParedIzquierdaComplejo para cómo evitar esto)
+				>> para comentar en informe: vulgarmente conocido como "el comportamiento del borracho", se trata de imitar el comportamientos de un paersona en estado de ebriedad que avanza por el pasillo de habitaciones tratando de encontrar la puerta de su habitación, avanza manteniendo una distancia cercana a la pared de la izquierda y entrará en la primera puerta que encuentre"
 
 
 ##########################
@@ -93,7 +98,15 @@ hacer cosas más complejas:
 				- busca línea avanzando derecho, poner el ortogonal a la linea...
 				- EXCELENTE!
 
-				> !!! lo bueno de estos comportamientos es que se usan sensores y timers en las condiciones...
+				>> !!! lo bueno de estos comportamientos es que se usan sensores y timers en las condiciones...
+
+	*) seguirParedIzquierdaComplejo: seguirParedIzquierdaSencillo + evitarObstaculo
+
+		- exaBot
+			- exabot_04_tuning.xml / TELE+SONAR
+				- EXCELENTE!
+				>> filmado!!
+				>> para comentar en informe: ya describimos este comportamiento, pero qué pasaría si un día el borracho se encuentra con un mueble que han puesto contra la pared del pasillo?? => complejo/subsuncion!
 
 
 	*) ver MAS!
