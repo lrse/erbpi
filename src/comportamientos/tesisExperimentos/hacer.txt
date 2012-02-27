@@ -34,7 +34,7 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 					- a veces tocaba un poquito las paredes...
 				- exabot_04_tuning.xml 
 					- EXCELENTE!
-(ESTOY ACA !!)			FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
+(*) FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
 	*) seguirLineaSencillo
@@ -52,13 +52,22 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 
 	*) seguirParedIzquierdaSencillo
 
-		- exaSim-TELE
+		- exaSim
 			- exasim_01.xml / lab5.world.png
 				- OK! pero se la pone contra la pared al girar al final...
 			- exasim_02_tuning.xml / lab5.world.png
 				- casi que recorre todo!!
 			- exasim_03_tuning.xml / lab5.world.png
 				- EXCELENTE! idem anterior pero avanza un poco más rápido!
+			- exasim_03_tuning.xml / lab6.world.png / confExaSim2
+				- EXCELENTE! idem anterior y NUEVO ESCENARIO !!
+(*) FALTA GRABAR CON EL NUEVO ESCENARIO! 
+
+		- yaks
+			- yaks_01.xml / lab5.world
+				- OK, hay que corregirlo un poco para que termine de entrar en la pieza!!!
+(*) FALTA CORREGIR UN POCO Y GRABAR! (hay que corregirlo un poco para que termine de entrar en la pieza!!!) 
+
 		- exaBot
 			- exabot_01.xml / SONAR (no llegué a probarlo, pruebo primero con telemetros)
 			- exabot_02_tuning.xml / TELE
