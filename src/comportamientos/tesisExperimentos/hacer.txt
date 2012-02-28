@@ -1,6 +1,6 @@
 
 ##########################################################################
-hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
+COMPORTAMIENTOS SIMPLES
 ##########################################################################
 
 	*) evitarObstaculosSencillo (todos sólo con telemetros):
@@ -79,9 +79,10 @@ hacer los siguientes Braitengers (1 sólo nodo) para los siguientes robots:
 				>> para comentar en informe: vulgarmente conocido como "el comportamiento del borracho", se trata de imitar el comportamientos de un paersona en estado de ebriedad que avanza por el pasillo de habitaciones tratando de encontrar la puerta de su habitación, avanza manteniendo una distancia cercana a la pared de la izquierda y entrará en la primera puerta que encuentre"
 
 
-##########################
-hacer cosas más complejas:
-##########################
+
+##########################################################################
+COMPORTAMIENTOS SIMPLES
+##########################################################################
 
 	*) seguirLineaComplejo: buscarLinea + seguirLinea
 
@@ -111,12 +112,31 @@ hacer cosas más complejas:
 
 	*) seguirParedIzquierdaComplejo: seguirParedIzquierdaSencillo + evitarObstaculo
 
+		- exaSim
+			- ???
+(*) FALTA HACER NUEVO ESCENARIO Y GRABAR! 
+
 		- exaBot
 			- exabot_04_tuning.xml / TELE+SONAR
 				- EXCELENTE!
 				>> filmado!!
 				>> para comentar en informe: ya describimos este comportamiento, pero qué pasaría si un día el borracho se encuentra con un mueble que han puesto contra la pared del pasillo?? => complejo/subsuncion!
 
+
+
+
+
+
+
+
+
+
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+####################################################################
+####################################################################
 
 	*) luchadorDeSumo - ExaBot
 			hacer esto sobre la base de varios simples:
