@@ -113,8 +113,13 @@ COMPORTAMIENTOS SIMPLES
 	*) seguirParedIzquierdaComplejo: seguirParedIzquierdaSencillo + evitarObstaculo
 
 		- exaSim
-			- ???
-(*) FALTA HACER NUEVO ESCENARIO Y GRABAR! 
+			- exasim_01.xml / lab7.world.png / confExaSim
+				- más o menos...
+			- exasim_02.xml / lab7.world.png / confExaSim
+				- EXCELENTE!
+			- exasim_03_tuning.xml / lab7.world.png / confExaSim
+				- EXCELENTE! idem anterior pero más rápido!!
+(*) FALTA GRABAR! 
 
 		- exaBot
 			- exabot_04_tuning.xml / TELE+SONAR
