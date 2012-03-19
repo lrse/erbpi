@@ -34,7 +34,6 @@ COMPORTAMIENTOS SIMPLES
 					- a veces tocaba un poquito las paredes...
 				- exabot_04_tuning.xml 
 					- EXCELENTE!
-(*) FALTA HACER BIEN EL ESCENARIO CON MADERAS Y GRABAR! 
 
 
 	*) seguirLineaSencillo
@@ -47,8 +46,6 @@ COMPORTAMIENTOS SIMPLES
 			- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- EXCELENTE!
 
-		>> para comentar en informe: el linefollowing es medio porqueria porque es 0/1, entonces hace que sea muy dificil manejarlo suavemente, los movimientos de correcion son muy bruscos, si se corre 1mm entonces 100% al motor, por lo que fue necesario ir bajando la velocidad de las costantes para que se ajuste. Particularidades de cada robot y sensor...
-				
 
 	*) seguirParedIzquierdaSencillo
 
@@ -75,13 +72,10 @@ COMPORTAMIENTOS SIMPLES
 			- exabot_03.xml / TELE
 				- es sólo seguir pared, debería meterse en el hueco, como comportamiento del borracho...
 				- EXCELENTE!
-				>> filmado, sin nada  y con un obstaculo que se lo lleva puesto... (ver seguirParedIzquierdaComplejo para cómo evitar esto)
-				>> para comentar en informe: vulgarmente conocido como "el comportamiento del borracho", se trata de imitar el comportamientos de un paersona en estado de ebriedad que avanza por el pasillo de habitaciones tratando de encontrar la puerta de su habitación, avanza manteniendo una distancia cercana a la pared de la izquierda y entrará en la primera puerta que encuentre"
-
 
 
 ##########################################################################
-COMPORTAMIENTOS SIMPLES
+COMPORTAMIENTOS COMPLEJOS
 ##########################################################################
 
 	*) seguirLineaComplejo: buscarLinea + seguirLinea
@@ -104,11 +98,10 @@ COMPORTAMIENTOS SIMPLES
 				- busca línea girando hacia la derecha, poner el robot +/- a 15º de la linea con rueda-trasera-der pisando linea...
 				- además le espejamos el nodo "seguirLinea" para que recorra bien el ciruito al revés...
 				- EXCELENTE!
-			- exabot_03b_tuning.xml / pizarrón con lineas en hojas circuito incompleto
+			- exabot_02c_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- busca línea avanzando derecho, poner el ortogonal a la linea...
 				- EXCELENTE!
 
-				>> !!! lo bueno de estos comportamientos es que se usan sensores y timers en las condiciones...
 
 	*) seguirParedIzquierdaComplejo: seguirParedIzquierdaSencillo + evitarObstaculo
 
@@ -124,43 +117,5 @@ COMPORTAMIENTOS SIMPLES
 		- exaBot
 			- exabot_04_tuning.xml / TELE+SONAR
 				- EXCELENTE!
-				>> filmado!!
-				>> para comentar en informe: ya describimos este comportamiento, pero qué pasaría si un día el borracho se encuentra con un mueble que han puesto contra la pared del pasillo?? => complejo/subsuncion!
-
-
-
-
-
-
-
-
-
-
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-####################################################################
-
-	*) luchadorDeSumo - ExaBot
-			hacer esto sobre la base de varios simples:
-				- buscar girando con sonar
-				- avanzar derecho
-				- mocho con bumpers
-				- retroceder con lineas
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
