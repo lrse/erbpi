@@ -128,13 +128,11 @@ COMPORTAMIENTOS COMPLEJOS
 				- EXCELENTE!
 			- exasim_03_tuning.xml / lab7.world.png / confExaSim
 				- EXCELENTE! idem anterior pero más rápido!!
-(*) FALTA GRABAR! 
-
-		- yaks?
-
+				- FILMADO!!
 
 		- exaBot
 			- exabot_04_tuning.xml / TELE+SONAR
 				- EXCELENTE!
+				- FILMADO!!
 
 
