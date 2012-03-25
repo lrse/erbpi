@@ -27,6 +27,8 @@ COMPORTAMIENTOS SIMPLES
 					- MAL! se traba en 4to cuadrante a los 1.20 minutos! llega a un balance entre sensores => ruedas = 0
 				- exasim_03_tuning.xml / lab5.world.png
 					- EXCELENTE! y casi recorre el todo laberinto en 2 minutos (menos el 3er cuadrante)...
+				- exasim_03_tuning.xml / lab5.world.png / confExaSim2
+					- FILMADO!!
 	
 		- exaBot
 			- solo exitatoria e inhibitorias
@@ -38,6 +40,7 @@ COMPORTAMIENTOS SIMPLES
 					- a veces tocaba un poquito las paredes...
 				- exabot_04_tuning.xml 
 					- EXCELENTE!
+					- FILMADO!!
 
 
 	*) seguirLineaSencillo
@@ -49,6 +52,7 @@ COMPORTAMIENTOS SIMPLES
 				- EXCELENTE! arranca por la parte recta y pega toda la vuelta, al final está muy justito y a veces se va. Es porque quedó más inteligente para girar a derecha que a izquierda...
 			- exabot_03_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- EXCELENTE!
+				- FILMADO!!
 
 
 	*) seguirParedIzquierdaSencillo
@@ -62,12 +66,17 @@ COMPORTAMIENTOS SIMPLES
 				- EXCELENTE! idem anterior pero avanza un poco más rápido!
 			- exasim_03_tuning.xml / lab6.world.png / confExaSim2
 				- EXCELENTE! idem anterior y NUEVO ESCENARIO !!
-(*) FALTA GRABAR CON EL NUEVO ESCENARIO! 
+				- FILMADO!!
 
 		- yaks
 			- yaks_01.xml / lab5.world
 				- OK, hay que corregirlo un poco para que termine de entrar en la pieza!!!
-(*) FALTA CORREGIR UN POCO Y GRABAR! (hay que corregirlo un poco para que termine de entrar en la pieza!!!) 
+			- yaks_02_tuning.xml / lab5.world / confYaks
+				- muy brusco...
+			- yaks_03_tuning.xml / lab5.world / confYaks y confYaks2 
+				- EXCELENTE!
+				- FILMADO!!
+
 
 		- exaBot
 			- exabot_01.xml / SONAR (no llegué a probarlo, pruebo primero con telemetros)
