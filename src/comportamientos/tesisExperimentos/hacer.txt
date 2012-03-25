@@ -14,6 +14,10 @@ COMPORTAMIENTOS SIMPLES
 					- EXCELENTE! recorre el 90% despueś de 3 minutos (salvo el pedacito de adentro...)
 				- yaks_02_tuning.xml / lab3.world
 					- OK! recorre el 95% despueś de 10 minutos!
+				- yaks_02_tuning.xml / lab4.world / confYaks2
+					- FILMADO!!
+				- yaks_03_tuning.xml / lab4.world / confYaks3
+					- FILMADO!!
 
 		- exaSim
 			- solo exitatoria e inhibitorias
