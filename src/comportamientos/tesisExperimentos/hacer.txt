@@ -77,7 +77,6 @@ COMPORTAMIENTOS SIMPLES
 				- EXCELENTE!
 				- FILMADO!!
 
-
 		- exaBot
 			- exabot_01.xml / SONAR (no llegué a probarlo, pruebo primero con telemetros)
 			- exabot_02_tuning.xml / TELE
@@ -85,6 +84,7 @@ COMPORTAMIENTOS SIMPLES
 			- exabot_03.xml / TELE
 				- es sólo seguir pared, debería meterse en el hueco, como comportamiento del borracho...
 				- EXCELENTE!
+				- FILMADO!!
 
 
 ##########################################################################
@@ -107,13 +107,16 @@ COMPORTAMIENTOS COMPLEJOS
 			- exabot_02a_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- busca línea girando hacia la izquierda, poner el robot +/- a 15º de la linea con ruedatrasera-izq pisando linea...
 				- EXCELENTE!
+				- FILMADO!!
 			- exabot_02b_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- busca línea girando hacia la derecha, poner el robot +/- a 15º de la linea con rueda-trasera-der pisando linea...
 				- además le espejamos el nodo "seguirLinea" para que recorra bien el ciruito al revés...
 				- EXCELENTE!
+				- FILMADO!!
 			- exabot_02c_tuning.xml / pizarrón con lineas en hojas circuito incompleto
 				- busca línea avanzando derecho, poner el ortogonal a la linea...
 				- EXCELENTE!
+				- FILMADO!!
 
 
 	*) seguirParedIzquierdaComplejo: seguirParedIzquierdaSencillo + evitarObstaculo
@@ -126,6 +129,9 @@ COMPORTAMIENTOS COMPLEJOS
 			- exasim_03_tuning.xml / lab7.world.png / confExaSim
 				- EXCELENTE! idem anterior pero más rápido!!
 (*) FALTA GRABAR! 
+
+		- yaks?
+
 
 		- exaBot
 			- exabot_04_tuning.xml / TELE+SONAR
