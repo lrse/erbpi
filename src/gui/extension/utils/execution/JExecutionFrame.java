@@ -39,9 +39,14 @@ public class JExecutionFrame extends JConsole
 		
 		// provide a pipe end for the processStreamHandler to write on
 		PipedOutputStream pipeInput = new PipedOutputStream();
+/*
+ * @author tfischer
+ * Descomentar si queremos que el output del subproceso que llamamos 
+ * sea pipeado a nuestra consola de la GUI.
+ * 		
 		PumpStreamHandler processStreamHandler = new PumpStreamHandler(pipeInput);
 		executor.setStreamHandler(processStreamHandler);
-		
+*/
 		// Stream where the process writes its out/err streams
 		PipedInputStream processOutputStream = null;
 		
