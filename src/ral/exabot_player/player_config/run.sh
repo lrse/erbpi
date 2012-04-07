@@ -1,2 +1,2 @@
 #!/bin/bash
-robot-player player.cfg
+player player.cfg

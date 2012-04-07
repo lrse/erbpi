@@ -38,10 +38,11 @@ public class JRemoteExecutionFrame extends JConsole
 			socket = new Socket(ip, port);
 		
 			sendProgram(socket, programFile);
-			
+/*			
 			//InputStream program_output = socket.getInputStream();
 			// no anda bien, lo cambio por un cartelito!
 	        String texto = "\n >> Ejecutando el CORE localmente en el Robot EXABOT...\n";
+
 	        try{
 	        	InputStream program_output = new ByteArrayInputStream(texto.getBytes("UTF-8"));
 	        	start(program_output);
@@ -49,8 +50,8 @@ public class JRemoteExecutionFrame extends JConsole
 	        catch( UnsupportedEncodingException e ){
 	        	e.printStackTrace();
 	        }
-
-			//start(program_output);
+*/
+			start();
 		}
 		catch (ConnectException e)
 		{

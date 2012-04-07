@@ -24,7 +24,7 @@ class JConsole extends JFrame implements ActionListener
 	//private TextArea console;
 	private JTextArea console;
 	private JScrollPane scrollPane;
-	private Thread monitorThread;
+//	private Thread monitorThread;
 	
 	private JButton stopButton;
 	private boolean running = false;
@@ -47,10 +47,10 @@ class JConsole extends JFrame implements ActionListener
 		});
 	}
 	
-	protected void start(InputStream stream)
+	protected void start(/*InputStream stream*/)
 	{
-		monitorThread = new ReaderThread(stream);
-		monitorThread.start();
+//		monitorThread = new ReaderThread(stream);
+//		monitorThread.start();
 		
 		this.setVisible(true);
 		
@@ -63,6 +63,7 @@ class JConsole extends JFrame implements ActionListener
 		
 		// TODO ver si esto mata el thread
 		System.out.println("waiting for monitorThread to finish");
+/*
 		monitorThread.interrupt();
 		try {
 			monitorThread.join();
@@ -71,6 +72,7 @@ class JConsole extends JFrame implements ActionListener
 			e.printStackTrace();
 			return;
 		}
+*/
 		System.out.println("monitorThread finished!");
 		
 		// show termination message

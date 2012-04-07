@@ -46,7 +46,7 @@ public class JExecutionFrame extends JConsole
  * 		
 		PumpStreamHandler processStreamHandler = new PumpStreamHandler(pipeInput);
 		executor.setStreamHandler(processStreamHandler);
-*/
+
 		// Stream where the process writes its out/err streams
 		PipedInputStream processOutputStream = null;
 		
@@ -57,7 +57,7 @@ public class JExecutionFrame extends JConsole
 			e.printStackTrace();
 			return;
 		}
-		
+*/		
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		
 		try {
@@ -72,7 +72,7 @@ public class JExecutionFrame extends JConsole
 			return;
 		}
 		
-		start(processOutputStream);
+		start(/*processOutputStream*/);
 	}
 	
 	@Override
