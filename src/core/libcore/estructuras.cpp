@@ -104,17 +104,17 @@ int Caja::Ejecutar()
     forall(it,_entradas)
         acumulador += (*it)->GetValor();
 
-		// ESTO ESTÁ MAL!!!
-		// están al revés los indices 0 y 1
-		// además cuando hace la cuenta de "a" termina haciendo un "-" en lugar de un "/"!!!
-				// acá calculo la función formada por los puntos
-				// la ecuación de la recta es Y = a*(X - x0) + y0
-				// donde a = (y1 - y0)/(x1 - x0)
+        // ESTO ESTÁ MAL!!!
+        // están al revés los indices 0 y 1
+        // además cuando hace la cuenta de "a" termina haciendo un "-" en lugar de un "/"!!!
+                // acá calculo la función formada por los puntos
+                // la ecuación de la recta es Y = a*(X - x0) + y0
+                // donde a = (y1 - y0)/(x1 - x0)
 
-	// ESTO ESTÁ BIEN...
-	// acá calculo la función formada por los puntos
-	// la ecuación de la recta es Y = a*(X - x0) + y0
-	// donde a = (y0 - y1)/(x0 - x1)
+    // ESTO ESTÁ BIEN...
+    // acá calculo la función formada por los puntos
+    // la ecuación de la recta es Y = a*(X - x0) + y0
+    // donde a = (y0 - y1)/(x0 - x1)
     
     if ( acumulador <= _punto_min.x )
         resultado = _punto_min.y;
@@ -126,14 +126,14 @@ int Caja::Ejecutar()
     {
         //float a = ( (float)_punto_max.y - (float)_punto_min.y ) - ( (float)_punto_max.x - (float)_punto_min.x );
         //resultado = (int)( a*( (float)acumulador - (float)_punto_min.x ) + (float)_punto_min.y );
-		float a = ( (float)_punto_min.y - (float)_punto_max.y ) / ( (float)_punto_min.x - (float)_punto_max.x );
-		resultado = (int)( a*( (float)acumulador - (float)_punto_min.x ) + (float)_punto_min.y );
+        float a = ( (float)_punto_min.y - (float)_punto_max.y ) / ( (float)_punto_min.x - (float)_punto_max.x );
+        resultado = (int)( a*( (float)acumulador - (float)_punto_min.x ) + (float)_punto_min.y );
         
     }
     
     _valor = resultado;
     
-	// cout << "nuevo valor de " << GetDescripcion() << ": " << GetValor() << endl;
+    // cout << "nuevo valor de " << GetDescripcion() << ": " << GetValor() << endl;
     
     return _valor;
 }
@@ -385,12 +385,32 @@ bool Conducta::ChequearActuadores(const ListaDeActuadores& actuadores) const
 
 void Conducta::LoguearEncabezadoDeElementos(ostream& log_os)
 {
-    // TODO
+    forall(it,_sensores)
+        log_os << (it->second)->GetId() << ", ";
+    
+    forall(it,_actuadores)
+        log_os << (it->second)->GetId() << ", ";
+    
+    forall(it,_timers)
+        log_os << (it->second)->GetId() << ", ";
+    
+    forall(it,_contadores)
+        log_os << (it->second)->GetId() << ", ";
 }
 
 void Conducta::LoguearEstadoDeElementos(ostream& log_os)
 {
-    // TODO
+    forall(it,_sensores)
+        log_os << (it->second)->GetValor() << ", ";
+    
+    forall(it,_actuadores)
+        log_os << (it->second)->GetValor() << ", ";
+    
+    forall(it,_timers)
+        log_os << (it->second)->GetValor() << ", ";
+    
+    forall(it,_contadores)
+        log_os << (it->second)->GetValor() << ", ";
 }
 
 Elemento* Conducta::ElementoPorId(const string& id_elemento)

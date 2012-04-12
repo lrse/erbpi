@@ -47,6 +47,12 @@
     {
         public:
             
+            // Destructor virtual para que al invocar el destructor 
+            // sobre una clase base (A* p, delete p), 
+            // se invoque el constructor de la clase real de p (~B)
+            // y no ~A, cuando B deriva de A.
+            virtual ~Elemento() { } ;
+            
             int SetValor(int);
             
             int GetValor() const;
@@ -176,6 +182,12 @@
     class Actualizacion
     {
         public:
+            
+            // Destructor virtual para que al invocar el destructor 
+            // sobre una clase base (A* p, delete p), 
+            // se invoque el constructor de la clase real de p (~B)
+            // y no ~A, cuando B deriva de A.
+            virtual ~Actualizacion() { } ;
             
             // es implementado por cada clase hija
             virtual void Ejecutar() = 0;

@@ -52,6 +52,8 @@ class JConsole extends JFrame implements ActionListener
 //		monitorThread = new ReaderThread(stream);
 //		monitorThread.start();
 		
+		this.console.append("Iniciando ejecución.\n");
+		
 		this.setVisible(true);
 		
 		running = true;
