@@ -1,7 +1,11 @@
+#include <boost/array.hpp>
+#include <boost/asio.hpp>
+#include <boost/algorithm/string.hpp>
+#include <vector>
 #include <RAL.h>
 #include "yaksRAL.h"
 
-// DEFINICION DE VARIABLES DE NORMALIZACION DE SENSORES Y MOTORES
+/*** DEFINICION DE VARIABLES DE NORMALIZACION DE SENSORES Y MOTORES ****/
 #define sensorProxMax				1023
 #define sensorProxMin				0
 #define sensorLightMax				512
@@ -17,160 +21,89 @@
 #define motorMinValYaks				-9
 
 
-// ---------------------------------------------------------------------
-// ------------------  VARIABLES GLOBALES  -----------------------------
-// ---------------------------------------------------------------------
-int sock; // global variable sock
+/*
+ * ------------------  VARIABLES GLOBALES  -----------------------------
+ */
+using boost::asio::ip::tcp;
+boost::asio::io_service io_service;
+tcp::socket* s;
+using namespace std;
 
+/*
+ * -------------  DEFINICION DE FUNCIONES PRIVADAS  --------------------
+ */
 
-// ---------------------------------------------------------------------
-// -------------  DEFINICION DE FUNCIONES PRIVADAS  --------------------
-// ---------------------------------------------------------------------
-
-int connectSocket(void){
-	struct sockaddr_in stSockAddr;
-	int Res;
-	int SocketFD = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-	if ( -1 == SocketFD ){
-		perror("cannot create socket");
-		exit(EXIT_FAILURE);
-	}
-
-	memset(&stSockAddr, 0, sizeof(stSockAddr));
-
-	stSockAddr.sin_family = AF_INET;
-	stSockAddr.sin_port = htons(SERVER_PORT);
-	Res = inet_pton(AF_INET, SERVER_HOST, &stSockAddr.sin_addr);
-
-	if (0 > Res){
-		perror("error: first parameter is not a valid address family");
-		close(SocketFD);
-		exit(EXIT_FAILURE);
-	}
-	else if (0 == Res){
-		perror("char string (second parameter does not contain valid ipaddress");
-		close(SocketFD);
-		exit(EXIT_FAILURE);
-	}
-
-	if (-1 == connect(SocketFD, (const sockaddr *)&stSockAddr, sizeof(stSockAddr))){
-		perror("connect failed");
-		close(SocketFD);
-		exit(EXIT_FAILURE);
-	}
-
-	return SocketFD;	
+void connectSocket(void){
+  tcp::resolver resolver(io_service);
+  tcp::resolver::query query(SERVER_HOST, SERVER_PORT);
+  tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
+  
+  s = new tcp::socket(io_service);
+  boost::system::error_code error;
+  s->connect(*endpoint_iterator);
 }
 
-int disconnectSocket(int SocketFD){
-	shutdown(SocketFD, SHUT_RDWR);
-	close(SocketFD);
-	return 0;
+void disconnectSocket(void){
+  s->close();
+}
+
+bool request_data(const std::string& cmd, std::vector<string>& output) {
+  vector<char> data(512);
+  
+  s->send(boost::asio::buffer(cmd + "\n"));
+  s->receive(boost::asio::buffer(data));
+  
+  std::string data_str(&data[0], data.size());
+  boost::split(output, data_str, boost::is_any_of(","));
+  std::string lowercase_cmd(cmd);
+  boost::algorithm::to_lower(lowercase_cmd);
+  if (output[0] != lowercase_cmd) return false;
+  else return true;
 }
 
 void readProximitySensors(int *sensors){
-	char buf[512], *p;
-	int i;
-
-	send(sock,"N\n",strlen("N\n"),0);
-	recv(sock,buf,sizeof(buf),0);
-
-	p=strchr(buf,'\n');
-	if( p!=NULL )
-		*p=0;
-	//printf("%s\n",buf);
-
-	i=0;
-	p=strtok(buf,",");
-
-	if( strcmp(p,"n") ){
-		/* error. Set all to 0 */
-		for( i=0; i<8; i++ )
-			sensors[i]=0;
-		return;
-	}
-
-	p=strtok(NULL,",");
-	while( i<8 && p!=NULL ){
-		sensors[i++] = (atoi(p));
-		p=strtok(NULL,",");
-	}
+  std::vector<std::string> strs;
+  if (!request_data("N", strs)) {
+    for(int i = 0; i < 8; i++) sensors[i] = 0;
+    return;
+  }
+  else {  
+    for (uint i = 0; i < 8 && i < strs.size(); i++)
+      sensors[i] = atoi(strs[i].c_str());
+  }
 }
 
 void readLightSensors(int *sensors){
-	char buf[512], *p;
-	int i;
-
-	send(sock,"O\n",strlen("O\n"),0);
-	recv(sock,buf,sizeof(buf),0);
-
-	p=strchr(buf,'\n');
-	if( p!=NULL )
-		*p=0;
-	//printf("%s\n",buf);
-
-	i=0;
-	p=strtok(buf,",");
-
-	if( strcmp(p,"o") ){
-		/* error. Set all to 0 */
-		for( i=0; i<8; i++ )
-			sensors[i]=0;
-		return;
-	}
-
-	p=strtok(NULL,",");
-	while( i<8 && p!=NULL ){
-		sensors[i++] = (atoi(p));
-		p=strtok(NULL,",");
-	}
+  std::vector<std::string> strs;
+  if (!request_data("O", strs)) {
+    for(int i = 0; i < 8; i++) sensors[i] = 0;
+    return;
+  }
+  else {  
+    for (uint i = 0; i < 8 && i < strs.size(); i++)
+      sensors[i] = atoi(strs[i].c_str());
+  }
 }
 
 float readGroundSensor(){
-	char buf[512], *p;
-
-	send(sock,"#G\n",strlen("#G\n"),0);
-	recv(sock,buf,sizeof(buf),0);
-
-	p=strchr(buf,'\n');
-	if( p!=NULL )
-		*p=0;
-	printf("%s\n",buf);
-
-	/* if the string does not begins with "#g,", something bad happened */
-	if( strncmp(buf,"#g,",3) )
-		return 0;
-
-	return (float)atof(&buf[3]);
+  std::vector<std::string> strs;
+  if (!request_data("#G", strs)) return 0;
+  else return atof(strs[0].c_str());
 }
 
 float readEnergySensor(){
-	char buf[512], *p;
-
-	send(sock,"#E\n",strlen("#E\n"),0);
-	recv(sock,buf,sizeof(buf),0);
-
-	p=strchr(buf,'\n');
-	if( p!=NULL )
-		*p=0;
-	printf("%s\n",buf);
-
-	/* if the string does not begins with "#e,", something bad happened */
-	if( strncmp(buf,"#e,",3) )
-		return 0;
-
-	return (float)atof(&buf[3]);
+  std::vector<std::string> strs;
+  if (!request_data("#E", strs)) return 0;
+  else return atof(strs[0].c_str());
 }
 
 void setMotors(int *motors){
-	char cmd[512], resp[512];
-
-	sprintf(cmd,"D,%d,%d\n",motors[0],motors[1]);
-	send(sock,cmd,strlen(cmd),0);
-
-	/* discard the answer */
-	recv(sock,resp,sizeof(resp),0);
+  ostringstream ostr;
+  ostr << "D," << motors[0] << "," << motors[1] << endl;
+  s->send(boost::asio::buffer(ostr.str()));
+  
+  vector<char> data(512);
+  s->receive(boost::asio::buffer(data)); // discard response
 }
 
 void normalizarSensores( int *sensors, int tamanio, std::string tipo ){
@@ -246,11 +179,11 @@ void desNormalizarMotores( int *motors, int tamanio ){
 // ---------------------------------------------------------------------
 
 void inicializarRAL(){
-	sock = connectSocket();
+	connectSocket();
 }
 
 void finalizarRAL(){
-	int res = disconnectSocket(sock);
+	disconnectSocket();
 }
 
 std::vector<std::string> getListaSensores(){

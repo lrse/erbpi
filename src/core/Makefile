@@ -10,7 +10,7 @@ libcore/libcore.a:
 
 core:  libcore/libcore.a core.o 
 	@echo "Linkeando core..."
-	$(CXX) -o core core.o $(LDFLAGS) -lRAL
+	$(CXX) -o core core.o $(LDFLAGS) -lRAL -lboost_system
 	
 core-exa: libcore/libcore.a core-exa.o 
 	@echo "Linkeando core-exa..."
