@@ -12,7 +12,7 @@ all: $(LIB)
 new: clean all
 
 $(LIB): RAL.o
-	$(CXX) $(CPPFLAGS)  -o $@ -shared   $^  $(LDFLAGS)
+	$(CXX) $(CPPFLAGS)  -o $@ -shared  -static-libgcc $^  $(LDFLAGS)
 	cp $@ ../
 
 clean:

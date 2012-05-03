@@ -30,6 +30,7 @@ install:
 	@cp -r ./ral/*.$(SHARED_EXT) $(BINDIR)/core
 	@echo "Copiando el core a la carpeta de archivos binarios..."
 	@cp $(COREDIR)/core $(BINDIR)/core/core
+	@if [ "$(uname)" != "Linux" ]; then cp /mingw/bin/libgcc*.dll $(BINDIR)/core/; cp /mingw/bin/libstdc++-6.dll $(BINDIR)/core/; fi
 	@mkdir $(BINDIR)/player
 	@cp -r ./ral/exabot_player/player_config/* $(BINDIR)/player
 	
