@@ -264,7 +264,8 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		}
 		else {
 			// copio la ral adecuada
-			String ext = (System.getProperty("os.name").toLowerCase().contains("linux") ? ".so" : ".dll");
+			Boolean is_linux = System.getProperty("os.name").toLowerCase().contains("linux"); 
+			String ext = (is_linux ? ".so" : ".dll");
 			File fileSrc = new File("../core/" + getRobot().getRal() + ext);
 			File fileDst = new File((new String("../core/libRAL")) + ext);
 			
@@ -278,7 +279,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 			
 			System.out.println("-> la RAL configurada es: " + fileSrc);
 			
-			String corePath = "../core/core_exe";
+			String corePath = (new String("../core/")) + (is_linux ? "core" : "core.exe");
 			
 			String cmdString = corePath + " " + tempProgramFile.getAbsolutePath() + " core_log.txt";
 			System.out.println("-> ejecutando el Core: "+cmdString);

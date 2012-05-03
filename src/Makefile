@@ -31,9 +31,9 @@ install:
 	@echo "Copiando las distintas RALs a la carpeta de archivos src (para desarrollo)..."
 	@cp -r ./ral/*.$(SHARED_EXT) $(SRCDIR)/core
 	@echo "Copiando el core a la carpeta de archivos binarios..."
-	@cp $(COREDIR)/core $(BINDIR)/core/core_exe
+	@cp $(COREDIR)/core $(BINDIR)/core/core
 	@echo "Copiando el core a la carpeta de archivos src (para desarrollo)..."
-	@cp $(COREDIR)/core $(SRCDIR)/core/core_exe
+	@cp $(COREDIR)/core $(SRCDIR)/core/core
 	@mkdir $(BINDIR)/player
 	@cp -r ./ral/exabot_player/player_config/* $(BINDIR)/player
 	
