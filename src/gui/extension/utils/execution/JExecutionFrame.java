@@ -43,7 +43,7 @@ public class JExecutionFrame extends JConsole
  * @author tfischer
  * Descomentar si queremos que el output del subproceso que llamamos 
  * sea pipeado a nuestra consola de la GUI.
- * 		
+ */ 		
 		PumpStreamHandler processStreamHandler = new PumpStreamHandler(pipeInput);
 		executor.setStreamHandler(processStreamHandler);
 
@@ -57,7 +57,7 @@ public class JExecutionFrame extends JConsole
 			e.printStackTrace();
 			return;
 		}
-*/		
+	
 		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
 		
 		try {
