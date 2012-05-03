@@ -1,7 +1,7 @@
 <?xml version='1.0' ?>
 <robot id="yaks" nombre="Yaks">
   <imagen id='esquema' href='robots/robot_yaks.png' />
-  <ral href='libyaksRAL.so'/>
+  <ral href='libyaksRAL'/>
   <sensores>
     <sensor id='proximidad.320' tipo='proximidad' default='true'>
       <mapaimagen imagen='esquema'>
