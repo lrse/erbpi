@@ -279,7 +279,7 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 			
 			System.out.println("-> la RAL configurada es: " + fileSrc);
 			
-			String corePath = (new String("../core/")) + (is_linux ? "core" : "core");
+			String corePath = "../core/core";
 			
 			String cmdString = corePath + " " + tempProgramFile.getAbsolutePath() + " core_log.txt";
 			System.out.println("-> ejecutando el Core: "+cmdString);
