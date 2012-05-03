@@ -1,7 +1,9 @@
 CXX=g++
 CXXFLAGS=-O2 -g -Wall -Ilibcore -I../ral
-LDFLAGS=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.'  -lcore -lpthread -lxerces-c
-LDFLAGS_EXA=-L../../../libexabot -lexabot
+include ../Makefile.common
+
+LDFLAGS:=-Llibcore -L../ral -Wl,-rpath='$$ORIGIN/.'  -lcore -lpthread -lxerces-c
+LDFLAGS_EXA=-L../../../libexabot -lexabot $(BOOST_LIBS)
 
 all: core 
 
@@ -10,7 +12,7 @@ libcore/libcore.a:
 
 core:  libcore/libcore.a core.o 
 	@echo "Linkeando core..."
-	$(CXX) -o core core.o $(LDFLAGS) -lRAL -lboost_system
+	$(CXX) -o core core.o $(LDFLAGS) -lRAL 
 	
 core-exa: libcore/libcore.a core-exa.o 
 	@echo "Linkeando core-exa..."
@@ -21,4 +23,4 @@ core-exa: libcore/libcore.a core-exa.o
 
 clean:
 	$(MAKE) -C libcore clean
-	rm -f core core_exe core-exa *.o *.so
+	rm -f core core_exe core-exa *.o *.$(SHARED_EXT)

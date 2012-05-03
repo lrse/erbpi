@@ -1,3 +1,5 @@
+include ../../Makefile.common
+
 CC=gcc
 CXX=g++
 CFLAGS=-O2
@@ -9,10 +11,8 @@ all: libexabotPlayerRAL.so
 new: clean all
 
 libexabotPlayerRAL.so: exabotPlayerRAL.o
-	@echo "Compilando libreria libexabotPlayerRAL.so para Linux"
-	@$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
-	@cp $@ ../
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+	cp $@ ../
 	
 clean:
-	@echo "Eliminando libreria libexabotPlayerRAL.so para Linux"
-	@$(RM) -f *.o *.so
+	$(RM) -f *.o *.so

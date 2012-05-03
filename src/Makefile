@@ -1,11 +1,10 @@
+include Makefile.common
 BINDIR=../bin
 SRCDIR=../src
 LIBDIR=./lib
 RALDIR=./ral
 GUIDIR=./gui
 COREDIR=./core
-
-MAKE=make
 
 all: 
 	@$(RM) -rf $(BINDIR)
@@ -28,9 +27,9 @@ install:
 	@$(MAKE) -C $(GUIDIR) install
 	@cp run.sh $(BINDIR)/
 	@echo "Copiando las distintas RALs a la carpeta de archivos binarios..."
-	@cp -r ./ral/*.so $(BINDIR)/core
+	@cp -r ./ral/*.$(SHARED_EXT) $(BINDIR)/core
 	@echo "Copiando las distintas RALs a la carpeta de archivos src (para desarrollo)..."
-	@cp -r ./ral/*.so $(SRCDIR)/core
+	@cp -r ./ral/*.$(SHARED_EXT) $(SRCDIR)/core
 	@echo "Copiando el core a la carpeta de archivos binarios..."
 	@cp $(COREDIR)/core $(BINDIR)/core/core_exe
 	@echo "Copiando el core a la carpeta de archivos src (para desarrollo)..."

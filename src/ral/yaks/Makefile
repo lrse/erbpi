@@ -1,21 +1,20 @@
+include ../../Makefile.common
+
 CXX=g++
 CXXFLAGS = -fPIC -Wall -O2 -g
 CPPFLAGS=-I../ 
-LDFLAGS=-shared
+LDFLAGS:=$(BOOST_LIBS)
 
-all: libyaksRAL.so
+LIB:= libyaksRAL.$(SHARED_EXT)
+
+all: $(LIB)
 
 new: clean all
 
-yaksRAL.o: RAL.cpp
-	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $^ -o $@
-
-libyaksRAL.so: yaksRAL.o
-	@echo "Compilando libreria libyaksRAL.so"
-	@$(CXX) $(CPPFLAGS) $(LDFLAGS) $^ -o $@ 
-	@cp $@ ../
+$(LIB): RAL.o
+	$(CXX) $(CPPFLAGS)  -o $@ -shared   $^  $(LDFLAGS)
+	cp $@ ../
 
 clean:
-	@echo "Eliminando libreria libyaksRAL.so"
-	@$(RM) -f *.o *.so
+	$(RM) -f *.o *.$(SHARED_EXT)
 

@@ -1,3 +1,5 @@
+include ../../../Makefile.common
+
 CXX=g++
 CXXFLAGS=-fPIC -Wall -O2 -g
 CPPFLAGS=-I../..

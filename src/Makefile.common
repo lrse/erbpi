@@ -1,0 +1,9 @@
+ifeq ($(shell uname),Linux)
+  LINUX:=1
+  SHARED_EXT:=so
+  BOOST_LIBS:=-lboost_system
+else
+  LINUX:=0
+  SHARED_EXT:=dll
+  BOOST_LIBS:=-lboost_system-mgw46-mt-1_49 -lws2_32
+endif

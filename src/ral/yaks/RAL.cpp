@@ -1,3 +1,5 @@
+#define BOOST_SYSTEM_USE_LIB
+#define BOOST_THREAD_USE_LIB
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/algorithm/string.hpp>
@@ -37,7 +39,7 @@ void connectSocket(void){
   tcp::resolver resolver(io_service);
   tcp::resolver::query query(SERVER_HOST, SERVER_PORT);
   tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
-  
+
   s = new tcp::socket(io_service);
   boost::system::error_code error;
   s->connect(*endpoint_iterator);
@@ -49,10 +51,10 @@ void disconnectSocket(void){
 
 bool request_data(const std::string& cmd, std::vector<string>& output) {
   vector<char> data(512);
-  
+
   s->send(boost::asio::buffer(cmd + "\n"));
   s->receive(boost::asio::buffer(data));
-  
+
   std::string data_str(&data[0], data.size());
   boost::split(output, data_str, boost::is_any_of(","));
   std::string lowercase_cmd(cmd);
@@ -67,8 +69,8 @@ void readProximitySensors(int *sensors){
     for(int i = 0; i < 8; i++) sensors[i] = 0;
     return;
   }
-  else {  
-    for (uint i = 0; i < 8 && i < strs.size(); i++)
+  else {
+    for (unsigned int i = 0; i < 8 && i < strs.size(); i++)
       sensors[i] = atoi(strs[i].c_str());
   }
 }
@@ -79,8 +81,8 @@ void readLightSensors(int *sensors){
     for(int i = 0; i < 8; i++) sensors[i] = 0;
     return;
   }
-  else {  
-    for (uint i = 0; i < 8 && i < strs.size(); i++)
+  else {
+    for (unsigned int i = 0; i < 8 && i < strs.size(); i++)
       sensors[i] = atoi(strs[i].c_str());
   }
 }
@@ -101,7 +103,7 @@ void setMotors(int *motors){
   ostringstream ostr;
   ostr << "D," << motors[0] << "," << motors[1] << endl;
   s->send(boost::asio::buffer(ostr.str()));
-  
+
   vector<char> data(512);
   s->receive(boost::asio::buffer(data)); // discard response
 }
@@ -221,7 +223,7 @@ std::vector<Item> getEstadoSensores(){
 	std::vector<Item> sensors;
 	int proximitySensors[8];
 	int lightSensors[8];
-	
+
 	readProximitySensors(proximitySensors);
 	readLightSensors(lightSensors);
 
@@ -233,7 +235,7 @@ std::vector<Item> getEstadoSensores(){
 		item.id = sensorsName[i];
 		item.valor = proximitySensors[i];
 		sensors.push_back(item);
-	} 
+	}
 	for(int i=8; i<16; i++){
 		item.id = sensorsName[i];
 		item.valor = lightSensors[i-8];
@@ -249,15 +251,15 @@ unsigned long getFrecuenciaTrabajo(){
 void setEstadoActuadores(std::vector<Item> actuators){
 	int motors[2];
 	//int* motors[2];
-	for(int i=0; i < actuators.size(); i++){
+	for(unsigned int i=0; i < actuators.size(); i++){
 		//printf("Valor motor %s es %d \n", (actuators[i].id).c_str(), actuators[i].valor);
 		if ( actuators[i].id == MOTOR_00){ motors[0] = actuators[i].valor;}
 		if ( actuators[i].id == MOTOR_01){ motors[1] = actuators[i].valor;}
 	}
-	
+
 	// desnormalizo los valores de motores de la GUI...
 	desNormalizarMotores( motors, 2 );
-	
+
 	// seteo
-	setMotors(motors);	
+	setMotors(motors);
 }
