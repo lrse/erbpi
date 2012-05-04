@@ -1,7 +1,8 @@
 compile:
-	# creo el JAR del proyecto GUI-Java
+	# crea el JAR, excluyendo los .svn y los .java
 	rm -f gui.jar
-	jar cvfm gui.jar MANIFEST.MF extension thirdparty org
+	find extension org thirdparty -not -path '*.svn*' -not -iname '*.java' -not -type d | xargs jar cvfm gui.jar MANIFEST.MF 
+        jar i gui.jar
 
 install:
 	mkdir -p ../../bin/gui
