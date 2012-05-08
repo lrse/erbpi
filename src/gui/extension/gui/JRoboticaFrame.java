@@ -238,29 +238,20 @@ public class JRoboticaFrame extends JFrame implements ActionListener
 		
 		if (getRobot().getId().equals("exabot"))
 		{
-			new JRemoteExecutionFrame(tempProgramFile, "192.168.0.2", 7654);
-
-///*-----------------------------------------------------*/
-//	System.out.println("EJEC MANUAL - INICIO");
-//			try{
-//				String exa_ip = new String("192.168.0.2");
-//				Socket s = new Socket(exa_ip, 7654); 
-//			 	PrintWriter out = new PrintWriter(s.getOutputStream(), true); 
-//	              
-//			 	BufferedReader in = new BufferedReader(new FileReader(tempProgramFile)); 
-//			 	String text = new String(); 
-//			 	while (in.ready()) { text += in.readLine() + "\n"; } 
-//			 	out.print(text); 
-//			 	in.close(); 
-//			 	out.close(); 
-//			 	s.close();
-//	System.out.println("EJEC MANUAL - FIN SIN INTERRUPCION");
-//			}
-//			catch( IOException e ){
-//				JOptionPane.showMessageDialog(this, new String("Hubo problemas al intentar ejecutar:\n") + e.getMessage());
-//			}
-///*-----------------------------------------------------*/
+			String exa_ip_str;
+			BufferedReader br;
+			try {
+				br = new BufferedReader(new FileReader("exa_ip.txt"));
+				try {
+					exa_ip_str = br.readLine();
+				} catch (IOException e) {
+					exa_ip_str = "192.168.0.2";
+				}
+			} catch (FileNotFoundException e) {
+				exa_ip_str = "192.168.0.2";
+			}
 			
+			new JRemoteExecutionFrame(tempProgramFile, exa_ip_str, 7654);		
 		}
 		else {
 			// copio la ral adecuada
