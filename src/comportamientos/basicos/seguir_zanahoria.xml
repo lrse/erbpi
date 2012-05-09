@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers/>
+    <contadores/>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <comportamiento descripcion="comportamiento.1" id="comportamiento.1"
+        pos_x="196" pos_y="135">
+        <cajas>
+            <caja id="function.2" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="29" y="-40"/>
+                <punto x="31" y="1"/>
+            </caja>
+            <caja id="function.3" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="60" y="40"/>
+                <punto x="63" y="-40"/>
+            </caja>
+            <caja id="function.4" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="60" y="40"/>
+                <punto x="68" y="-40"/>
+            </caja>
+            <caja id="function.5" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="30" y="-40"/>
+                <punto x="34" y="1"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="function.3" src="telemetro.0"/>
+            <coneccion dst="function.4" src="telemetro.0"/>
+            <coneccion dst="motor.derecha" src="function.5"/>
+            <coneccion dst="motor.derecha" src="function.4"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.izquierda" src="function.3"/>
+            <coneccion dst="function.2" src="telemetro.0"/>
+            <coneccion dst="function.5" src="telemetro.0"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
