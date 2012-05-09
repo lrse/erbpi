@@ -79,6 +79,7 @@ class JConsole extends JFrame implements ActionListener
 		
 		// show termination message
 		console.append("> Process terminated by user." + NEWLINE);
+		this.dispose();
 	}
 	
 	private void addConsole()
@@ -88,7 +89,7 @@ class JConsole extends JFrame implements ActionListener
 		console.setEditable(false);
 		
 		scrollPane = new JScrollPane(console);
-		scrollPane.setPreferredSize(new Dimension(640,480));
+		scrollPane.setPreferredSize(new Dimension(200,100));
 		
 		this.add(scrollPane);
 	}
