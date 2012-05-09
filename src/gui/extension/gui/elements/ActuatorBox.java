@@ -26,7 +26,7 @@ public class ActuatorBox extends Box
 	
 	@Override public Icon getImage()					{ return actuatorType.getImage(); }
 	@Override public boolean showsHighlight()			{ return true; }
-	@Override protected boolean canConnectFrom(Box b)	{ return true; }
+	@Override protected boolean canConnectFrom(Box b)	{ return (b instanceof FunctionBox); } // solo acepta conexiones desde funciones
 	@Override public BoxType getBoxType()				{ return BoxType.ACTUATOR; };
 	
 	@Override 
