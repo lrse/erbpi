@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<conducta id_comportamiento_inicial="comportamiento.0">
+    <robot id="exabot"/>
+    <sensores>
+        <sensor id="telemetro.315"/>
+        <sensor id="telemetro.0"/>
+        <sensor id="telemetro.45"/>
+        <sensor id="telemetro.90"/>
+        <sensor id="telemetro.180"/>
+        <sensor id="telemetro.270"/>
+        <sensor id="sonar.0"/>
+        <sensor id="contacto.0"/>
+        <sensor id="contacto.1"/>
+        <sensor id="linea.0"/>
+        <sensor id="linea.1"/>
+    </sensores>
+    <actuadores>
+        <actuador id="motor.izquierda"/>
+        <actuador id="motor.derecha"/>
+    </actuadores>
+    <timers/>
+    <contadores>
+        <contador descripcion="contador.1" id="contador.1"/>
+    </contadores>
+    <comportamiento descripcion="nodo inicial" id="comportamiento.0"
+        pos_x="100" pos_y="100"/>
+    <comportamiento descripcion="contar hueco" id="comportamiento.17"
+        pos_x="520" pos_y="101">
+        <cajas>
+            <caja id="function.29" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.31" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="26"/>
+                <punto x="100" y="26"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.izquierda" src="function.29"/>
+            <coneccion dst="motor.derecha" src="function.31"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="avanzar" id="comportamiento.20"
+        pos_x="397" pos_y="203">
+        <cajas>
+            <caja id="function.27" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="40"/>
+                <punto x="100" y="40"/>
+            </caja>
+            <caja id="function.28" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="46"/>
+                <punto x="100" y="46"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="motor.derecha" src="function.28"/>
+            <coneccion dst="motor.izquierda" src="function.27"/>
+        </conecciones>
+    </comportamiento>
+    <comportamiento descripcion="seguirPared" id="comportamiento.1"
+        pos_x="343" pos_y="97">
+        <cajas>
+            <caja id="function.0" location="left" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.1" location="right" templateId="energia">
+                <esquema id="energia"/>
+                <punto x="0" y="20"/>
+                <punto x="100" y="20"/>
+            </caja>
+            <caja id="function.2" location="left" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="75" y="0"/>
+                <punto x="77" y="10"/>
+            </caja>
+            <caja id="function.4" location="right" templateId="parametrica">
+                <esquema id="energia"/>
+                <punto x="54" y="30"/>
+                <punto x="57" y="0"/>
+            </caja>
+        </cajas>
+        <conecciones>
+            <coneccion dst="function.4" src="telemetro.270"/>
+            <coneccion dst="motor.izquierda" src="function.2"/>
+            <coneccion dst="motor.izquierda" src="function.0"/>
+            <coneccion dst="function.2" src="telemetro.270"/>
+            <coneccion dst="motor.derecha" src="function.4"/>
+            <coneccion dst="motor.derecha" src="function.1"/>
+        </conecciones>
+    </comportamiento>
+    <transiciones>
+        <transicion id_destino="comportamiento.1" id_origen="comportamiento.17">
+            <condiciones>
+                <condicion comparacion=">=" id_elemento="contador.1" umbral="3"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.20" id_origen="comportamiento.0">
+            <condiciones/>
+            <actualizaciones/>
+        </transicion>
+        <transicion id_destino="comportamiento.17" id_origen="comportamiento.20">
+            <condiciones>
+                <condicion comparacion="&lt;"
+                    id_elemento="telemetro.270" umbral="10"/>
+                <condicion comparacion="&lt;" id_elemento="contador.1" umbral="3"/>
+            </condiciones>
+            <actualizaciones>
+                <actualizacion accion="incrementar"
+                    id_contador="contador.1" tipo="contador"/>
+            </actualizaciones>
+        </transicion>
+        <transicion id_destino="comportamiento.20" id_origen="comportamiento.17">
+            <condiciones>
+                <condicion comparacion=">" id_elemento="telemetro.270" umbral="20"/>
+            </condiciones>
+            <actualizaciones/>
+        </transicion>
+    </transiciones>
+</conducta>
